@@ -13,7 +13,7 @@
 #ifndef _ACTIVETILE_H
 #define _ACTIVETILE_H
 
-enum coordinate{x, y, _x, _y};
+enum coordinate{x, y, _x, _y};	//for tile sides
 
 class ActiveTile
 {
