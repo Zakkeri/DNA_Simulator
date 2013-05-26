@@ -162,12 +162,12 @@ public:
 		Post-Conditions: Tile's neighbor on a particular side is returned; if tile does not have a neighbor, null is returned
 	*/
 
-    void RotateTile(QPair<int, int> referencePoint, int times);
+    void rotateTile(QPair<int, int> referencePoint, int times);
 	/*
 		Post-Conditions: Tile is rotated against reference point required number of times
 	*/
 
-    void MoveTile(QPair<int, int> shift);
+    void moveTile(QPair<int, int> shift);
 	/*
 		Post-Conditions: Tile is translated according to the shift coordinates
 	*/
