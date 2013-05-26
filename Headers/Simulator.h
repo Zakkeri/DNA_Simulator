@@ -12,33 +12,89 @@
 
 #ifndef _SIMULATOR_H
 #define _SIMULATOR_H
+#include"SetOfAssemblyTiles.h"
+#include"AssemblyTileSetManager.h"
+#include<QMap>
+#include<QString>
 
+typedef struct fittingSpot
+{
+    QPair<int, int> firstTile;
+    QPair<int, int> secondtTile;
+}FitPlace;
 
 class Simulator
 {
 public:
-    int StepCounter;
-    int AssemblyTileSetManager;
-    int StrengthMap;
+    Simulator(SetOfAssemblyTiles S, QMap<QString, int> StrengthMap, int ThetaParameter, int NumberOfSteps);
+    /*
+     Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
+     */
+    void initialize();
+    /*
+     Post-Condition: All initialization goes here
+     */
+    void startSimulation();
+    /*
+     Main function that starts simulation
+     */
+private:
+    SetOfAssemblyTiles & createNewSetOfAssemblyTiles();
+    /*
+     Post-Condition: New empty set of assembly tiles is created and returned
+     */
+    SetOfAssemblyTiles & selectNextSetOfAssemblyTiles();
+    /*
+     Post-Condition: Next non-processed set of assembly tiles is picked and returned
+     */
+    AssemblyTile & selectFirstAssemblyTile(SetOfAssemblyTiles & S);
+    /*
+     Post-Condition: First assembly tile from set S is picked
+     */
+    AssemblyTile & selectSecondAssemblyTile(SetOfAssemblyTiles & S);
+    /*
+     Post-Condition: Second assembly tile from set S is picked
+     */
+    QList<FitPlace> findFittingSpots(AssemblyTile &T1,AssemblyTile &T2);
+    /*
+     Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
+     */
+    AssemblyTile * attemptToCombine(AssemblyTile &T1,AssemblyTile &T2, QPair<int, int> first, QPair<int, int> second);
+    /*
+     Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
+     If not successful, NULL is returned
+     */
+    bool isDone();
+    /*
+     Post-Condition: Check if simulation is over
+     */
+    bool checkXYOverlap(AssemblyTile & T1, AssemblyTile & T2);
+    /*
+     Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
+     return true, if there is an overlap, and false otherwise
+     */
+    bool checkBondsStrength(AssemblyTile & T1, AssemblyTile & T2);
+    /*
+     Post-Condition: Check if T1 and T2 can be combined satisfying bond strength condition.
+     return true if they can, and false if they can't
+     */
+    void TileModificationFunction(AssemblyTile & T);
+    /*
+     Post-Condition: Apply tile modification function to tile T
+     */
+
+
+    //Attributes go next
+    int CurrentStep;
+    AssemblyTileSetManager manager;
+    QMap<QString, int> StrengthMap;
     int ThetaParameter;
     int NumberOfSteps;
-    int SetOfAssemblyTiles Iterator;
-    int FirstAssemblyTile Iterator;
-    int SecondAssemblyTile Iterator;
-    void Constructor(int SetOfAssemblyTiles, int StrengthMap, int ThetaParameter, int NumberOfSteps);
-    void Initialize();
-    void StartSimulation();
-private:
-    void CreateNewSetOfAssemblyTiles();
-    void SelectNextSetOfAssemblyTiles();
-    void SelectFirstAssemblyTile();
-    void SelectSecondAssemblyTile();
-    void FindFittingSpots();
-    void AttemptToCombine();
-    void Done();
-    void CheckXYOverlap();
-    void CheckBondsStrength();
-    void TileModificationFunction();
+
+    //Not sure about variables below yet
+    int SetOfAssemblyTilesIterator;
+    int FirstAssemblyTileIterator;
+    int SecondAssemblyTileIterator;
 };
 
 #endif  //_SIMULATOR_H

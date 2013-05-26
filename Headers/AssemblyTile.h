@@ -12,21 +12,52 @@
 
 #ifndef _ASSEMBLYTILE_H
 #define _ASSEMBLYTILE_H
-
-class ActiveTile;
+#include<QPair>
+#include<QList>
+#include<QMap>
+#include"ActiveTile.h";
 
 class AssemblyTile
 {
 public:
-	AssemblyTile(ActiveTile T);
-	AssemblyTile(ActiveTile T1, ActiveTile T2);
+    AssemblyTile(ActiveTile &T);
+    /*
+     Constructor with one tile
+     Post-Condition: Assembly tile object that consists of only one tile is created
+     */
+    AssemblyTile(AssemblyTile &T1, AssemblyTile &T2);
+    /*
+     Constructor with for assembly tile
+     Post-Condition: Assembly tile object is created from combination of two assembly tiles
+     */
 	~AssemblyTile();
-    int ListOfActiveTiles;
+    /*
+     Default destructor
+     */
+    ActiveTile & GetTileFromCoordinates(QPair<int, int> coordinate);
+    /*
+     Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
+     */
+
+    void moveAssemblyTile(QPair<int, int> shift);
+    /*
+     Post-Condition: Whole assembly tile is moved
+     */
+    void rotateAssemblyTile(QPair<int, int> refPoint, int times);
+    /*
+     Post-Condition: Assembly tile is rotated required amount of times along reference point
+     */
+
+    QList<ActiveTile> & getListOfActiveTiles();
+    /*
+     Post-Condition: List of all active tiles is returned
+     */
+
+private:
+    QList<ActiveTile> ListOfActiveTiles;
     int NumberOfActiveTiles;
-	int map	//will map coordinate to tile
-    void GetTileFromCoordinates();
-    void MoveAssemblyTile();
-    void RotateAssemblyTile();
+    QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
+
 };
 
 #endif  //_ASSEMBLYTILE_H

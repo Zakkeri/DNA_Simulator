@@ -12,24 +12,62 @@
 
 #ifndef _SETOFASSEMBLYTILES_H
 #define _SETOFASSEMBLYTILES_H
+#include"AssemblyTile.h"
+#include<QList>
 
-class AssemblyTile;
+
 
 class SetOfAssemblyTiles
 {
 public:
 	SetOfAssemblyTiles();
-	SetOfAssemblyTiles(AssemblyTile A);
+    /*
+     Default Constructor
+     */
+    SetOfAssemblyTiles(AssemblyTile &A);
+    /*
+     Post-Condition: Set of assembly Tiles is created with one assembly tile in it
+     */
 	SetOfAssemblyTiles(AssemblyTile A [], int n);
+    /*
+     Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
+     */
 	~SetOfAssemblyTiles();
-    int CollectionOfAssemblyTiles;
+    /*
+     Default destructor
+     */
+
+    void addAssemblyTile(AssemblyTile &T);
+    /*
+     Post-Condition: If assembly tile is not in the set, then it is added to the set
+     */
+    void removeAssemblyTile(AssemblyTile &T);
+    /*
+     Post-Condition: If assembly tile is in the set, then it is removed from the set
+     */
+
+    bool checkIfTileIsInTheSet(AssemblyTile &T);
+    /*
+     Post-Condition: If T is in the set, then function returns true, and false otherwise
+     */
+
+    AssemblyTile & getAssemblyTile(int index);
+    /*
+     Post-Condition: Return an assembly tile corresponding to the index
+     */
+    QList<AssemblyTile> & getListOfAssemblyTiles();
+    /*
+     Post-Condition: Returns list of all assembly tiles
+     */
+
+    bool isEmpty();
+    /*
+     Post-Condition: If set is empty, returns true, and false otherwise
+     */
+private:
+    QList<AssemblyTile> CollectionOfAssemblyTiles;
     int NumberOfAssemblyTiles;
     int SetID_StepNumber;
-    void AddAssemblyTile();
-    void RemoveAssemblyTile();
-    void CheckIfTileIsInTheSet();
-    void AccessAssemblyTile();
-    void GetIterator();
 };
 
 #endif  //_SETOFASSEMBLYTILES_H

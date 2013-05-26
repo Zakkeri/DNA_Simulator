@@ -12,68 +12,109 @@
 
 #include "Simulator.h"
 
-void Simulator::Constructor(int SetOfAssemblyTiles, int StrengthMap, int ThetaParameter, int NumberOfSteps)
+Simulator::Simulator(SetOfAssemblyTiles S, QMap<QString, int> StrengthMap, int ThetaParameter, int NumberOfSteps)
+/*
+ Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
+ */
 {
 
 }
 
-void Simulator::Initialize()
+void Simulator::initialize()
+/*
+ Post-Condition: All initialization goes here
+ */
 {
 
 }
 
-void Simulator::StartSimulation()
+void Simulator::startSimulation()
+/*
+ Main function that starts simulation
+ */
 {
 
 }
 
-void Simulator::CreateNewSetOfAssemblyTiles()
+SetOfAssemblyTiles & Simulator::createNewSetOfAssemblyTiles()
+/*
+ Post-Condition: New empty set of assembly tiles is created and returned
+ */
 {
 
 }
 
-void Simulator::SelectNextSetOfAssemblyTiles()
+SetOfAssemblyTiles & Simulator::selectNextSetOfAssemblyTiles()
+/*
+ Post-Condition: Next non-processed set of assembly tiles is picked and returned
+ */
 {
 
 }
 
-void Simulator::SelectFirstAssemblyTile()
+AssemblyTile & Simulator::selectFirstAssemblyTile(SetOfAssemblyTiles & S)
+/*
+ Post-Condition: First assembly tile from set S is picked
+ */
 {
 
 }
 
-void Simulator::SelectSecondAssemblyTile()
+AssemblyTile & Simulator::selectSecondAssemblyTile(SetOfAssemblyTiles & S)
+/*
+ Post-Condition: Second assembly tile from set S is picked
+ */
 {
 
 }
 
-void Simulator::FindFittingSpots()
+QList<FitPlace> Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
+/*
+ Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
+ */
 {
 
 }
 
-void Simulator::AttemptToCombine()
+AssemblyTile * Simulator::attemptToCombine(AssemblyTile &T1,AssemblyTile &T2, QPair<int, int> first, QPair<int, int> second)
+/*
+ Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
+ If not successful, NULL is returned
+ */
 {
 
 }
 
-void Simulator::Done()
+bool Simulator::isDone()
+/*
+ Post-Condition: Check if simulation is over
+ */
 {
 
 }
 
-void Simulator::CheckXYOverlap()
+bool Simulator::checkXYOverlap(AssemblyTile & T1, AssemblyTile & T2)
+/*
+ Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
+ return true, if there is an overlap, and false otherwise
+ */
 {
 
 }
 
-void Simulator::CheckBondsStrength()
+bool Simulator::checkBondsStrength(AssemblyTile & T1, AssemblyTile & T2)
+/*
+ Post-Condition: Check if T1 and T2 can be combined satisfying bond strength condition.
+ return true if they can, and false if they can't
+ */
 {
 
 }
 
-void Simulator::TileModificationFunction()
+void Simulator::TileModificationFunction(AssemblyTile & T)
+/*
+ Post-Condition: Apply tile modification function to tile T
+ */
 {
 
 }
-

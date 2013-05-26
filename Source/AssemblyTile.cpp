@@ -12,22 +12,61 @@
 
 #include "AssemblyTile.h"
 
-void AssemblyTile::ConstructFromTwoTiles()
+AssemblyTile::AssemblyTile(ActiveTile &T)
+/*
+ Constructor with one tile
+ Post-Condition: Assembly tile object that consists of only one tile is created
+ */
+{
+
+
+}
+
+AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2)
+/*
+ Constructor with for assembly tile
+ Post-Condition: Assembly tile object is created from combination of two assembly tiles
+ */
 {
 
 }
 
-void AssemblyTile::GetTileFromCoordinates()
+AssemblyTile::~AssemblyTile()
+/*
+ Default destructor
+ */
 {
 
 }
 
-void AssemblyTile::MoveAssemblyTile()
+ActiveTile & AssemblyTile::GetTileFromCoordinates(QPair<int, int> coordinate)
+/*
+ Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
+ */
 {
 
 }
 
-void AssemblyTile::RotateAssemblyTile()
+void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
+/*
+ Post-Condition: Whole assembly tile is moved
+ */
+{
+
+}
+
+void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
+/*
+ Post-Condition: Assembly tile is rotated required amount of times along reference point
+ */
+{
+
+}
+
+QList<ActiveTile> & AssemblyTile::getListOfActiveTiles()
+/*
+ Post-Condition: List of all active tiles is returned
+ */
 {
 
 }

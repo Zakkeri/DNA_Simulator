@@ -11,34 +11,74 @@
 
 
 #include "AssemblyTileSetManager.h"
-
-void AssemblyTileSetManager::AccessAssemblyTileSet()
+AssemblyTileSetManager::AssemblyTileSetManager()
+/*
+ Default constructor
+ */
 {
 
 }
 
-void AssemblyTileSetManager::CreateANewSet()
+AssemblyTileSetManager::AssemblyTileSetManager(SetOfAssemblyTiles &S)
+/*
+ Post-Condition: Assembly tile set manager is created and contains one set of assembly tiles
+ */
 {
 
 }
 
-void AssemblyTileSetManager::GetAssemblyTileSetIterator()
+AssemblyTileSetManager::~AssemblyTileSetManager()
+/*
+ Default destructor
+ */
 {
 
 }
 
-void AssemblyTileSetManager::DeleteSet()
+SetOfAssemblyTiles & AssemblyTileSetManager::getAssemblyTileSet(int index)
+/*
+ Post-Condition: Set that corresponds to index is returned
+ */
 {
 
 }
 
-void AssemblyTileSetManager::StoreSetOnHardrive()
+SetOfAssemblyTiles & AssemblyTileSetManager::createANewSet()
+/*
+ Post-Condition: An empty set is added to the collection of sets, and the reference to this set is returned
+ */
 {
 
 }
 
-void AssemblyTileSetManager::LoadSetFromHardrive()
+QList<SetOfAssemblyTiles> & AssemblyTileSetManager::getListOfSets()
+/*
+ Post-Condition: List of assembly tile sets is returned
+ */
 {
 
 }
 
+void AssemblyTileSetManager::DeleteSet(SetOfAssemblyTiles & S)
+/*
+ Post-Condition: If set S is in the collection, it is deleted
+ */
+{
+
+}
+
+void AssemblyTileSetManager::StoreSetOnHardrive(int index)
+/*
+ Post-Condition: Set that corresponds to index is stored on the hardrive
+ */
+{
+
+}
+
+void AssemblyTileSetManager::LoadSetFromHardrive(int index)
+/*
+ Post-Condition: Set that corresponds to index is retrived from the hardrive
+ */
+{
+
+}

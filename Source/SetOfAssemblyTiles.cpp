@@ -12,28 +12,82 @@
 
 #include "SetOfAssemblyTiles.h"
 
-void SetOfAssemblyTiles::AddAssemblyTile()
+SetOfAssemblyTiles::SetOfAssemblyTiles()
+/*
+ Default Constructor
+ */
 {
 
 }
 
-void SetOfAssemblyTiles::RemoveAssemblyTile()
+SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile &A)
+/*
+ Post-Condition: Set of assembly Tiles is created with one assembly tile in it
+ */
 {
 
 }
 
-void SetOfAssemblyTiles::CheckIfTileIsInTheSet()
+SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
+/*
+ Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
+ */
 {
 
 }
 
-void SetOfAssemblyTiles::AccessAnAssemblyTile()
+SetOfAssemblyTiles::~SetOfAssemblyTiles()
+/*
+ Default destructor
+ */
 {
 
 }
 
-void SetOfAssemblyTiles::GetIterator()
+void SetOfAssemblyTiles::addAssemblyTile(AssemblyTile &T)
+/*
+ Post-Condition: If assembly tile is not in the set, then it is added to the set
+ */
 {
 
 }
 
+void SetOfAssemblyTiles::removeAssemblyTile(AssemblyTile &T)
+/*
+ Post-Condition: If assembly tile is in the set, then it is removed from the set
+ */
+{
+
+}
+
+bool SetOfAssemblyTiles::checkIfTileIsInTheSet(AssemblyTile &T)
+/*
+ Post-Condition: If T is in the set, then function returns true, and false otherwise
+ */
+{
+
+}
+
+AssemblyTile & SetOfAssemblyTiles::getAssemblyTile(int index)
+/*
+ Post-Condition: Return an assembly tile corresponding to the index
+ */
+{
+
+}
+
+QList<AssemblyTile> & SetOfAssemblyTiles::getListOfAssemblyTiles()
+/*
+ Post-Condition: Returns list of all assembly tiles
+ */
+{
+
+}
+
+bool SetOfAssemblyTiles::isEmpty()
+/*
+ Post-Condition: If set is empty, returns true, and false otherwise
+ */
+{
+
+}

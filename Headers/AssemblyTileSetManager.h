@@ -12,23 +12,52 @@
 
 #ifndef _ASSEMBLYTILESETMANAGER_H
 #define _ASSEMBLYTILESETMANAGER_H
-
-class SetOfAssemblyTiles;
+#include"SetOfAssemblyTiles.h"
+#include<QList>
 
 class AssemblyTileSetManager
 {
 public:
 	AssemblyTileSetManager();
-	AssemblyTileSetManager(SetOfAssemblyTiles S);
+    /*
+     Default constructor
+     */
+    AssemblyTileSetManager(SetOfAssemblyTiles &S);
+    /*
+     Post-Condition: Assembly tile set manager is created and contains one set of assembly tiles
+     */
 	~AssemblyTileSetManager();
-    int ListOfReferencesToAssemblyTileSets;
+    /*
+     Default destructor
+     */
+
+    SetOfAssemblyTiles & getAssemblyTileSet(int index);
+    /*
+     Post-Condition: Set that corresponds to index is returned
+     */
+    SetOfAssemblyTiles & createANewSet();
+    /*
+     Post-Condition: An empty set is added to the collection of sets, and the reference to this set is returned
+     */
+    QList<SetOfAssemblyTiles> & getListOfSets();
+    /*
+     Post-Condition: List of assembly tile sets is returned
+     */
+    void DeleteSet(SetOfAssemblyTiles & S);
+    /*
+     Post-Condition: If set S is in the collection, it is deleted
+     */
+    void StoreSetOnHardrive(int index);
+    /*
+     Post-Condition: Set that corresponds to index is stored on the hardrive
+     */
+    void LoadSetFromHardrive(int index);
+    /*
+     Post-Condition: Set that corresponds to index is retrived from the hardrive
+     */
+private:
+    QList<SetOfAssemblyTiles> ListOfAssemblyTileSets;
     int NumberOfSets;
-    void AccessAssemblyTileSet();
-    void CreateANewSet();
-    void GetAssemblyTileSetIterator();
-    void DeleteSet();
-    void StoreSetOnHardrive();
-    void LoadSetFromHardrive();
 };
 
 #endif  //_ASSEMBLYTILESETMANAGER_H
