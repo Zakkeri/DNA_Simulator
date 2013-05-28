@@ -175,15 +175,17 @@ public:
 private:
 	static int counter;
 	int TileID;
-    QList<QSet<QString> > ActiveLabels;
+	
+	//We will have an array that will store structs for each side
+    /*QList<QSet<QString> > ActiveLabels;
     QList<QSet<QString> > InactiveLabels;
     QSet<Signal> ActivationSignals;
-    QSet<Signal> TranmissionSignals;
+    QSet<Signal> TranmissionSignals;*/
     QPair<int, int> X_YCoordinates;
     ActiveTile * X;
-	ActiveTile * Y;
-	ActiveTile * _X;
-	ActiveTile * _Y;
+    ActiveTile * Y;
+    ActiveTile * _X;
+    ActiveTile * _Y;
 };
 
 int ActiveTile::counter = 0;
