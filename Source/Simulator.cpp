@@ -12,10 +12,11 @@
 
 #include "Simulator.h"
 
-Simulator::Simulator(SetOfAssemblyTiles S, QMap<QString, int> StrengthMap, int ThetaParameter, int NumberOfSteps)
+Simulator::Simulator(SetOfAssemblyTiles S, QMap<QString, int> &StrengthFunction, int Theta, int StepNumber)
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
+    : manager(S), StrengthMap(StrengthFunction), ThetaParameter(Theta), NumberOfSteps(StepNumber)
 {
 
 }
@@ -25,7 +26,7 @@ void Simulator::initialize()
  Post-Condition: All initialization goes here
  */
 {
-
+    CurrentStep = 1;
 }
 
 void Simulator::startSimulation()
@@ -33,6 +34,49 @@ void Simulator::startSimulation()
  Main function that starts simulation
  */
 {
+    for(CurrentStep; CurrentStep <= NumberOfSteps; CurrentStep++)   //Perform simulation, until the number of required steps is reached
+    {
+        SetOfAssemblyTiles newSet = createNewSetOfAssemblyTiles();  //New empty set of Assembly tiles
+        SetOfAssemblyTiles currentSet = selectMostCurrentSetOfAssemblyTiles();  //most up to date set of assembly tiles
+        QList<AssemblyTile>::Iterator i;
+        for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
+        {
+            AssemblyTile t1 = *i;   //get next first assembly tile t1
+            QList<SetOfAssemblyTiles>::Iterator j;
+            for(j = manager.getListOfSets().begin(); j!=manager.getListOfSets().end(); j++)//iterate through every set of assembly tiles
+            {
+                SetOfAssemblyTiles temp = *j;   //get temporal set of assembly tiles for picking the second assembly tile
+                QList<AssemblyTile>::Iterator k;
+                for(k = temp.getListOfAssemblyTiles().begin(); k!=temp.getListOfAssemblyTiles().end(); k++)    //each tile in temp iterate through and try to combine two tiles
+                {
+                    AssemblyTile t2 = *k;  //chose second assembly tile
+                    if(&temp == &currentSet && t2.getIndex() < t1.getIndex()) //check for redundant tiles
+                    {
+                        continue;
+                    }
+                    QList<FitPlace> spots = findFittingSpots(t1, t2);   //get all fitting spots
+                    if(spots.empty())   //check if there are any fitting spot
+                    {
+                        continue;
+                    }
+                    QList<FitPlace>::Iterator fit;
+                    for(fit = spots.begin(); fit!=spots.end(); fit++)  //iterata through each fitting spot
+                    {
+                        FitPlace next = *fit;   //get next spot
+                        AssemblyTile* combined = attemptToCombine(t1, t2, next.firstTile, next.secondtTile);
+                        if(combined == 0)   //check if tiles were combined
+                        {
+                            continue;
+                        }
+
+                        newSet.addAssemblyTile(*combined);
+                    }
+                }
+            }
+
+         }
+
+    }
 
 }
 
@@ -43,26 +87,9 @@ SetOfAssemblyTiles & Simulator::createNewSetOfAssemblyTiles()
 {
 
 }
-
-SetOfAssemblyTiles & Simulator::selectNextSetOfAssemblyTiles()
+SetOfAssemblyTiles & Simulator::selectMostCurrentSetOfAssemblyTiles()
 /*
- Post-Condition: Next non-processed set of assembly tiles is picked and returned
- */
-{
-
-}
-
-AssemblyTile & Simulator::selectFirstAssemblyTile(SetOfAssemblyTiles & S)
-/*
- Post-Condition: First assembly tile from set S is picked
- */
-{
-
-}
-
-AssemblyTile & Simulator::selectSecondAssemblyTile(SetOfAssemblyTiles & S)
-/*
- Post-Condition: Second assembly tile from set S is picked
+ Post-Condition: Most updated set of assembly tiles is returned. This set contains tiles that will be picked as First Assembly Tiles
  */
 {
 
@@ -80,14 +107,6 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile &T1,AssemblyTile &T2, QP
 /*
  Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
  If not successful, NULL is returned
- */
-{
-
-}
-
-bool Simulator::isDone()
-/*
- Post-Condition: Check if simulation is over
  */
 {
 

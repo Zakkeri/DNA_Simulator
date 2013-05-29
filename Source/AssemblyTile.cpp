@@ -71,3 +71,18 @@ QList<ActiveTile> & AssemblyTile::getListOfActiveTiles()
 
 }
 
+int AssemblyTile::getIndex()
+/*
+ Post-Condition: Returns the index of a tile
+ */
+{
+
+}
+
+void AssemblyTile::setCurrentNumber(int num)
+/*
+ Post-Condition: Sets the value of static integer currentNumber to value of num
+ */
+{
+
+}

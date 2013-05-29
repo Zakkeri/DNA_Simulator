@@ -52,12 +52,22 @@ public:
     /*
      Post-Condition: List of all active tiles is returned
      */
+    int getIndex();
+    /*
+     Post-Condition: Returns the index of a tile
+     */
 
+    void setCurrentNumber(int num);
+    /*
+     Post-Condition: Sets the value of static integer currentNumber to value of num
+     */
 private:
     QList<ActiveTile> ListOfActiveTiles;
     int NumberOfActiveTiles;
     QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
+    int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
+    static int currentNumber;
 
 };
-
+int AssemblyTile::currentNumber = 0;
 #endif  //_ASSEMBLYTILE_H

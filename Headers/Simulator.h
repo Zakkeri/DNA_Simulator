@@ -26,7 +26,7 @@ typedef struct fittingSpot
 class Simulator
 {
 public:
-    Simulator(SetOfAssemblyTiles S, QMap<QString, int> StrengthMap, int ThetaParameter, int NumberOfSteps);
+    Simulator(SetOfAssemblyTiles S, QMap<QString, int> &StrengthFunction, int Theta, int StepNumber);
     /*
      Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
      */
@@ -43,17 +43,9 @@ private:
     /*
      Post-Condition: New empty set of assembly tiles is created and returned
      */
-    SetOfAssemblyTiles & selectNextSetOfAssemblyTiles();
+    SetOfAssemblyTiles & selectMostCurrentSetOfAssemblyTiles();
     /*
-     Post-Condition: Next non-processed set of assembly tiles is picked and returned
-     */
-    AssemblyTile & selectFirstAssemblyTile(SetOfAssemblyTiles & S);
-    /*
-     Post-Condition: First assembly tile from set S is picked
-     */
-    AssemblyTile & selectSecondAssemblyTile(SetOfAssemblyTiles & S);
-    /*
-     Post-Condition: Second assembly tile from set S is picked
+     Post-Condition: Most updated set of assembly tiles is returned. This set contains tiles that will be picked as First Assembly Tiles
      */
     QList<FitPlace> findFittingSpots(AssemblyTile &T1,AssemblyTile &T2);
     /*
@@ -64,10 +56,7 @@ private:
      Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
      If not successful, NULL is returned
      */
-    bool isDone();
-    /*
-     Post-Condition: Check if simulation is over
-     */
+
     bool checkXYOverlap(AssemblyTile & T1, AssemblyTile & T2);
     /*
      Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
