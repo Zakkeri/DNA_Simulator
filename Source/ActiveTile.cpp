@@ -9,262 +9,263 @@
 //
 //
 
-#include "ActiveTile.h"
+#include "Headers/ActiveTile.h"
     
+	// Default Constructor
+
 	ActiveTile::ActiveTile()
-	/*
-		Default Constructor
-		Post-Conditions: New tile object with empty sets of labels and signals was created
-	*/
 	{
 		TileID = counter;
 		counter++;
 
 	}
 
-    ActiveTile::ActiveTile(QList<QSet<QString> > &ActiveLabels, QList<QSet<QString> >  InactiveLabels, QSet<Signal> &ActivationSignals, QSet<Signal> &TransmissionSignals)
-    /*
-     Constructor with neighbors being not specified
-     Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
-     */
+
+
+	// Constructor with neighbors being not specified
+	// Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
+    
+    ActiveTile::ActiveTile(const QList<QList<int> > &ActiveLabels, const QList<QList<int> >  &InactiveLabels,
+                           const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals)
     {
         TileID = counter;
         counter++;
 
-        this -> ActiveLabels = ActiveLabels;
-        this -> InactiveLabels = InactiveLabels;
-        this -> ActivationSignals = ActivationSignals;
-        this -> TranmissionSignals = TranmissionSignals;
+		for(int i = 0; i < 4; i++)
+		{
+            Side[i].ActiveLabels = ActiveLabels[i];
+            Side[i].InactiveLabels = InactiveLabels[i];
+            Side[i].ActivationSignals = ActivationSignals[i];
+            Side[i].TransmissionSignals = TransmissionSignals[i];
+		}
 
     }
-    ActiveTile::ActiveTile(QList<QSet<QString> > &ActiveLabels, QList<QSet<QString> >  InactiveLabels, QSet<Signal> &ActivationSignals, QSet<Signal> &TransmissionSignals,
-                           ActiveTile * X,
-                           ActiveTile * Y,
-                           ActiveTile * _X,
-                           ActiveTile * _Y)
-	/*
-		Constructor with defined tile's parameters.
-		Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created
-	*/
+
+
+
+	// Contructor that makes a deep copy of another tile
+	// Post-Conditions: New tile is created that is the same as otherTile
+
+	ActiveTile::ActiveTile(const ActiveTile &otherTile)
 	{
+        X_Y_Coordinates = otherTile.X_Y_Coordinates;
 		TileID = counter;
 		counter++;
-		
-		this -> ActiveLabels = ActiveLabels;
-		this -> InactiveLabels = InactiveLabels;
-		this -> ActivationSignals = ActivationSignals;
-		this -> TranmissionSignals = TranmissionSignals;
-		
-		this -> X = X;
-		this -> Y = Y;
-		this -> _X = _X;
-		this -> _Y = _Y;
-
 	}
-	ActiveTile::~ActiveTile()
-	/*
-		Default destcrutor
-	*/
-	{}
-	
+
+
+
+	// Default Destructor
+	ActiveTile::~ActiveTile(){}
+
+
+	// Post-Conditions: Object's coordinates were changed
+
     void ActiveTile::setCoordinates(QPair<int, int> coord)
-	/*
-		Post-Conditions: Object's coordinates were changed
-	*/
 	{
-		this->X_YCoordinates = coord;
-
-	}
-    void ActiveTile::setNeighbor(coordinate neigh, ActiveTile * newTile)
-	/*
-		Post-Conditions: Object neighbor marked by integer neigh is replaced with newTile
-	*/
-	{
-		switch(neigh)
-		{
-		case x: this->X = newTile; break;
-		case y: this->Y = newTile; break;
-		case _x: this->_X = newTile; break;
-		case _y: this->_Y = newTile; break;
-        default: qDebug("Invalid coordinate for neighbor\n"); break;
-
-		}
-	}
-
-       void ActiveTile::AddActiveLabel(coordinate side, QString label)
-	/*
-		Post-Conditions: New active label is added to a particular side
-	*/
-	   {
-		   
-	   }
-    void ActiveTile::AddActiveLabels(coordinate side, QString labels[], int n)
-	/*
-		Post-Conditions: n new active labels are added to a particular side
-	*/
-	{
-
-	}
-    void ActiveTile::RemoveActiveLabel(coordinate side, QString label)
-	/*
-		Post-Conditions: Active label is removed from a side
-	*/
-	{
-
-	}
-    void ActiveTile::RemoveActiveLabels(coordinate side, QString labels[], int n)
-	/*
-		Post-Conditions: n active labels are removed from a side
-	*/
-	{
-
-	}
-    void ActiveTile::AddInactiveLabel(coordinate side, QString label)
-	/*
-		Post-Conditions: New inactive label is added to a particular side
-	*/
-	{
-
-	}
-    void ActiveTile::AddInactiveLabels(coordinate side, QString labels[], int n)
-	/*
-		Post-Conditions: n new inactive labels are added to a particular side
-	*/
-	{
-
-	}
-    void ActiveTile::RemoveInactiveLabel(coordinate side, QString label)
-	/*
-		Post-Conditions: Inactive label is removed from a side
-	*/
-	{
-
-	}
-    void ActiveTile::RemoveInactiveLabels(coordinate side, QString labels[], int n)
-		/*
-		Post-Conditions: n inactive labels are removed from a side
-	*/
-	{
-
-	}
-	void ActiveTile::AddActivationSignal(Signal s)
-	/*
-		Post-Conditions: Activation signal was added
-	*/
-	{
+        this->X_Y_Coordinates = coord;
 
 	}
 
-    void ActiveTile::AddActivationSignals(Signal s[], int n)
-	/*
-		Post-Conditions: n activation signals were added
-	*/
-	{
 
-	}
-	void ActiveTile::RemoveActivationSignal(Signal s)
-	/*
-		Post-Conditions: if s belongs to the tile, it is removed
-	*/
-	{
+	// Post-Conditions: Object neighbor marked by integer neigh is replaced with newTile
 
+    void ActiveTile::setNeighbor(direction neigh, ActiveTile * newTile)
+	{
+        this->Neighbors[neigh] = newTile;
 	}
 
-	void ActiveTile::RemoveActivationSignals(Signal s[], int n)
-	/*
-		Post-Conditions: for n activation signals, if signal belongs to the tile, it is removed
-	*/
-	{
 
-	}
-	//Similarly for transmission signals
-    void ActiveTile::AddTransmissionSignal(Signal s)
-	{
 
-	}
-	void AddTransmissionSignals(Signal s[], int n)
-	{
+	// Post-Conditions: Adds/removes active labels or a list of active labels from a given side
 
-	}
-	void RemoveTransmissionSignal(Signal s)
+    void ActiveTile::AddActiveLabel(direction side, int label)
 	{
-
+		Side[side].ActiveLabels << label;
 	}
-	void RemoveTransmissionSignals(Signal s[], int n)
+
+    void ActiveTile::AddActiveLabels(direction side, QList<int> labels)
 	{
-
+		Side[side].ActiveLabels << labels;
 	}
+
+    void ActiveTile::RemoveActiveLabel(direction side, int label)
+	{
+        this->Side[side].ActiveLabels.removeOne(label);
+	}
+
+    void ActiveTile::RemoveActiveLabels(direction side, QList<int> labels)
+	{
+        int labelToRemove;
+
+        foreach(labelToRemove, labels)
+        {
+            this->Side[side].ActiveLabels.removeOne(labelToRemove);
+        }
+	}
+
+
+	// Post-Conditions: Adds/removes inactive labels or a list of inactive labels from a given side
+
+    void ActiveTile::AddInactiveLabel(direction side, int label)
+	{
+        Side[side].InactiveLabels << label;
+	}
+
+    void ActiveTile::AddInactiveLabels(direction side, QList<int> labels)
+	{
+		Side[side].InactiveLabels << labels;
+	}
+
+    void ActiveTile::RemoveInactiveLabel(direction side, int label)
+	{
+        this->Side[side].InactiveLabels.removeOne(label);
+	}
+
+    void ActiveTile::RemoveInactiveLabels(direction side, QList<int> labels)
+	{
+        int labelToRemove;
+
+        foreach(labelToRemove, labels)
+        {
+            this->Side[side].InactiveLabels.removeOne(labelToRemove);
+        }
+	}
+
+
+
+	// Post-Conditions: Adds/removes activation signals or a list of activation signals from a given side
+	//                  if the activation signal(s) exist on that side
+	//
+	// Please Note:  Only 1 side may be affected per call of the function, even if a list is being added/removed
+
+    void ActiveTile::AddActivationSignal(direction side, Signal signal)
+	{
+        Side[side].ActivationSignals << signal;
+	}
+
+    void ActiveTile::AddActivationSignals(direction side, QList<Signal> signalList)
+	{
+        Side[side].ActivationSignals << signalList;
+	}
+
+    void ActiveTile::RemoveActivationSignal(direction side, Signal signal)
+	{
+        Side[side].ActivationSignals.removeOne(signal);
+	}
+
+    void ActiveTile::RemoveActivationSignals(direction side, QList<Signal> signalList)
+    {
+        Signal signalToRemove(0,x);
+
+        foreach(signalToRemove, signalList)
+        {
+            this->Side[side].ActivationSignals.removeOne(signalToRemove);
+        }
+	}
+
+
+
+	// Similarly for transmission signals
+
+    void ActiveTile::AddTransmissionSignal(direction side, Signal signal)
+	{
+        this->Side[side].TransmissionSignals << signal;
+	}
+
+    void ActiveTile::AddTransmissionSignals(direction side, QList<Signal> signalList)
+	{
+        Side[side].TransmissionSignals << signalList;
+	}
+
+    void ActiveTile::RemoveTransmissionSignal(direction side, Signal signal)
+	{
+        Side[side].TransmissionSignals.removeOne(signal);
+	}
+
+    void ActiveTile::RemoveTransmissionSignals(direction side, QList<Signal> signalList)
+	{
+        Signal signalToRemove(0,x);
+
+        foreach(signalToRemove, signalList)
+        {
+            this->Side[side].TransmissionSignals.removeOne(signalToRemove);
+        }
+	}
+
+
+
+	// Post-Conditions:  Returns a list of a side's Labels or Signals
+
+    QList<int> ActiveTile::getActiveLabels(direction side)
+	{
+		return Side[side].ActiveLabels;
+	}
+
+    QList<int> ActiveTile::getInactiveLabels(direction side)
+	{
+		return Side[side].InactiveLabels;
+	}
+
+    QList<Signal> ActiveTile::getActivationSignals(direction side)
+	{
+		return Side[side].ActivationSignals;
+	}
+
+    QList<Signal> ActiveTile::getTransmissionSignals(direction side)
+	{
+		return Side[side].TransmissionSignals;
+	}
+
+
+
+	// Post-Conditions: Get functions for various properties, they return their appropriate type
 
 	int ActiveTile::getId()
-	/*
-		Post-Conditions: Tile's id is returned
-	*/
 	{
-		return 0;
-	}
-    QSet<QString> ActiveTile::getActiveLabels(int side)
-	/*
-		Post-Conditions: Active labels of a particular side are returned
-	*/
-	{
-        QSet<QString> empty;
-		return empty;
+		return TileID;
 	}
 
-    QSet<QString> ActiveTile::getInactiveLabels(int side)
-	/*
-		Post-Conditions: Inactive labels of a particular side are returned
-	*/
-	{
-        QSet<QString> empty;
-			return empty;
-	}
-    QSet<Signal> ActiveTile::getActivationSignals()
-	/*
-		Post-Conditions: Activation signals of a tile are returned
-	*/
-	{
-        QSet<Signal> empty;
-		return empty;
-	}
-    QSet<Signal> ActiveTile::getTransmissionSignals()
-	/*
-		Post-Conditions: Transmission signals of a tile are returned
-	*/
-	{
-            QSet<Signal> empty;
-		return empty;
-	}
     QPair<int, int> ActiveTile::getCoordinates()
-	/*
-		Post-Conditions: Tile's coordinates are returned
-	*/
 	{
         QPair<int, int> empty(0, 0);
 		return empty;
 	}
 
-	ActiveTile * ActiveTile::getNeighbor(coordinate from)
-	/*
-		Post-Conditions: Tile's neighbor on a particular side is returned; if tile does not have a neighbor, null is returned
-	*/
+    ActiveTile * ActiveTile::getNeighbor(direction from)
 	{
-		ActiveTile T;
-		return &T;
+        return this->Neighbors[from];
 	}
 
-    void ActiveTile::rotateTile(QPair<int, int> referencePoint, int times)
-	/*
-		Post-Conditions: Tile is rotated against reference point required number of times
-	*/
-	{
 
-	}
+
+    // Post-Conditions: Tile is rotated counterclockwise required number of times
+    void ActiveTile::rotateTile(int times=1)
+    {
+        if(times > 1) rotateTile(times - 1);
+
+        TileSide tempSide;
+        tempSide = Side[1];
+        Side[1] = Side[0];
+        Side[0] = Side[3];
+        Side[3] = Side[2];
+        Side[2] = tempSide;
+    }
+
+
+
+	// Post-Conditions: Tile is translated according to the shift coordinates
     void ActiveTile::moveTile(QPair<int, int> shift)
-	/*
-		Post-Conditions: Tile is translated according to the shift coordinates
-	*/
-
 	{
-
+		X_Y_Coordinates.first += shift.first;
+		X_Y_Coordinates.second += shift.second;
 	}
+
+
+    // Operator == for signals
+    // Post-Conditions:  Returns true iff the signal and the target are the same
+    bool signal::operator ==(const signal otherSignal) const
+    {
+        if(this->label == otherSignal.label && this->Target == otherSignal.Target) return true;
+        return false;
+    }

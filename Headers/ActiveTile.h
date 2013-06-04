@@ -15,177 +15,147 @@
 
 #include<QSet>
 #include<QList>
-#include<QString>
 #include<QPair>
 
 using namespace std;
 
-enum coordinate{zero, x, y, _x, _y};	//for tile's sides
+enum direction{x, y, _x, _y};	//for tile's sides
 
 typedef struct signal
 {
 
-    QString label;
-	coordinate Source;
-	coordinate Target;
-    signal(QString l, coordinate S, coordinate T)	//Signal constructor
-		:label(l), Source(S), Target(T)
-	{
-		if(Target == zero)	//Target can't be zero
-		{
-            qDebug("Target can't be zero\n");
-		}
-	}
+    int label;
+    direction Target;
+
+    // I'm fairly certain this overload is required for removeOne() to work
+    // Post-Conditions:  Returns true iff labels and targets are the same
+    bool operator == (const signal otherSignal) const;
+
+    signal(int l, direction T)	//Signal constructor
+		:label(l), Target(T){}
 
 } Signal;
+
+typedef struct TileSide
+{
+    QList<Signal> ActivationSignals;
+    QList<Signal> TransmissionSignals;
+	QList<int> ActiveLabels;
+	QList<int> InactiveLabels;
+
+	// Default Contructor, makes a TileSide with no signals or labels
+	// These should be populated later by the ActiveTile they're a part of
+	TileSide();
+
+} TileSide;
 
 
 
 class ActiveTile
 {
 public:
+	// Default Constructor
     ActiveTile();
-	/*
-		Default Constructor
-		Post-Conditions: New tile object with empty sets of labels and signals was created
-	*/
 
-    ActiveTile(QList<QSet<QString> > &ActiveLabels, QList<QSet<QString> >  InactiveLabels, QSet<Signal> &ActivationSignals, QSet<Signal> &TransmissionSignals);
-    /*
-     Constructor with neighbors being not specified
-     Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
-     */
-    ActiveTile(QList<QSet<QString> > &ActiveLabels, QList<QSet<QString> >  InactiveLabels, QSet<Signal> &ActivationSignals, QSet<Signal> &TransmissionSignals,
-               ActiveTile * X, ActiveTile * Y, ActiveTile * _X, ActiveTile * _Y);
-	/*
-		Constructor with defined tile's parameters.
-		Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created
-	*/
+
+
+	// Constructor with neighbors being not specified
+	// Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
+    ActiveTile(const QList<QList<int> > &ActiveLabels, const QList<QList<int> > &InactiveLabels,
+               const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals);
+
+
+
+	// Contructor that makes a deep copy of another tile
+	// Post-Conditions: New tile is created that is the same as otherTile
+	ActiveTile(const ActiveTile &otherTile);
+
+
+
+	// Default Destructor
 	~ActiveTile();
-	/*
-		Default destcrutor
-	*/
+
+
+
+	// Post-Conditions: Object's coordinates were changed
     void setCoordinates(QPair<int, int> coord);
-	/*
-		Post-Conditions: Object's coordinates were changed
-	*/
-    void setNeighbor(coordinate neigh, ActiveTile * newTile);
-	/*
-		Post-Conditions: Object neighbor marked by integer neigh is replaced with newTile
-	*/
-    void AddActiveLabel(coordinate side, QString label);
-	/*
-		Post-Conditions: New active label is added to a particular side
-	*/
-    void AddActiveLabels(coordinate side, QString labels[], int n);
-	/*
-		Post-Conditions: n new active labels are added to a particular side
-	*/
-    void RemoveActiveLabel(coordinate side, QString label);
-	/*
-		Post-Conditions: Active label is removed from a side
-	*/
-    void RemoveActiveLabels(coordinate side, QString labels[], int n);
-	/*
-		Post-Conditions: n active labels are removed from a side
-	*/
 
-    void AddInactiveLabel(coordinate side, QString label);
-	/*
-		Post-Conditions: New inactive label is added to a particular side
-	*/
-    void AddInactiveLabels(coordinate side, QString labels[], int n);
-	/*
-		Post-Conditions: n new inactive labels are added to a particular side
-	*/
-    void RemoveInactiveLabel(coordinate side, QString label);
-	/*
-		Post-Conditions: Inactive label is removed from a side
-	*/
-    void RemoveInactiveLabels(coordinate side, QString labels[], int n);
-	/*
-		Post-Conditions: n inactive labels are removed from a side
-	*/
-	void AddActivationSignal(Signal s);
-	/*
-		Post-Conditions: Activation signal was added
-	*/
 
-    void AddActivationSignals(Signal s[], int n);
-	/*
-		Post-Conditions: n activation signals were added
-	*/
 
-	void RemoveActivationSignal(Signal s);
-	/*
-		Post-Conditions: if s belongs to the tile, it is removed
-	*/
+	// Post-Conditions: Object neighbor marked by integer neigh is replaced with newTile
+    void setNeighbor(direction neigh, ActiveTile * newTile);
 
-	void RemoveActivationSignals(Signal s[], int n);
-	/*
-		Post-Conditions: for n activation signals, if signal belongs to the tile, it is removed
-	*/
 
-	//Similarly for transmission signals
-    void AddTransmissionSignal(Signal s);
-	void AddTransmissionSignals(Signal s[], int n);
-	void RemoveTransmissionSignal(Signal s);
-	void RemoveTransmissionSignals(Signal s[], int n);
 
+    // Post-Conditions: Adds/removes active labels or a list of active labels from a given side
+    //
+    // Please Note:  Only 1 side may be affected per call of the function,
+    //               even if a list is being added/removed
+    void AddActiveLabel(direction side, int label);
+    void AddActiveLabels(direction side, QList<int> labels);
+    void RemoveActiveLabel(direction side, int label);
+    void RemoveActiveLabels(direction side, QList<int> labels);
+
+
+
+	// Post-Conditions: Adds/removes inactive labels or a list of inactive labels from a given side
+    void AddInactiveLabel(direction side, int label);
+    void AddInactiveLabels(direction side, QList<int> labels);
+    void RemoveInactiveLabel(direction side, int label);
+    void RemoveInactiveLabels(direction side, QList<int> labels);
+
+
+
+	// Post-Conditions: Adds/removes activation signals or a list of activation signals from a given side
+	//                  if the activation signal(s) exist on that side
+	//
+    // Please Note:  Only 1 side may be affected per call of the function,
+    //               even if a list is being added/removed
+    void AddActivationSignal(direction side, Signal signal);
+    void AddActivationSignals(direction side, QList<Signal> signalList);
+    void RemoveActivationSignal(direction side, Signal signal);
+    void RemoveActivationSignals(direction side, QList<Signal> signalList);
+
+
+
+	// Similarly for transmission signals
+    void AddTransmissionSignal(direction side, Signal signal);
+    void AddTransmissionSignals(direction side, QList<Signal> signalList);
+    void RemoveTransmissionSignal(direction side, Signal signal);
+    void RemoveTransmissionSignals(direction side, QList<Signal> signalList);
+
+
+
+	// Post-Conditions:  Returns a list of a side's Labels or Signals
+    QList<int> getActiveLabels(direction side);
+    QList<int> getInactiveLabels(direction side);
+    QList<Signal> getActivationSignals(direction side);
+    QList<Signal> getTransmissionSignals(direction side);
+
+
+
+	// Post-Conditions: Get functions for various properties, they return their appropriate type
 	int getId();
-	/*
-		Post-Conditions: Tile's id is returned
-	*/
-    QSet<QString> getActiveLabels(int side);
-	/*
-		Post-Conditions: Active labels of a particular side are returned
-	*/
-
-    QSet<QString> getInactiveLabels(int side);
-	/*
-		Post-Conditions: Inactive labels of a particular side are returned
-	*/
-    QSet<Signal> getActivationSignals();
-	/*
-		Post-Conditions: Activation signals of a tile are returned
-	*/
-    QSet<Signal> getTransmissionSignals();
-	/*
-		Post-Conditions: Transmission signals of a tile are returned
-	*/
     QPair<int, int> getCoordinates();
-	/*
-		Post-Conditions: Tile's coordinates are returned
-	*/
-	ActiveTile * getNeighbor(coordinate from);
-	/*
-		Post-Conditions: Tile's neighbor on a particular side is returned; if tile does not have a neighbor, null is returned
-	*/
+    ActiveTile * getNeighbor(direction from);
 
-    void rotateTile(QPair<int, int> referencePoint, int times);
-	/*
-		Post-Conditions: Tile is rotated against reference point required number of times
-	*/
 
+
+    // Post-Conditions: Tile is rotated counterclockwise required number of times
+    void rotateTile(int times);
+
+
+
+	// Post-Conditions: Tile is translated according to the shift coordinates
     void moveTile(QPair<int, int> shift);
-	/*
-		Post-Conditions: Tile is translated according to the shift coordinates
-	*/
 
 private:
 	static int counter;
 	int TileID;
-	
-	//We will have an array that will store structs for each side
-    /*QList<QSet<QString> > ActiveLabels;
-    QList<QSet<QString> > InactiveLabels;
-    QSet<Signal> ActivationSignals;
-    QSet<Signal> TranmissionSignals;*/
-    QPair<int, int> X_YCoordinates;
-    ActiveTile * X;
-    ActiveTile * Y;
-    ActiveTile * _X;
-    ActiveTile * _Y;
+    QPair<int, int> X_Y_Coordinates;
+    ActiveTile *Neighbors[4];
+	TileSide Side[4];
+    QList<Signal> InitiationSignals;
 };
 
 int ActiveTile::counter = 0;
