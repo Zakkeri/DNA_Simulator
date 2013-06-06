@@ -10,7 +10,7 @@
 //
 
 
-#include "AssemblyTile.h"
+#include "../Headers/AssemblyTile.h"
 
 AssemblyTile::AssemblyTile(ActiveTile &T)
 /*
@@ -79,9 +79,25 @@ int AssemblyTile::getIndex()
 
 }
 
+void AssemblyTile::setIndex(int ind)
+/*
+ Post-Condition: Sets the index of a tile
+ */
+{
+
+}
+
 void AssemblyTile::setCurrentNumber(int num)
 /*
  Post-Condition: Sets the value of static integer currentNumber to value of num
+ */
+{
+
+}
+
+bool AssemblyTile::operator==(const AssemblyTile & other)const
+/*
+ Overloaded equal operator
  */
 {
 

@@ -39,7 +39,7 @@ public:
      Main function that starts simulation
      */
 private:
-    SetOfAssemblyTiles & createNewSetOfAssemblyTiles();
+   // SetOfAssemblyTiles & createNewSetOfAssemblyTiles();
     /*
      Post-Condition: New empty set of assembly tiles is created and returned
      */
@@ -74,7 +74,7 @@ private:
 
 
     //Attributes go next
-    int CurrentStep;
+    int currentStep;
     AssemblyTileSetManager manager;
     QMap<QString, int> StrengthMap;
     int ThetaParameter;

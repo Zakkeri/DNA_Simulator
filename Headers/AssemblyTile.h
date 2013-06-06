@@ -57,10 +57,21 @@ public:
      Post-Condition: Returns the index of a tile
      */
 
+    void setIndex(int ind);
+    /*
+     Post-Condition: Sets the index of a tile
+     */
+
     void setCurrentNumber(int num);
     /*
      Post-Condition: Sets the value of static integer currentNumber to value of num
      */
+
+    bool operator==(const AssemblyTile & other)const;
+    /*
+     Overloaded equal operator
+     */
+
 private:
     QList<ActiveTile> ListOfActiveTiles;
     int NumberOfActiveTiles;

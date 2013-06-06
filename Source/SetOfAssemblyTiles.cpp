@@ -10,12 +10,13 @@
 //
 
 
-#include "SetOfAssemblyTiles.h"
+#include "../Headers/SetOfAssemblyTiles.h"
 
 SetOfAssemblyTiles::SetOfAssemblyTiles()
 /*
  Default Constructor
  */
+    :  numberOfAssemblyTiles(0), setID_StepNumber(-1)
 {
 
 }
@@ -24,16 +25,23 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile &A)
 /*
  Post-Condition: Set of assembly Tiles is created with one assembly tile in it
  */
+    :  numberOfAssemblyTiles(1), setID_StepNumber(-1)
 {
-
+    listOfAssemblyTiles.append(A);
+    A.setIndex(0);
 }
 
 SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
 /*
  Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
  */
+    : numberOfAssemblyTiles(n)
 {
-
+    for(int i = 0; i < n; i++)
+    {
+        listOfAssemblyTiles.append(A[i]);
+        A[i].setIndex(i);
+    }
 }
 
 SetOfAssemblyTiles::~SetOfAssemblyTiles()
@@ -49,6 +57,14 @@ void SetOfAssemblyTiles::addAssemblyTile(AssemblyTile &T)
  Post-Condition: If assembly tile is not in the set, then it is added to the set
  */
 {
+    if(listOfAssemblyTiles.contains(T))
+    {
+        return;
+    }
+    T.setIndex(listOfAssemblyTiles.last().getIndex() + 1);
+    listOfAssemblyTiles.append(T);
+    numberOfAssemblyTiles++;
+    return;
 
 }
 
@@ -57,7 +73,12 @@ void SetOfAssemblyTiles::removeAssemblyTile(AssemblyTile &T)
  Post-Condition: If assembly tile is in the set, then it is removed from the set
  */
 {
-
+    if(!listOfAssemblyTiles.contains(T))
+    {
+        return;
+    }
+    listOfAssemblyTiles.removeOne(T);
+    numberOfAssemblyTiles--;
 }
 
 bool SetOfAssemblyTiles::checkIfTileIsInTheSet(AssemblyTile &T)
@@ -65,7 +86,7 @@ bool SetOfAssemblyTiles::checkIfTileIsInTheSet(AssemblyTile &T)
  Post-Condition: If T is in the set, then function returns true, and false otherwise
  */
 {
-
+    return listOfAssemblyTiles.contains(T);
 }
 
 AssemblyTile & SetOfAssemblyTiles::getAssemblyTile(int index)
@@ -73,7 +94,7 @@ AssemblyTile & SetOfAssemblyTiles::getAssemblyTile(int index)
  Post-Condition: Return an assembly tile corresponding to the index
  */
 {
-
+    return listOfAssemblyTiles[index];
 }
 
 QList<AssemblyTile> & SetOfAssemblyTiles::getListOfAssemblyTiles()
@@ -81,7 +102,23 @@ QList<AssemblyTile> & SetOfAssemblyTiles::getListOfAssemblyTiles()
  Post-Condition: Returns list of all assembly tiles
  */
 {
+    return listOfAssemblyTiles;
+}
+int SetOfAssemblyTiles::getSetId()
+/*
+ Post-Condition: Returns the id of current set, which corresponds to the step numberOfAssemblyTiles
+ */
+{
+    return setID_StepNumber;
+}
 
+void SetOfAssemblyTiles::setID(int ind)
+/*
+ Post-Condition: Sets the id of current set, which corresponds to the step numberOfAssemblyTiles
+ */
+{
+    setID_StepNumber = ind;
+    return;
 }
 
 bool SetOfAssemblyTiles::isEmpty()
@@ -89,5 +126,13 @@ bool SetOfAssemblyTiles::isEmpty()
  Post-Condition: If set is empty, returns true, and false otherwise
  */
 {
+    return listOfAssemblyTiles.isEmpty();
+}
+bool SetOfAssemblyTiles::operator==(const SetOfAssemblyTiles& other)const
+/*
+ Overloaded equal operator
+ */
+{
+    return this == &other;
 
 }

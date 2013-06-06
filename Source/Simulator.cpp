@@ -10,7 +10,7 @@
 //
 
 
-#include "Simulator.h"
+#include "../Headers/Simulator.h"
 
 Simulator::Simulator(SetOfAssemblyTiles S, QMap<QString, int> &StrengthFunction, int Theta, int StepNumber)
 /*
@@ -26,7 +26,7 @@ void Simulator::initialize()
  Post-Condition: All initialization goes here
  */
 {
-    CurrentStep = 1;
+    currentStep = 1;
 }
 
 void Simulator::startSimulation()
@@ -34,9 +34,9 @@ void Simulator::startSimulation()
  Main function that starts simulation
  */
 {
-    for(CurrentStep; CurrentStep <= NumberOfSteps; CurrentStep++)   //Perform simulation, until the number of required steps is reached
+    for(currentStep; currentStep <= NumberOfSteps; currentStep++)   //Perform simulation, until the number of required steps is reached
     {
-        SetOfAssemblyTiles newSet = createNewSetOfAssemblyTiles();  //New empty set of Assembly tiles
+        SetOfAssemblyTiles newSet;  //New empty set of Assembly tiles
         SetOfAssemblyTiles currentSet = selectMostCurrentSetOfAssemblyTiles();  //most up to date set of assembly tiles
         QList<AssemblyTile>::Iterator i;
         for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
@@ -75,24 +75,28 @@ void Simulator::startSimulation()
             }
 
          }
-
+        if(newSet.isEmpty())    //check if new set is empty
+        {
+            break;
+        }
+        manager.addSet(newSet);
     }
 
 }
 
-SetOfAssemblyTiles & Simulator::createNewSetOfAssemblyTiles()
+/*SetOfAssemblyTiles & Simulator::createNewSetOfAssemblyTiles()
 /*
  Post-Condition: New empty set of assembly tiles is created and returned
- */
+ /
 {
 
-}
+}*/
 SetOfAssemblyTiles & Simulator::selectMostCurrentSetOfAssemblyTiles()
 /*
  Post-Condition: Most updated set of assembly tiles is returned. This set contains tiles that will be picked as First Assembly Tiles
  */
 {
-
+    return manager.getAssemblyTileSet(currentStep - 1);
 }
 
 QList<FitPlace> Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)

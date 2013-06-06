@@ -59,15 +59,29 @@ public:
     /*
      Post-Condition: Returns list of all assembly tiles
      */
+    int getSetId();
+    /*
+     Post-Condition: Returns the id of current set, which corresponds to the step numberOfAssemblyTiles
+     */
 
+    void setID(int ind);
+    /*
+     Post-Condition: Sets the id of current set, which corresponds to the step numberOfAssemblyTiles
+     */
     bool isEmpty();
     /*
      Post-Condition: If set is empty, returns true, and false otherwise
      */
+
+    bool operator==(const SetOfAssemblyTiles& other)const;
+    /*
+     Overloaded equal operator
+     */
 private:
-    QList<AssemblyTile> CollectionOfAssemblyTiles;
-    int NumberOfAssemblyTiles;
-    int SetID_StepNumber;
+
+    QList<AssemblyTile> listOfAssemblyTiles;
+    int numberOfAssemblyTiles;
+    int setID_StepNumber;
 };
 
 #endif  //_SETOFASSEMBLYTILES_H

@@ -35,9 +35,9 @@ public:
     /*
      Post-Condition: Set that corresponds to index is returned
      */
-    SetOfAssemblyTiles & createANewSet();
+    void addSet(SetOfAssemblyTiles &newSet);
     /*
-     Post-Condition: An empty set is added to the collection of sets, and the reference to this set is returned
+     Post-Condition: A new set is added to the collection of sets
      */
     QList<SetOfAssemblyTiles> & getListOfSets();
     /*
@@ -47,17 +47,17 @@ public:
     /*
      Post-Condition: If set S is in the collection, it is deleted
      */
-    void StoreSetOnHardrive(int index);
+    void storeSetOnHardrive(int index);
     /*
      Post-Condition: Set that corresponds to index is stored on the hardrive
      */
-    void LoadSetFromHardrive(int index);
+    void loadSetFromHardrive(int index);
     /*
      Post-Condition: Set that corresponds to index is retrived from the hardrive
      */
 private:
-    QList<SetOfAssemblyTiles> ListOfAssemblyTileSets;
-    int NumberOfSets;
+    QList<SetOfAssemblyTiles> listOfAssemblyTileSets;
+    int numberOfSets;
 };
 
 #endif  //_ASSEMBLYTILESETMANAGER_H

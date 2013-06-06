@@ -10,11 +10,12 @@
 //
 
 
-#include "AssemblyTileSetManager.h"
+#include "../Headers/AssemblyTileSetManager.h"
 AssemblyTileSetManager::AssemblyTileSetManager()
 /*
  Default constructor
  */
+    : numberOfSets(0)
 {
 
 }
@@ -23,8 +24,10 @@ AssemblyTileSetManager::AssemblyTileSetManager(SetOfAssemblyTiles &S)
 /*
  Post-Condition: Assembly tile set manager is created and contains one set of assembly tiles
  */
+    : numberOfSets(1)
 {
-
+    listOfAssemblyTileSets.append(S);
+    S.setID(0);
 }
 
 AssemblyTileSetManager::~AssemblyTileSetManager()
@@ -40,15 +43,18 @@ SetOfAssemblyTiles & AssemblyTileSetManager::getAssemblyTileSet(int index)
  Post-Condition: Set that corresponds to index is returned
  */
 {
-
+    return listOfAssemblyTileSets[index];
 }
 
-SetOfAssemblyTiles & AssemblyTileSetManager::createANewSet()
+void AssemblyTileSetManager::addSet(SetOfAssemblyTiles &newSet)
 /*
- Post-Condition: An empty set is added to the collection of sets, and the reference to this set is returned
+ Post-Condition: A new set is added to the collection of sets
  */
 {
-
+    newSet.setID(numberOfSets);
+    numberOfSets++;
+    listOfAssemblyTileSets.append(newSet);
+    return;
 }
 
 QList<SetOfAssemblyTiles> & AssemblyTileSetManager::getListOfSets()
@@ -56,7 +62,7 @@ QList<SetOfAssemblyTiles> & AssemblyTileSetManager::getListOfSets()
  Post-Condition: List of assembly tile sets is returned
  */
 {
-
+    return listOfAssemblyTileSets;
 }
 
 void AssemblyTileSetManager::DeleteSet(SetOfAssemblyTiles & S)
@@ -64,10 +70,15 @@ void AssemblyTileSetManager::DeleteSet(SetOfAssemblyTiles & S)
  Post-Condition: If set S is in the collection, it is deleted
  */
 {
+    if(listOfAssemblyTileSets.contains(S))
+    {
+        listOfAssemblyTileSets.removeOne(S);
+    }
 
+    return;
 }
 
-void AssemblyTileSetManager::StoreSetOnHardrive(int index)
+void AssemblyTileSetManager::storeSetOnHardrive(int index)
 /*
  Post-Condition: Set that corresponds to index is stored on the hardrive
  */
@@ -75,7 +86,7 @@ void AssemblyTileSetManager::StoreSetOnHardrive(int index)
 
 }
 
-void AssemblyTileSetManager::LoadSetFromHardrive(int index)
+void AssemblyTileSetManager::loadSetFromHardrive(int index)
 /*
  Post-Condition: Set that corresponds to index is retrived from the hardrive
  */
