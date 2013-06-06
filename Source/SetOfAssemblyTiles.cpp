@@ -133,6 +133,17 @@ bool SetOfAssemblyTiles::operator==(const SetOfAssemblyTiles& other)const
  Overloaded equal operator
  */
 {
-    return this == &other;
+    if(this->numberOfAssemblyTiles != other.numberOfAssemblyTiles)
+    {
+        return false;
+    }
+    for(int i = 0; i < this->numberOfAssemblyTiles; i++)
+    {
+        if(!(this->listOfAssemblyTiles[i] == other.listOfAssemblyTiles[i]))
+        {
+            return false;
+        }
+    }
 
+    return true;
 }
