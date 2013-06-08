@@ -43,15 +43,15 @@ public:
     /*
      Post-Condition: List of assembly tile sets is returned
      */
-    void DeleteSet(SetOfAssemblyTiles & S);
+    void deleteSet(SetOfAssemblyTiles &S);
     /*
      Post-Condition: If set S is in the collection, it is deleted
      */
-    void storeSetOnHardrive(int index);
+    void storeSetOnHardrive(int index)const;
     /*
      Post-Condition: Set that corresponds to index is stored on the hardrive
      */
-    void loadSetFromHardrive(int index);
+    void loadSetFromHardrive(int index) const;
     /*
      Post-Condition: Set that corresponds to index is retrived from the hardrive
      */

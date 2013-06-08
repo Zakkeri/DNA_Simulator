@@ -65,7 +65,7 @@ QList<SetOfAssemblyTiles> & AssemblyTileSetManager::getListOfSets()
     return listOfAssemblyTileSets;
 }
 
-void AssemblyTileSetManager::DeleteSet(SetOfAssemblyTiles & S)
+void AssemblyTileSetManager::deleteSet(SetOfAssemblyTiles & S)
 /*
  Post-Condition: If set S is in the collection, it is deleted
  */
@@ -78,7 +78,7 @@ void AssemblyTileSetManager::DeleteSet(SetOfAssemblyTiles & S)
     return;
 }
 
-void AssemblyTileSetManager::storeSetOnHardrive(int index)
+void AssemblyTileSetManager::storeSetOnHardrive(int index) const
 /*
  Post-Condition: Set that corresponds to index is stored on the hardrive
  */
@@ -86,7 +86,7 @@ void AssemblyTileSetManager::storeSetOnHardrive(int index)
 
 }
 
-void AssemblyTileSetManager::loadSetFromHardrive(int index)
+void AssemblyTileSetManager::loadSetFromHardrive(int index)const
 /*
  Post-Condition: Set that corresponds to index is retrived from the hardrive
  */

@@ -17,6 +17,19 @@
 #include<QMap>
 #include"ActiveTile.h";
 
+struct freeActiveLabel
+{
+    freeActiveLabel(int l, direction dir, QPair<int, int> xy)
+        :label(l), side(dir), xyCoord(xy)
+    {
+
+    }
+
+    int label;
+    direction side;
+    QPair<int, int> xyCoord;
+};
+
 class AssemblyTile
 {
 public:
@@ -34,7 +47,7 @@ public:
     /*
      Default destructor
      */
-    ActiveTile & GetTileFromCoordinates(QPair<int, int> coordinate);
+    ActiveTile & getTileFromCoordinates(QPair<int, int> coordinate);
     /*
      Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
      */
@@ -67,6 +80,11 @@ public:
      Post-Condition: Sets the value of static integer currentNumber to value of num
      */
 
+    QList<freeActiveLabel> &getListOfFreeSides();
+    /*
+     Post-Conditions: listOfFreeSides is returned
+     */
+
     bool operator==(const AssemblyTile & other)const;
     /*
      Overloaded equal operator
@@ -77,6 +95,7 @@ private:
     int NumberOfActiveTiles;
     QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
     int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
+    QList<freeActiveLabel> listOfFreeSides; //will hold a set of all free sides of the whole Assembly tile
     static int currentNumber;
 
 };

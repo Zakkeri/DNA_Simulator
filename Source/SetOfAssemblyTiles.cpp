@@ -35,7 +35,7 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
 /*
  Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
  */
-    : numberOfAssemblyTiles(n)
+    : numberOfAssemblyTiles(n), setID_StepNumber(-1)
 {
     for(int i = 0; i < n; i++)
     {
@@ -68,7 +68,7 @@ void SetOfAssemblyTiles::addAssemblyTile(AssemblyTile &T)
 
 }
 
-void SetOfAssemblyTiles::removeAssemblyTile(AssemblyTile &T)
+void SetOfAssemblyTiles::removeAssemblyTile(const AssemblyTile &T)
 /*
  Post-Condition: If assembly tile is in the set, then it is removed from the set
  */
@@ -81,7 +81,7 @@ void SetOfAssemblyTiles::removeAssemblyTile(AssemblyTile &T)
     numberOfAssemblyTiles--;
 }
 
-bool SetOfAssemblyTiles::checkIfTileIsInTheSet(AssemblyTile &T)
+bool SetOfAssemblyTiles::checkIfTileIsInTheSet(const AssemblyTile &T)const
 /*
  Post-Condition: If T is in the set, then function returns true, and false otherwise
  */
@@ -104,7 +104,7 @@ QList<AssemblyTile> & SetOfAssemblyTiles::getListOfAssemblyTiles()
 {
     return listOfAssemblyTiles;
 }
-int SetOfAssemblyTiles::getSetId()
+int SetOfAssemblyTiles::getSetId() const
 /*
  Post-Condition: Returns the id of current set, which corresponds to the step numberOfAssemblyTiles
  */
@@ -121,7 +121,7 @@ void SetOfAssemblyTiles::setID(int ind)
     return;
 }
 
-bool SetOfAssemblyTiles::isEmpty()
+bool SetOfAssemblyTiles::isEmpty()const
 /*
  Post-Condition: If set is empty, returns true, and false otherwise
  */

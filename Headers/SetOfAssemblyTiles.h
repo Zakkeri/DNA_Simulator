@@ -41,12 +41,12 @@ public:
     /*
      Post-Condition: If assembly tile is not in the set, then it is added to the set
      */
-    void removeAssemblyTile(AssemblyTile &T);
+    void removeAssemblyTile(const AssemblyTile &T);
     /*
      Post-Condition: If assembly tile is in the set, then it is removed from the set
      */
 
-    bool checkIfTileIsInTheSet(AssemblyTile &T);
+    bool checkIfTileIsInTheSet(const AssemblyTile &T) const;
     /*
      Post-Condition: If T is in the set, then function returns true, and false otherwise
      */
@@ -59,7 +59,7 @@ public:
     /*
      Post-Condition: Returns list of all assembly tiles
      */
-    int getSetId();
+    int getSetId()const;
     /*
      Post-Condition: Returns the id of current set, which corresponds to the step numberOfAssemblyTiles
      */
@@ -68,7 +68,7 @@ public:
     /*
      Post-Condition: Sets the id of current set, which corresponds to the step numberOfAssemblyTiles
      */
-    bool isEmpty();
+    bool isEmpty() const;
     /*
      Post-Condition: If set is empty, returns true, and false otherwise
      */
