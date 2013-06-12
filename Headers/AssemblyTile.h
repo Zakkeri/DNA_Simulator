@@ -96,8 +96,8 @@ private:
     QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
     int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
     QList<freeActiveLabel> listOfFreeSides; //will hold a set of all free sides of the whole Assembly tile
-    static int currentNumber;
+    //static int currentNumber;
 
 };
-int AssemblyTile::currentNumber = 0;
+//int AssemblyTile::currentNumber = 0;
 #endif  //_ASSEMBLYTILE_H
