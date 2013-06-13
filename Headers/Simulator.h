@@ -27,7 +27,7 @@ typedef struct fittingSpot
 
     QPair<int, int> firstTile;
     QPair<int, int> secondtTile;
-    int  rotation;
+    int rotation;
 }FitPlace;
 
 class Simulator
