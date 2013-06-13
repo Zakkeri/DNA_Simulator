@@ -19,8 +19,15 @@
 
 typedef struct fittingSpot
 {
+    fittingSpot(QPair<int, int>& c1, QPair<int, int> &c2, int num)
+        : firstTile(c1), secondtTile(c2), rotation(num)
+    {
+
+    }
+
     QPair<int, int> firstTile;
     QPair<int, int> secondtTile;
+    int  rotation;
 }FitPlace;
 
 class Simulator
@@ -47,11 +54,11 @@ private:
     /*
      Post-Condition: Most updated set of assembly tiles is returned. This set contains tiles that will be picked as First Assembly Tiles
      */
-    QList<FitPlace> findFittingSpots(AssemblyTile &T1,AssemblyTile &T2);
+    QList<FitPlace*> *findFittingSpots(AssemblyTile &T1,AssemblyTile &T2);
     /*
      Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
      */
-    AssemblyTile * attemptToCombine(AssemblyTile &T1,AssemblyTile &T2, QPair<int, int> first, QPair<int, int> second);
+    AssemblyTile * attemptToCombine(AssemblyTile T1, AssemblyTile T2, FitPlace *place);
     /*
      Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
      If not successful, NULL is returned

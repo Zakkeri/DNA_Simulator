@@ -54,16 +54,18 @@ void Simulator::startSimulation()
                     {
                         continue;
                     }
-                    QList<FitPlace> spots = findFittingSpots(t1, t2);   //get all fitting spots
-                    if(spots.empty())   //check if there are any fitting spot
+                    QList<FitPlace*> *spots;
+                    spots = findFittingSpots(t1, t2);   //get all fitting spots
+                    if(spots == 0)   //check if there are any fitting spot
                     {
                         continue;
                     }
-                    QList<FitPlace>::Iterator fit;
-                    for(fit = spots.begin(); fit!=spots.end(); fit++)  //iterata through each fitting spot
+                    QList<FitPlace*>::Iterator fit;
+                    for(fit = spots->begin(); fit!=spots->end(); fit++)  //iterata through each fitting spot
                     {
-                        FitPlace next = *fit;   //get next spot
-                        AssemblyTile* combined = attemptToCombine(t1, t2, next.firstTile, next.secondtTile);
+                        FitPlace * next = *fit;   //get next spot
+                        AssemblyTile* combined = attemptToCombine(t1, t2, next);
+                        delete next;    //free the memory
                         if(combined == 0)   //check if tiles were combined
                         {
                             continue;
@@ -71,6 +73,8 @@ void Simulator::startSimulation()
 
                         newSet.addAssemblyTile(*combined);
                     }
+
+                    delete spots;   //free the memory
                 }
             }
 
@@ -99,15 +103,49 @@ SetOfAssemblyTiles & Simulator::selectMostCurrentSetOfAssemblyTiles()
     return manager.getAssemblyTileSet(currentStep - 1);
 }
 
-QList<FitPlace> Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
+QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
 /*
  Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
  */
 {
+    QList<FitPlace*> *fitPlaces = new QList<FitPlace*>;
+    foreach(freeActiveLabel label1, T1.getListOfFreeSides())
+    {
+        foreach(freeActiveLabel label2, T2.getListOfFreeSides())
+        {
+            if(label1.match(label2))
+            {
+                QPair<int, int> coord;
+                switch(label1.side)
+                {
+                    case x: coord.first = label1.xyCoord.first + 1;
+                            coord.second = label1.xyCoord.second;
+                            break;
 
+                    case y: coord.first = label1.xyCoord.first;
+                            coord.second = label1.xyCoord.second + 1;
+                            break;
+
+                    case _x: coord.first = label1.xyCoord.first - 1;
+                             coord.second = label1.xyCoord.second;
+                             break;
+
+                    case _y: coord.first = label1.xyCoord.first;
+                             coord.second = label1.xyCoord.second - 1;
+                             break;
+
+                }
+                int rotation = (label1.side - ((label2.side + 2)%4)) % 4;
+                FitPlace *match = new FitPlace(coord, label2.xyCoord, rotation);
+                fitPlaces->append(match);
+            }
+        }
+    }
+
+    return fitPlaces;
 }
 
-AssemblyTile * Simulator::attemptToCombine(AssemblyTile &T1,AssemblyTile &T2, QPair<int, int> first, QPair<int, int> second)
+AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitPlace *place)
 /*
  Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
  If not successful, NULL is returned
