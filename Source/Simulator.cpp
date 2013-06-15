@@ -9,10 +9,10 @@
 //
 //
 
-
+#include <QDebug>
 #include "../Headers/Simulator.h"
 
-Simulator::Simulator(SetOfAssemblyTiles S, QMap<QString, int> &StrengthFunction, int Theta, int StepNumber)
+Simulator::Simulator(SetOfAssemblyTiles S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
@@ -56,8 +56,9 @@ void Simulator::startSimulation()
                     }
                     QList<FitPlace*> *spots;
                     spots = findFittingSpots(t1, t2);   //get all fitting spots
-                    if(spots == 0)   //check if there are any fitting spot
+                    if(spots->isEmpty())   //check if there are any fitting spot
                     {
+                        delete spots;   //free memory
                         continue;
                     }
                     QList<FitPlace*>::Iterator fit;
@@ -108,15 +109,15 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
  Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
  */
 {
-    QList<FitPlace*> *fitPlaces = new QList<FitPlace*>;
-    foreach(freeActiveLabel label1, T1.getListOfFreeSides())
+    QList<FitPlace*> *fitPlaces = new QList<FitPlace*>; //create a new list of fit places
+    foreach(freeActiveLabel label1, T1.getListOfFreeSides())    //for each free side of T1
     {
-        foreach(freeActiveLabel label2, T2.getListOfFreeSides())
+        foreach(freeActiveLabel label2, T2.getListOfFreeSides())//find a matching label from T2
         {
-            if(label1.match(label2))
+            if(label1.match(label2))    //if two labels match, then create a new fitting spot
             {
                 QPair<int, int> coord;
-                switch(label1.side)
+                switch(label1.side) //calculate first coordinate
                 {
                     case x: coord.first = label1.xyCoord.first + 1;
                             coord.second = label1.xyCoord.second;
@@ -135,8 +136,8 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
                              break;
 
                 }
-                int rotation = (label1.side - ((label2.side + 2)%4)) % 4;
-                FitPlace *match = new FitPlace(coord, label2.xyCoord, rotation);
+                int rotation = (label1.side - ((label2.side + 2)%4)) % 4;   //calculate rotation
+                FitPlace *match = new FitPlace(coord, label2.xyCoord, rotation);    //create FirPlace and append it to the list
                 fitPlaces->append(match);
             }
         }
@@ -151,30 +152,222 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
  If not successful, NULL is returned
  */
 {
+    T2.rotateAssemblyTile(place->secondtTile, place->rotation); //rotate second tile
 
+    QPair<int, int> shift(place->firstTile.first - place->secondtTile.first, place->firstTile.second - place->secondtTile.second);
+    T2.moveAssemblyTile(shift); //shift second tile
+
+    QList<boundaryPoint*> boundaryList;
+    if(checkOverlapAndStrength(T1, T2, &boundaryList)) //check if two tiles overlap and have enough bond strength
+    {
+        foreach(boundaryPoint* next, boundaryList)  //if not, free the memory and return 0
+        {
+            delete next;
+        }
+
+        return 0;
+    }
+
+
+    AssemblyTile *newTile = new AssemblyTile(T1, T2, &boundaryList);    //if yes, create a new tile
+
+    tileModificationFunction(*newTile, &boundaryList);  //apply tile modificattion function
+
+    if(!boundaryList.isEmpty())
+    {
+        qDebug()<<"Error!!!, List must be empty";
+    }
+
+    return newTile;
 }
 
-bool Simulator::checkXYOverlap(AssemblyTile & T1, AssemblyTile & T2)
+bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QList<boundaryPoint*> *boundary)
 /*
  Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
- return true, if there is an overlap, and false otherwise
+ return true, if there is an overlap, and false otherwise. Also construct a list of boundary points, and check bond strength
  */
 {
+    int strength = 0;
+    if(T1.getListOfActiveTiles().length() > T2.getListOfActiveTiles().length()) //if T2 has less active tiles, then process it
+    {
+        foreach(ActiveTile t2, T2.getListOfActiveTiles())   //for each active tile in T2
+        {
+            ActiveTile *temp = T1.getTileFromCoordinates(t2.getCoordinates());  //check if there is an overlap
+            if(temp != 0)   //if there is an overlap, then return true
+            {
+                return true;
+            }
+
+
+            for(int i = 0; i < 4; i++)  //otherwise, check if t2 is on the boundary
+            {
+                if(t2.getNeighbor((direction)i))    //if t2 has a neighbor in the i'th direction, then go to next side
+                {
+                    continue;
+                }
+                int x = t2.getCoordinates().first;
+                int y = t2.getCoordinates().second;
+
+                switch(i)   //otherwise check if there is any active tile from assembly tile T1, and if so add boundary point to the list
+                {
+                case 0: if(T1.getTileFromCoordinates(QPair<int, int>(x + 1, y)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t2, *T1.getTileFromCoordinates(QPair<int, int>(x + 1, y)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)0);
+                        boundary->append(bound);
+
+                    }
+                         break;
+
+                case 1: if(T1.getTileFromCoordinates(QPair<int, int>(x , y + 1)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t2, *T1.getTileFromCoordinates(QPair<int, int>(x, y + 1)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)1);
+                        boundary->append(bound);
+                    }
+                     break;
+
+                case 2: if(T1.getTileFromCoordinates(QPair<int, int>(x - 1, y)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t2, *T1.getTileFromCoordinates(QPair<int, int>(x - 1, y)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)2);
+                        boundary->append(bound);
+                    }
+                     break;
+
+                case 3: if(T1.getTileFromCoordinates(QPair<int, int>(x, y - 1)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t2, *T1.getTileFromCoordinates(QPair<int, int>(x, y - 1)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)3);
+                        boundary->append(bound);
+                    }
+                     break;
+                }
+            }
+
+        }
+
+    }
+    else
+    {
+        foreach(ActiveTile t1, T1.getListOfActiveTiles())   //else T1 has less active tiles, so process all active tiles of T1
+        {
+            ActiveTile *temp = T2.getTileFromCoordinates(t1.getCoordinates());  //check if there is an overlap
+            if(temp != 0)   //if there is an overlap, then return 0
+            {
+                return true;
+            }
+
+
+            for(int i = 0; i < 4; i++)  //otherwise, check if t2 is on the boundary
+            {
+                if(t1.getNeighbor((direction)i))    //if t2 has a neighbor in the i'th direction, then go to next side
+                {
+                    continue;
+                }
+                int x = t1.getCoordinates().first;
+                int y = t1.getCoordinates().second;
+
+                switch(i)   //otherwise check if there is any active tile from assembly tile T1, and if so add boundary point to the list
+                {
+                case 0: if(T2.getTileFromCoordinates(QPair<int, int>(x + 1, y)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t1, *T2.getTileFromCoordinates(QPair<int, int>(x + 1, y)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)0);
+                        boundary->append(bound);
+
+                    }
+                         break;
+
+                case 1: if(T2.getTileFromCoordinates(QPair<int, int>(x , y + 1)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t1, *T2.getTileFromCoordinates(QPair<int, int>(x, y + 1)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)1);
+                        boundary->append(bound);
+                    }
+                     break;
+
+                case 2: if(T2.getTileFromCoordinates(QPair<int, int>(x - 1, y)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t1, *T2.getTileFromCoordinates(QPair<int, int>(x - 1, y)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)2);
+                        boundary->append(bound);
+                    }
+                     break;
+
+                case 3: if(T2.getTileFromCoordinates(QPair<int, int>(x, y - 1)))
+                    {
+                        if(strength < this->ThetaParameter)
+                        {
+                            strength += getBondStrength(t1, *T2.getTileFromCoordinates(QPair<int, int>(x, y - 1)), (direction)i);
+                        }
+                        boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)3);
+                        boundary->append(bound);
+                    }
+                     break;
+                }
+            }
+
+        }
+
+    }
+
+    if(strength < this->ThetaParameter)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boundary)
+/*
+ Post-Condition: returns the highest bond strenghth of tile t1 and t2 at specified direction of tile t1
+ */
+{
+    int strength = 0;
+    foreach(int label1, t1.getActiveLabels(boundary))
+    {
+        foreach(int label2, t2.getActiveLabels((direction)(boundary + 2)))
+        {
+            if(label1 + label2 == 0)
+            {
+                if(strength < abs(StrengthMap[label1]))
+                {
+                    strength = abs(StrengthMap[label1]);
+                }
+            }
+        }
+    }
+
+    return strength;
 
 }
 
-bool Simulator::checkBondsStrength(AssemblyTile & T1, AssemblyTile & T2)
+void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *> *boundary)
 /*
- Post-Condition: Check if T1 and T2 can be combined satisfying bond strength condition.
- return true if they can, and false if they can't
- */
-{
-
-}
-
-void Simulator::TileModificationFunction(AssemblyTile & T)
-/*
- Post-Condition: Apply tile modification function to tile T
+ Post-Condition: Apply tile modification function to tile T, also make boundary list empty at the end
  */
 {
 
