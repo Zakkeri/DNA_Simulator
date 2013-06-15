@@ -32,7 +32,7 @@ typedef struct signal
     bool operator == (const signal otherSignal) const;
 
     signal(int l, direction T)	//Signal constructor
-		:label(l), Target(T){}
+        :label(abs(l)), Target(T){}
 
 } Signal;
 
@@ -125,10 +125,10 @@ public:
     void RemoveTransmissionSignals(direction side, QList<Signal> signalList);
 
     // Similarly for initiation signals
-    void AddInitiationSignal(direction side, Signal signal);
-    void AddInitiationSignals(direction side, QList<Signal> signalList);
-    void RemoveInitiationSignal(direction side, Signal signal);
-    void RemoveInitiationSignals(direction side, QList<Signal> signalList);
+    void AddInitiationSignal(Signal signal);
+    void AddInitiationSignals(QList<Signal> signalList);
+    void RemoveInitiationSignal(Signal signal);
+    void RemoveInitiationSignals(QList<Signal> signalList);
 
 	// Post-Conditions:  Returns a list of a side's Labels or Signals
     QList<int> getActiveLabels(direction side);

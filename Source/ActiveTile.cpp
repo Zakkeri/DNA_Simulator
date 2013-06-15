@@ -195,22 +195,22 @@
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Similarly for initiation signals
-    void ActiveTile::AddInitiationSignal(direction side, Signal signal)
+    void ActiveTile::AddInitiationSignal(Signal signal)
     {
 
     }
 
-    void ActiveTile::AddInitiationSignals(direction side, QList<Signal> signalList)
+    void ActiveTile::AddInitiationSignals(QList<Signal> signalList)
     {
 
     }
 
-    void ActiveTile::RemoveInitiationSignal(direction side, Signal signal)
+    void ActiveTile::RemoveInitiationSignal(Signal signal)
     {
 
     }
 
-    void ActiveTile::RemoveInitiationSignals(direction side, QList<Signal> signalList)
+    void ActiveTile::RemoveInitiationSignals(QList<Signal> signalList)
     {
 
     }
