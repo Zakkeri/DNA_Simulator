@@ -19,7 +19,7 @@
 
 typedef struct fittingSpot
 {
-    fittingSpot(QPair<int, int>& c1, QPair<int, int> &c2, int num)
+    fittingSpot(const QPair<int, int>& c1, const QPair<int, int> &c2,const int num)
         : firstTile(c1), secondtTile(c2), rotation(num)
     {
 
@@ -30,10 +30,22 @@ typedef struct fittingSpot
     int rotation;
 }FitPlace;
 
+struct boundaryPoint
+{
+    boundaryPoint(const bool tile,const QPair<int, int> coord,const direction dir)
+        : isT1(tile), x_y(coord), side(dir)
+    {
+
+    }
+    bool isT1;  //to tell from which assembly tile the boundary point is infered
+    QPair<int, int> x_y; //coordinates of tile1 on the boundary point
+    direction side; //where the boundary is
+};
+
 class Simulator
 {
 public:
-    Simulator(SetOfAssemblyTiles S, QMap<QString, int> &StrengthFunction, int Theta, int StepNumber);
+    Simulator(SetOfAssemblyTiles S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber);
     /*
      Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
      */
@@ -64,26 +76,25 @@ private:
      If not successful, NULL is returned
      */
 
-    bool checkXYOverlap(AssemblyTile & T1, AssemblyTile & T2);
+    bool checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QList<boundaryPoint *> *boundary);
     /*
      Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
-     return true, if there is an overlap, and false otherwise
+     return true, if there is an overlap, and false otherwise. Also construct a list of boundary points, and check bond strength
      */
-    bool checkBondsStrength(AssemblyTile & T1, AssemblyTile & T2);
+    bool getBondStrength(ActiveTile &t1, ActiveTile &t2, direction boundary);
     /*
-     Post-Condition: Check if T1 and T2 can be combined satisfying bond strength condition.
-     return true if they can, and false if they can't
+     Post-Condition: returns the highest bond strenghth of tile t1 and t2 at specified direction of tile t1
      */
-    void TileModificationFunction(AssemblyTile & T);
+    void tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *> *boundary);
     /*
-     Post-Condition: Apply tile modification function to tile T
+     Post-Condition: Apply tile modification function to tile T, also make boundary list empty at the end
      */
 
 
     //Attributes go next
     int currentStep;
     AssemblyTileSetManager manager;
-    QMap<QString, int> StrengthMap;
+    QMap<int, int> StrengthMap;
     int ThetaParameter;
     int NumberOfSteps;
 
