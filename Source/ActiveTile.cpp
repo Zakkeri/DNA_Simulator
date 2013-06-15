@@ -15,8 +15,8 @@
 
 	ActiveTile::ActiveTile()
 	{
-		TileID = counter;
-		counter++;
+        TileID = ActiveTile::counter;
+        ActiveTile::counter++;
 
 	}
 
@@ -28,8 +28,8 @@
     ActiveTile::ActiveTile(const QList<QList<int> > &ActiveLabels, const QList<QList<int> >  &InactiveLabels,
                            const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals)
     {
-        TileID = counter;
-        counter++;
+        TileID = ActiveTile::counter;
+        ActiveTile::counter++;
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -193,6 +193,27 @@
         }
 	}
 
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Similarly for initiation signals
+    void ActiveTile::AddInitiationSignal(direction side, Signal signal)
+    {
+
+    }
+
+    void ActiveTile::AddInitiationSignals(direction side, QList<Signal> signalList)
+    {
+
+    }
+
+    void ActiveTile::RemoveInitiationSignal(direction side, Signal signal)
+    {
+
+    }
+
+    void ActiveTile::RemoveInitiationSignals(direction side, QList<Signal> signalList)
+    {
+
+    }
 
 
 	// Post-Conditions:  Returns a list of a side's Labels or Signals
@@ -217,6 +238,11 @@
 		return Side[side].TransmissionSignals;
 	}
 
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    QList<Signal> ActiveTile::getInitiationSignals()
+    {
+
+    }
 
 
 	// Post-Conditions: Get functions for various properties, they return their appropriate type

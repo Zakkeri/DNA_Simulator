@@ -45,7 +45,7 @@ typedef struct TileSide
 
 	// Default Contructor, makes a TileSide with no signals or labels
 	// These should be populated later by the ActiveTile they're a part of
-	TileSide();
+    //TileSide();
 
 } TileSide;
 
@@ -124,14 +124,18 @@ public:
     void RemoveTransmissionSignal(direction side, Signal signal);
     void RemoveTransmissionSignals(direction side, QList<Signal> signalList);
 
-
+    // Similarly for initiation signals
+    void AddInitiationSignal(direction side, Signal signal);
+    void AddInitiationSignals(direction side, QList<Signal> signalList);
+    void RemoveInitiationSignal(direction side, Signal signal);
+    void RemoveInitiationSignals(direction side, QList<Signal> signalList);
 
 	// Post-Conditions:  Returns a list of a side's Labels or Signals
     QList<int> getActiveLabels(direction side);
     QList<int> getInactiveLabels(direction side);
     QList<Signal> getActivationSignals(direction side);
     QList<Signal> getTransmissionSignals(direction side);
-
+    QList<Signal> getInitiationSignals();
 
 
 	// Post-Conditions: Get functions for various properties, they return their appropriate type
@@ -150,7 +154,7 @@ public:
     void moveTile(QPair<int, int> shift);
 
 private:
-	static int counter;
+    static int counter;
 	int TileID;
     QPair<int, int> X_Y_Coordinates;
     ActiveTile *Neighbors[4];
