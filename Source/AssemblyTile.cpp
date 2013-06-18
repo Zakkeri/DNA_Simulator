@@ -22,7 +22,7 @@ AssemblyTile::AssemblyTile(ActiveTile &T)
 
 }
 
-AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2)
+AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoint *> *boundary)
 /*
  Constructor with for assembly tile
  Post-Condition: Assembly tile object is created from combination of two assembly tiles
@@ -39,7 +39,7 @@ AssemblyTile::~AssemblyTile()
 
 }
 
-ActiveTile & AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
+ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
 /*
  Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
  */
@@ -95,7 +95,7 @@ void AssemblyTile::setCurrentNumber(int num)
 
 }
 
-QList<freeActiveLabel> &getListOfFreeSides()
+QList<freeActiveLabel> &AssemblyTile::getListOfFreeSides()
 /*
  Post-Conditions: listOfFreeSides is returned
  */

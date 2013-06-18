@@ -15,8 +15,9 @@
 
 	ActiveTile::ActiveTile()
 	{
-        TileID = ActiveTile::counter;
-        ActiveTile::counter++;
+        //TileID = ActiveTile::counter;
+       // ActiveTile::counter++;
+        TileID = 0;
 
 	}
 
@@ -26,10 +27,11 @@
 	// Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
     
     ActiveTile::ActiveTile(const QList<QList<int> > &ActiveLabels, const QList<QList<int> >  &InactiveLabels,
-                           const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals)
+                           const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals, int ID)
     {
-        TileID = ActiveTile::counter;
-        ActiveTile::counter++;
+       // TileID = ActiveTile::counter;
+        //ActiveTile::counter++;
+        TileID = ID;
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -49,8 +51,9 @@
 	ActiveTile::ActiveTile(const ActiveTile &otherTile)
 	{
         X_Y_Coordinates = otherTile.X_Y_Coordinates;
-		TileID = counter;
-		counter++;
+        //TileID = counter;
+        //counter++;
+        TileID = otherTile.getId();
 	}
 
 
@@ -245,9 +248,15 @@
     }
 
 
+    //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
+    void ActiveTile::activate(direction sourceSide, Signal activationSignal)
+    {
+
+    }
+
 	// Post-Conditions: Get functions for various properties, they return their appropriate type
 
-	int ActiveTile::getId()
+    int ActiveTile::getId() const
 	{
 		return TileID;
 	}
@@ -287,6 +296,11 @@
 		X_Y_Coordinates.second += shift.second;
 	}
 
+    //Post-Conditions: Set functions for various properties
+    void ActiveTile::setId(int id)
+    {
+        TileID = id;
+    }
 
     // Operator == for signals
     // Post-Conditions:  Returns true iff the signal and the target are the same

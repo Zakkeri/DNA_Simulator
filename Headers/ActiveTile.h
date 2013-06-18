@@ -62,7 +62,7 @@ public:
 	// Constructor with neighbors being not specified
 	// Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
     ActiveTile(const QList<QList<int> > &ActiveLabels, const QList<QList<int> > &InactiveLabels,
-               const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals);
+               const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals, int ID);
 
 
 
@@ -138,11 +138,16 @@ public:
     QList<Signal> getInitiationSignals();
 
 
+    //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
+    void activate(direction sourceSide, Signal activationSignal);
+
 	// Post-Conditions: Get functions for various properties, they return their appropriate type
-	int getId();
+    int getId()const;
     QPair<int, int> getCoordinates();
     ActiveTile * getNeighbor(direction from);
 
+    //Post-Conditions: Set functions for various properties
+    void setId(int id);
 
 
     // Post-Conditions: Tile is rotated counterclockwise required number of times
@@ -154,7 +159,7 @@ public:
     void moveTile(QPair<int, int> shift);
 
 private:
-    static int counter;
+  //  static int counter;
 	int TileID;
     QPair<int, int> X_Y_Coordinates;
     ActiveTile *Neighbors[4];
@@ -162,6 +167,6 @@ private:
     QList<Signal> InitiationSignals;
 };
 
-int ActiveTile::counter = 0;
+//int ActiveTile::counter = 0;
 
 #endif  //_ACTIVETILE_H

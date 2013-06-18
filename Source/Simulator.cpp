@@ -8,11 +8,11 @@
 //  @ Author : 
 //
 //
-
+ #include <QQueue>
 #include <QDebug>
 #include "../Headers/Simulator.h"
 
-Simulator::Simulator(SetOfAssemblyTiles S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
+Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
@@ -36,16 +36,16 @@ void Simulator::startSimulation()
 {
     for(currentStep; currentStep <= NumberOfSteps; currentStep++)   //Perform simulation, until the number of required steps is reached
     {
-        SetOfAssemblyTiles newSet;  //New empty set of Assembly tiles
+        SetOfAssemblyTiles *newSet = new SetOfAssemblyTiles;  //New empty set of Assembly tiles
         SetOfAssemblyTiles currentSet = selectMostCurrentSetOfAssemblyTiles();  //most up to date set of assembly tiles
         QList<AssemblyTile>::Iterator i;
         for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
         {
             AssemblyTile t1 = *i;   //get next first assembly tile t1
-            QList<SetOfAssemblyTiles>::Iterator j;
+            QList<SetOfAssemblyTiles*>::Iterator j;
             for(j = manager.getListOfSets().begin(); j!=manager.getListOfSets().end(); j++)//iterate through every set of assembly tiles
             {
-                SetOfAssemblyTiles temp = *j;   //get temporal set of assembly tiles for picking the second assembly tile
+                SetOfAssemblyTiles temp = **j;   //get temporal set of assembly tiles for picking the second assembly tile
                 QList<AssemblyTile>::Iterator k;
                 for(k = temp.getListOfAssemblyTiles().begin(); k!=temp.getListOfAssemblyTiles().end(); k++)    //each tile in temp iterate through and try to combine two tiles
                 {
@@ -72,7 +72,7 @@ void Simulator::startSimulation()
                             continue;
                         }
 
-                        newSet.addAssemblyTile(*combined);
+                        newSet->addAssemblyTile(*combined);
                     }
 
                     delete spots;   //free the memory
@@ -80,12 +80,15 @@ void Simulator::startSimulation()
             }
 
          }
-        if(newSet.isEmpty())    //check if new set is empty
+        if(newSet->isEmpty())    //check if new set is empty
         {
+            delete newSet;
             break;
         }
         manager.addSet(newSet);
     }
+
+    qDebug()<<"Simulation is over!";
 
 }
 
@@ -370,5 +373,67 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
  Post-Condition: Apply tile modification function to tile T, also make boundary list empty at the end
  */
 {
+    foreach(boundaryPoint* next, *boundary) //process every boundary
+    {
+        ActiveTile* mainTile = T.getTileFromCoordinates(next->x_y); //get main tile of the boundary
+        ActiveTile* connectedTile = mainTile->getNeighbor(next->side);  //get connected to the boundary tile
+        foreach(Signal init, connectedTile->getInitiationSignals())  //for each initiation signal of the connected tile
+        {
+            bool isDone = false; //flag that will tell if initiation signal was processed
+            if(init.Target != (direction)(next->side + 2))// process only initiation signals that point to the boundary direction
+            {
+                continue;
+            }
 
+            foreach(Signal activ, mainTile->getActivationSignals(next->side)) //first, check if initiation signal have corresponding activation signal
+            {
+                if(activ.label - init.label != 0)   //if labels don't match, pick next one
+                {
+                    continue;
+                }
+
+                //There should be activate() function in the ActiveTile class
+                mainTile->activate(next->side, activ);
+
+                connectedTile->RemoveInitiationSignal(init);    //remove initiation signal, since it was processed
+                isDone = true;
+            }
+
+            if(isDone)  //if activation signal was found, then we are done
+            {
+                continue;
+            }
+
+            QQueue<Signal> initSignal;   //list of newly created initiation signals
+            foreach(Signal transm, mainTile->getTransmissionSignals(next->side))    //next, check if there are any transmission signal that can be transmitted
+            {
+                if(transm.label - init.label != 0)  //if labels don't match, pick next one
+                {
+                    continue;
+                }
+
+                //else, replace transmission signal with initiation signal
+
+                mainTile->RemoveTransmissionSignal(next->side, transm);
+
+                connectedTile->RemoveInitiationSignal(init);
+
+                if(mainTile->getNeighbor(transm.Target) == 0)   //if tile has no neighbor in the signal direction
+                {
+                    mainTile->AddInitiationSignal(Signal(init.label, transm.Target));   //then add initiation signal to the tile
+                }
+                else
+                {
+                    initSignal.enqueue(Signal(init.label, transm.Target));   //otherwise put it in the queue for further processing
+                }
+            }
+
+            while(!initSignal.isEmpty())
+            {
+                Signal next = initSignal.dequeue();
+
+            }
+
+        }
+    }
 }

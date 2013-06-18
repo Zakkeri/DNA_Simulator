@@ -16,7 +16,7 @@
 #include<QList>
 #include<QMap>
 #include"ActiveTile.h";
-
+//#include"../Headers/Simulator.h"
 struct freeActiveLabel
 {
     freeActiveLabel(int l, direction dir, QPair<int, int> xy)
@@ -35,6 +35,8 @@ struct freeActiveLabel
     QPair<int, int> xyCoord;
 };
 
+struct boundaryPoint;
+
 class AssemblyTile
 {
 public:
@@ -43,7 +45,7 @@ public:
      Constructor with one tile
      Post-Condition: Assembly tile object that consists of only one tile is created
      */
-    AssemblyTile(AssemblyTile &T1, AssemblyTile &T2);
+    AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoint *> *boundary);
     /*
      Constructor with for assembly tile
      Post-Condition: Assembly tile object is created from combination of two assembly tiles
@@ -52,7 +54,7 @@ public:
     /*
      Default destructor
      */
-    ActiveTile & getTileFromCoordinates(QPair<int, int> coordinate);
+    ActiveTile * getTileFromCoordinates(QPair<int, int> coordinate);
     /*
      Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
      */
@@ -85,7 +87,7 @@ public:
      Post-Condition: Sets the value of static integer currentNumber to value of num
      */
 
-    QList<freeActiveLabel> &getListOfFreeSides();
+    QList<freeActiveLabel> & getListOfFreeSides();
     /*
      Post-Conditions: listOfFreeSides is returned
      */

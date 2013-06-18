@@ -45,7 +45,7 @@ struct boundaryPoint
 class Simulator
 {
 public:
-    Simulator(SetOfAssemblyTiles S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber);
+    Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber);
     /*
      Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
      */

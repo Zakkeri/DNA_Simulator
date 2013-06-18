@@ -22,7 +22,7 @@ public:
     /*
      Default constructor
      */
-    AssemblyTileSetManager(SetOfAssemblyTiles &S);
+    AssemblyTileSetManager(SetOfAssemblyTiles *S);
     /*
      Post-Condition: Assembly tile set manager is created and contains one set of assembly tiles
      */
@@ -35,15 +35,15 @@ public:
     /*
      Post-Condition: Set that corresponds to index is returned
      */
-    void addSet(SetOfAssemblyTiles &newSet);
+    void addSet(SetOfAssemblyTiles *newSet);
     /*
      Post-Condition: A new set is added to the collection of sets
      */
-    QList<SetOfAssemblyTiles> & getListOfSets();
+    QList<SetOfAssemblyTiles *> &getListOfSets();
     /*
      Post-Condition: List of assembly tile sets is returned
      */
-    void deleteSet(SetOfAssemblyTiles &S);
+    void deleteSet(SetOfAssemblyTiles *S);
     /*
      Post-Condition: If set S is in the collection, it is deleted
      */
@@ -56,7 +56,7 @@ public:
      Post-Condition: Set that corresponds to index is retrived from the hardrive
      */
 private:
-    QList<SetOfAssemblyTiles> listOfAssemblyTileSets;
+    QList<SetOfAssemblyTiles*> listOfAssemblyTileSets;
     int numberOfSets;
 };
 

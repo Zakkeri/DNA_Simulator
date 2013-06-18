@@ -61,7 +61,17 @@ void SetOfAssemblyTiles::addAssemblyTile(AssemblyTile &T)
     {
         return;
     }
-    T.setIndex(listOfAssemblyTiles.last().getIndex() + 1);
+
+    if(listOfAssemblyTiles.isEmpty())
+    {
+        T.setIndex(0);
+    }
+
+    else
+    {
+        T.setIndex(listOfAssemblyTiles.last().getIndex() + 1);
+    }
+
     listOfAssemblyTiles.append(T);
     numberOfAssemblyTiles++;
     return;

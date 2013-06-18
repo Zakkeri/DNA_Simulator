@@ -20,14 +20,14 @@ AssemblyTileSetManager::AssemblyTileSetManager()
 
 }
 
-AssemblyTileSetManager::AssemblyTileSetManager(SetOfAssemblyTiles &S)
+AssemblyTileSetManager::AssemblyTileSetManager(SetOfAssemblyTiles *S)
 /*
  Post-Condition: Assembly tile set manager is created and contains one set of assembly tiles
  */
     : numberOfSets(1)
 {
     listOfAssemblyTileSets.append(S);
-    S.setID(0);
+    S->setID(0);
 }
 
 AssemblyTileSetManager::~AssemblyTileSetManager()
@@ -35,7 +35,10 @@ AssemblyTileSetManager::~AssemblyTileSetManager()
  Default destructor
  */
 {
-
+    foreach(SetOfAssemblyTiles* next, listOfAssemblyTileSets)
+    {
+        delete next;
+    }
 }
 
 SetOfAssemblyTiles & AssemblyTileSetManager::getAssemblyTileSet(int index)
@@ -43,21 +46,21 @@ SetOfAssemblyTiles & AssemblyTileSetManager::getAssemblyTileSet(int index)
  Post-Condition: Set that corresponds to index is returned
  */
 {
-    return listOfAssemblyTileSets[index];
+    return *(listOfAssemblyTileSets[index]);
 }
 
-void AssemblyTileSetManager::addSet(SetOfAssemblyTiles &newSet)
+void AssemblyTileSetManager::addSet(SetOfAssemblyTiles * newSet)
 /*
  Post-Condition: A new set is added to the collection of sets
  */
 {
-    newSet.setID(numberOfSets);
+    newSet->setID(numberOfSets);
     numberOfSets++;
     listOfAssemblyTileSets.append(newSet);
     return;
 }
 
-QList<SetOfAssemblyTiles> & AssemblyTileSetManager::getListOfSets()
+QList<SetOfAssemblyTiles*> & AssemblyTileSetManager::getListOfSets()
 /*
  Post-Condition: List of assembly tile sets is returned
  */
@@ -65,7 +68,7 @@ QList<SetOfAssemblyTiles> & AssemblyTileSetManager::getListOfSets()
     return listOfAssemblyTileSets;
 }
 
-void AssemblyTileSetManager::deleteSet(SetOfAssemblyTiles & S)
+void AssemblyTileSetManager::deleteSet(SetOfAssemblyTiles * S)
 /*
  Post-Condition: If set S is in the collection, it is deleted
  */
