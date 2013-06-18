@@ -200,22 +200,27 @@
     // Similarly for initiation signals
     void ActiveTile::AddInitiationSignal(Signal signal)
     {
-
+        InitiationSignals << signal;
     }
 
     void ActiveTile::AddInitiationSignals(QList<Signal> signalList)
     {
-
+        InitiationSignals << signalList;
     }
 
     void ActiveTile::RemoveInitiationSignal(Signal signal)
     {
-
+        InitiationSignals.removeOne(signal);
     }
 
     void ActiveTile::RemoveInitiationSignals(QList<Signal> signalList)
     {
+        Signal signalToRemove(0,x);
 
+        foreach(signalToRemove, signalList)
+        {
+            InitiationSignals.removeOne(signalToRemove);
+        }
     }
 
 
@@ -244,14 +249,18 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     QList<Signal> ActiveTile::getInitiationSignals()
     {
-
+        return this->InitiationSignals;
     }
 
 
     //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
     void ActiveTile::activate(direction sourceSide, Signal activationSignal)
     {
-
+        Side[sourceSide].ActivationSignals.removeOne(activationSignal);
+        if(Side[activationSignal.Target].InactiveLabels.removeOne(activationSignal.label))
+        {
+            Side[activationSignal.Target].ActiveLabels << activationSignal.label;
+        }
     }
 
 	// Post-Conditions: Get functions for various properties, they return their appropriate type
