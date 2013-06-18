@@ -52,7 +52,12 @@ void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
  Post-Condition: Whole assembly tile is moved
  */
 {
+    ActiveTile currentTile;
 
+    foreach(currentTile, this->ListOfActiveTiles)
+    {
+        currentTile.moveTile(shift);
+    }
 }
 
 void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
@@ -68,7 +73,7 @@ QList<ActiveTile> & AssemblyTile::getListOfActiveTiles()
  Post-Condition: List of all active tiles is returned
  */
 {
-
+    return this->ListOfActiveTiles;
 }
 
 int AssemblyTile::getIndex()
@@ -76,7 +81,7 @@ int AssemblyTile::getIndex()
  Post-Condition: Returns the index of a tile
  */
 {
-
+    return index;
 }
 
 void AssemblyTile::setIndex(int ind)
@@ -84,7 +89,7 @@ void AssemblyTile::setIndex(int ind)
  Post-Condition: Sets the index of a tile
  */
 {
-
+    index = ind;
 }
 
 void AssemblyTile::setCurrentNumber(int num)

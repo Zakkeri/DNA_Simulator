@@ -196,7 +196,7 @@
         }
 	}
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     // Similarly for initiation signals
     void ActiveTile::AddInitiationSignal(Signal signal)
     {
@@ -246,7 +246,7 @@
 		return Side[side].TransmissionSignals;
 	}
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     QList<Signal> ActiveTile::getInitiationSignals()
     {
         return this->InitiationSignals;
@@ -272,8 +272,7 @@
 
     QPair<int, int> ActiveTile::getCoordinates()
 	{
-        QPair<int, int> empty(0, 0);
-		return empty;
+        return X_Y_Coordinates;
 	}
 
     ActiveTile * ActiveTile::getNeighbor(direction from)
@@ -304,6 +303,17 @@
 		X_Y_Coordinates.first += shift.first;
 		X_Y_Coordinates.second += shift.second;
 	}
+
+
+
+    // Post-Conditions:  Tile is translated to the given coordinates
+    void ActiveTile::moveTo(QPair<int,int> finalCoords)
+    {
+        X_Y_Coordinates.first = finalCoords.first;
+        X_Y_Coordinates.second = finalCoords.second;
+    }
+
+
 
     //Post-Conditions: Set functions for various properties
     void ActiveTile::setId(int id)

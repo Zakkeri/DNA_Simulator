@@ -158,6 +158,11 @@ public:
 	// Post-Conditions: Tile is translated according to the shift coordinates
     void moveTile(QPair<int, int> shift);
 
+
+
+    // Post-Conditions:  Tile is translated to the given coordinates
+    voidmoveTo(QPair<int,int> finalCoords);
+
 private:
   //  static int counter;
 	int TileID;
