@@ -196,26 +196,31 @@
         }
 	}
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     // Similarly for initiation signals
     void ActiveTile::AddInitiationSignal(Signal signal)
     {
-
+        InitiationSignals << signal;
     }
 
     void ActiveTile::AddInitiationSignals(QList<Signal> signalList)
     {
-
+        InitiationSignals << signalList;
     }
 
     void ActiveTile::RemoveInitiationSignal(Signal signal)
     {
-
+        InitiationSignals.removeOne(signal);
     }
 
     void ActiveTile::RemoveInitiationSignals(QList<Signal> signalList)
     {
+        Signal signalToRemove(0,x);
 
+        foreach(signalToRemove, signalList)
+        {
+            InitiationSignals.removeOne(signalToRemove);
+        }
     }
 
 
@@ -259,17 +264,21 @@
 		return Side[side].TransmissionSignals;
 	}
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     QList<Signal> ActiveTile::getInitiationSignals()
     {
-
+        return this->InitiationSignals;
     }
 
 
     //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
     void ActiveTile::activate(direction sourceSide, Signal activationSignal)
     {
-
+        Side[sourceSide].ActivationSignals.removeOne(activationSignal);
+        if(Side[activationSignal.Target].InactiveLabels.removeOne(activationSignal.label))
+        {
+            Side[activationSignal.Target].ActiveLabels << activationSignal.label;
+        }
     }
 
 	// Post-Conditions: Get functions for various properties, they return their appropriate type
@@ -281,8 +290,7 @@
 
     QPair<int, int> ActiveTile::getCoordinates()
 	{
-        QPair<int, int> empty(0, 0);
-		return empty;
+        return X_Y_Coordinates;
 	}
 
     ActiveTile * ActiveTile::getNeighbor(direction from)
@@ -313,6 +321,17 @@
 		X_Y_Coordinates.first += shift.first;
 		X_Y_Coordinates.second += shift.second;
 	}
+
+
+
+    // Post-Conditions:  Tile is translated to the given coordinates
+    void ActiveTile::moveTo(QPair<int,int> finalCoords)
+    {
+        X_Y_Coordinates.first = finalCoords.first;
+        X_Y_Coordinates.second = finalCoords.second;
+    }
+
+
 
     //Post-Conditions: Set functions for various properties
     void ActiveTile::setId(int id)
