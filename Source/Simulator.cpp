@@ -377,63 +377,42 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
     {
         ActiveTile* mainTile = T.getTileFromCoordinates(next->x_y); //get main tile of the boundary
         ActiveTile* connectedTile = mainTile->getNeighbor(next->side);  //get connected to the boundary tile
+
         foreach(Signal init, connectedTile->getInitiationSignals())  //for each initiation signal of the connected tile
         {
-            bool isDone = false; //flag that will tell if initiation signal was processed
+
             if(init.Target != (direction)(next->side + 2))// process only initiation signals that point to the boundary direction
             {
                 continue;
             }
 
-            foreach(Signal activ, mainTile->getActivationSignals(next->side)) //first, check if initiation signal have corresponding activation signal
-            {
-                if(activ.label - init.label != 0)   //if labels don't match, pick next one
-                {
-                    continue;
-                }
+            //else tell ActiveTile to process signal
+            mainTile->processSignal(next->side, init);
 
-                //There should be activate() function in the ActiveTile class
-                mainTile->activate(next->side, activ);
+            //remove initiation signal, since it was processed
+            connectedTile->RemoveInitiationSignal(init);
 
-                connectedTile->RemoveInitiationSignal(init);    //remove initiation signal, since it was processed
-                isDone = true;
-            }
 
-            if(isDone)  //if activation signal was found, then we are done
+        }
+
+        foreach(Signal init, mainTile->getInitiationSignals())  //next, pass all initiation signals from the maintile to the connectedtile
+        {
+
+            if(init.Target != (direction)(next->side))// process only initiation signals that point to the boundary direction
             {
                 continue;
             }
 
-            QQueue<Signal> initSignal;   //list of newly created initiation signals
-            foreach(Signal transm, mainTile->getTransmissionSignals(next->side))    //next, check if there are any transmission signal that can be transmitted
-            {
-                if(transm.label - init.label != 0)  //if labels don't match, pick next one
-                {
-                    continue;
-                }
+            //else tell ActiveTile to process signal
+            connectedTile->processSignal((direction)(next->side + 2), init);
 
-                //else, replace transmission signal with initiation signal
-
-                mainTile->RemoveTransmissionSignal(next->side, transm);
-
-                connectedTile->RemoveInitiationSignal(init);
-
-                if(mainTile->getNeighbor(transm.Target) == 0)   //if tile has no neighbor in the signal direction
-                {
-                    mainTile->AddInitiationSignal(Signal(init.label, transm.Target));   //then add initiation signal to the tile
-                }
-                else
-                {
-                    initSignal.enqueue(Signal(init.label, transm.Target));   //otherwise put it in the queue for further processing
-                }
-            }
-
-            while(!initSignal.isEmpty())
-            {
-                Signal next = initSignal.dequeue();
-
-            }
+            //remove initiation signal, since it was processed
+            mainTile->RemoveInitiationSignal(init);
 
         }
+
+        //next, we can clear all signals that can't be used
+        mainTile->clearSide(next->side);
+        connectedTile->clearSide((direction)(next->side + 2));
     }
 }

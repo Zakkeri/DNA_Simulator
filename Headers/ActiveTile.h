@@ -138,6 +138,19 @@ public:
     QList<Signal> getInitiationSignals();
 
 
+    /*Post-Conditions: signal is received from the side and is processed. As a result:
+    1) If corresponding activation signal is found, then inactive label is activated, else
+    2) If corresponding transmission signal is found, then initiation signal is passed to the next tile,
+        or initiation signal is added to the tile, else
+    3) No corresponding signal is found
+    */
+    void processSignal(direction side, Signal toProcess);
+
+    //Pre-Conditions: On the corresponding side, all initiation signals were received and processed
+    //Post-Conditions: all activation signals and corresponding inactive labels that can't be activated are removed, and all transmission signals that can't be transmited are also removed
+    void clearSide(direction side);
+
+
     //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
     void activate(direction sourceSide, Signal activationSignal);
 
