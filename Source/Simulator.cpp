@@ -178,7 +178,7 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
 
     if(!boundaryList.isEmpty())
     {
-        qDebug()<<"Error!!!, List must be empty";
+        qDebug()<<"Error!!! List must be empty";
     }
 
     return newTile;
@@ -356,10 +356,7 @@ bool Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boun
         {
             if(label1 + label2 == 0)
             {
-                if(strength < abs(StrengthMap[label1]))
-                {
-                    strength = abs(StrengthMap[label1]);
-                }
+                strength += StrengthMap[label1];
             }
         }
     }
@@ -414,5 +411,9 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
         //next, we can clear all signals that can't be used
         mainTile->clearSide(next->side);
         connectedTile->clearSide((direction)(next->side + 2));
+
+        //make boundary list empty
+        boundary->removeOne(next);
+        delete next;
     }
 }

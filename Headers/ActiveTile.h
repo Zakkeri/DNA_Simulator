@@ -101,7 +101,7 @@ public:
 	// Post-Conditions: Adds/removes inactive labels or a list of inactive labels from a given side
     void AddInactiveLabel(direction side, int label);
     void AddInactiveLabels(direction side, QList<int> labels);
-    void RemoveInactiveLabel(direction side, int label);
+    void RemoveInactiveLabel(direction side, int label);    // !!!!! Will need to remove both, positive and negative Labels!!!!
     void RemoveInactiveLabels(direction side, QList<int> labels);
 
 
@@ -151,6 +151,13 @@ public:
     void clearSide(direction side);
 
 
+    //Post-Condition: All transmission signals that point in the corresponding direction with corresponding label are removed. Function is recursively called on the removed signals' origin
+    void removeUpwardChain(direction toSide, int label);
+
+    //Post-Condition: All transmission and activation signals that start from the corresponding direction with corresponding label are removed. Function is recursively called on the removed signals' target
+    //Also, all inactive labels to which activation signals were pointing are removed
+    void removeDownwardChain(direction fromSide, int label);
+
     //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
     void activate(direction sourceSide, Signal activationSignal);
 
@@ -174,7 +181,7 @@ public:
 
 
     // Post-Conditions:  Tile is translated to the given coordinates
-    voidmoveTo(QPair<int,int> finalCoords);
+    void moveTo(QPair<int,int> finalCoords);
 
 private:
   //  static int counter;
