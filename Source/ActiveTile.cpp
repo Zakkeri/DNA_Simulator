@@ -94,7 +94,10 @@
 
     void ActiveTile::RemoveActiveLabel(direction side, int label)
 	{
-        this->Side[side].ActiveLabels.removeOne(label);
+        if(!this->Side[side].ActiveLabels.removeOne(label))
+        {
+            this->Side[side].ActiveLabels.removeOne(label);
+        }
 	}
 
     void ActiveTile::RemoveActiveLabels(direction side, QList<int> labels)
@@ -122,7 +125,10 @@
 
     void ActiveTile::RemoveInactiveLabel(direction side, int label)
 	{
-        this->Side[side].InactiveLabels.removeOne(label);
+        if(!this->Side[side].InactiveLabels.removeOne(label))
+        {
+            this->Side[side].InactiveLabels.removeOne(-label);
+        }
 	}
 
     void ActiveTile::RemoveInactiveLabels(direction side, QList<int> labels)
@@ -242,6 +248,8 @@
              {
                 activate(side, activation); //else activate a corresponding label
                 return; //and return, since we are done
+                        //Should it return here?  There could be both a tramission and
+                        //activation signal from the same side.
              }
          }
 
@@ -303,6 +311,8 @@
             if(listOfTranmsmSignals.contains(Signal(activ.label, (direction)(side + 2))))   //if there is a corresponding transmission signal
             {
                 listOfTranmsmSignals.removeOne(Signal(activ.label, (direction)(side + 2))); //remove signal from the list
+                // This is another place where having both an activation signal and trasmission signal
+                // from the same side could cause problems in the code.
                 continue; //check for next activation signal
             }
             else    //else remove activation signal and corresponding inactive label
@@ -341,6 +351,9 @@
                 }
 
                 //else, check for transmission signals
+                // As it's written, it's going to check for both trasmission signals and activation
+                // signals regardless of whether it finds them first, so isn't it redundant to use
+                // the same if statement twice?
 
                 foreach(Signal neighTransm, neighborForTransm->getTransmissionSignals((direction)(transm.Target + 2)))
                 {
