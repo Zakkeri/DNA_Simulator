@@ -291,13 +291,13 @@
         QList<Signal> listOfTranmsmSignals; //list that will hold all transmission signals of the neighbor tile
 
         //construct the list first
-        for(direction dir = x; dir <=_y; (direction)(dir + 1)) //for every side of the neighbor tile
+        for(int dir = 0; dir < 4; dir++) //for every side of the neighbor tile
         {
-            if(dir == (direction)(side + 2)) //skip the boundary direction
+            if(dir == (side + 2)%4) //skip the boundary direction
             {
                 continue;
             }
-            foreach(Signal transm, neighbor->getTransmissionSignals(dir)) //for every transmission signal of that side
+            foreach(Signal transm, neighbor->getTransmissionSignals((direction)dir)) //for every transmission signal of that side
             {
                 if(transm.Target == (direction)(side + 2))// if signal goes on the boundary direction, then
                 {
@@ -318,7 +318,33 @@
             else    //else remove activation signal and corresponding inactive label
             {
                 RemoveActivationSignal(side, activ);
-                RemoveInactiveLabel(activ.Target, activ.label);
+
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // Check if there are any other activation signal that can activate the label
+                bool removeLabel = true;    //flag for label deletion
+                for(int dir = 0; dir < 4; dir++)    //go through each side
+                {
+                    if(dir == (side + 2)%4) //skip the side to which signals are going
+                    {
+                        continue;
+                    }
+                    foreach (Signal activ2, Side[dir].ActivationSignals)//for each activation signal
+                    {
+                        if(activ2.Target == activ.Target && activ2.label == activ.label)//check if it is pointing in the same direction and has the same label
+                        {
+                            removeLabel = false;    //if so, then we don't want to remove inactive label, since it can still be activated
+                            break;  //break from the loop, since decision was made
+                        }
+                    }
+                    if(!removeLabel)    //if we are not removing label, then break from the loop
+                    {
+                        break;
+                    }
+                }
+                if(removeLabel) //if we are removing label, then remove it
+                {
+                    RemoveInactiveLabel(activ.Target, activ.label);
+                }
             }
         }
 
@@ -395,7 +421,7 @@
     //Post-Condition: All transmission signals that point in the corresponding direction with corresponding label are removed. Function is recursively called on the removed signals' origin
     void ActiveTile::removeUpwardChain(direction toSide, int label)
     {
-        for(direction dir = x; dir <=_y; (direction)(dir + 1))  //for every side, chack for transmission signals pointing toSide
+        for(int dir = x; dir < 4; dir++)  //for every side, chack for transmission signals pointing toSide
         {
             if(dir == toSide)   //skip toSide
             {
@@ -406,8 +432,8 @@
             {
                 if(transm.Target == toSide && transm.label == label) //if it is a correct transmission signal, then
                 {
-                    RemoveTransmissionSignal(dir, transm);  //remove it
-                    getNeighbor(dir)->removeUpwardChain((direction)(dir + 2), label); //also remove the whole chain from above
+                    RemoveTransmissionSignal((direction)dir, transm);  //remove it
+                    getNeighbor((direction)dir)->removeUpwardChain((direction)((dir + 2)%4), label); //also remove the whole chain from above
                 }
             }
         }
