@@ -44,7 +44,29 @@ ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
  Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
  */
 {
+    QPair<int, int> modifiedCoordinate;
 
+    // To get the coordinate a tile is within the map, you'll have to take
+    // it's current xy coordinate, undo the rotation, then undo the shift.
+    switch(this->rotation)
+    {
+    case y:
+        modifiedCoordinate = QPair<int, int>(coordinate.second, -coordinate.first);
+        break;
+    case _x:
+        modifiedCoordinate = QPair<int, int>(-coordinate.first, -coordinate.second);
+        break;
+    case _y:
+        modifiedCoordinate = QPair<int, int>(-coordinate.second, coordinate.first);
+        break;
+    default:
+        modifiedCoordinate = coordinate;
+        break;
+    }
+    modifiedCoordinate.first -= this->tileOffset.first;
+    modifiedCoordinate.second -= this->tileOffset.second;
+
+    return &map[modifiedCoordinate];
 }
 
 void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
@@ -58,6 +80,9 @@ void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
     {
         currentTile.moveTile(shift);
     }
+
+    this->tileOffset.first -= shift.first;
+    this->tileOffset.second -= shift.second;
 }
 
 void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
@@ -65,7 +90,33 @@ void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
  Post-Condition: Assembly tile is rotated required amount of times along reference point
  */
 {
+    // First, move the refPoint to (0,0)
+    this->moveAssemblyTile(QPair<int,int>(-refPoint.first, -refPoint.second));
 
+    // Then, rotate the assembly tile around (0,0)
+    switch(times % 4)
+    {
+    case 0:
+        break;
+    case 1:
+        // For counter-clockwise rotation, x->y, y->-x
+        this->tileOffset = QPair<int, int>(-this->tileOffset.second, this->tileOffset.first);
+        this->rotation = (direction)(this->rotation + 1);
+        break;
+    case 2:
+        // For 180 degree rotation, x->-x, y->-y
+        this->tileOffset = QPair<int, int>(-this->tileOffset.first, -this->tileOffset.second);
+        this->rotation = (direction)(this->rotation + 2);
+        break;
+    case 3:
+        // For clockwise rotation, x->-y, y->x
+        this->tileOffset = QPair<int, int>(this->tileOffset.second, -this->tileOffset.first);
+        this->rotation = (direction)(this->rotation + 3);
+        break;
+    }
+
+    // Then, move the refPoint back to where it should be
+    this->moveAssemblyTile(refPoint);
 }
 
 QList<ActiveTile> & AssemblyTile::getListOfActiveTiles()
@@ -92,20 +143,12 @@ void AssemblyTile::setIndex(int ind)
     index = ind;
 }
 
-void AssemblyTile::setCurrentNumber(int num)
-/*
- Post-Condition: Sets the value of static integer currentNumber to value of num
- */
-{
-
-}
-
 QList<freeActiveLabel> &AssemblyTile::getListOfFreeSides()
 /*
  Post-Conditions: listOfFreeSides is returned
  */
 {
-
+    return this->listOfFreeSides;
 }
 
 bool AssemblyTile::operator==(const AssemblyTile & other)const
@@ -113,5 +156,47 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
  Overloaded equal operator
  */
 {
+    // Check to see if they have the same number of tiles
+    if(other.NumberOfActiveTiles != this->NumberOfActiveTiles) return false;
 
+    bool matching = true;
+    QList<QPair<int, int> > tileCoords, otherCoords;
+    QPair<int, int> currentPair, shift;
+
+    // Extract the list of keys from either, please note that these are
+    // automatically in ascending order, with the lowest tiles being the
+    // ones furthest to the left, then furthest down.
+    tileCoords = this->map.keys();
+    otherCoords = other.map.keys();
+
+    // Need to check if the two lists are the same for all four rotations
+    for(int i = 0; i < 4; i++)
+    {
+        // First, figure out how much the offset is, then account for it.
+        shift = QPair<int, int>(tileCoords[0].first - otherCoords[0].first, tileCoords[0].second - otherCoords[0].second);
+
+        // See if the lists match
+        for(int j = 0; j < tileCoords.length(); j++)
+        {
+            if(tileCoords[j] != QPair<int, int>(otherCoords[j].first + shift.first, otherCoords[j].second + shift.second))
+            {
+                matching = false;
+                break;
+            }
+        }
+
+        // If they don't match, rotate the other tile, resort the list and try again
+        if(!matching)
+        {
+            foreach(currentPair, otherCoords)
+            {
+                currentPair = QPair<int, int>(-currentPair.second, currentPair.first);
+            }
+            qSort(otherCoords);
+        }else{
+            return true;
+        }
+    }
+
+    return false;
 }

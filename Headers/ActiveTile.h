@@ -178,10 +178,11 @@ public:
 	// Post-Conditions: Tile is translated according to the shift coordinates
     void moveTile(QPair<int, int> shift);
 
-
-
     // Post-Conditions:  Tile is translated to the given coordinates
     void moveTo(QPair<int,int> finalCoords);
+
+    // Post-Conditions: Returns true iff the tiles have the same ID
+    bool operator==(ActiveTile &otherTile);
 
 private:
   //  static int counter;
