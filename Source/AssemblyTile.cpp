@@ -44,7 +44,7 @@ ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
  Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
  */
 {
-
+    return map[coordinate];
 }
 
 void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
@@ -92,20 +92,20 @@ void AssemblyTile::setIndex(int ind)
     index = ind;
 }
 
-void AssemblyTile::setCurrentNumber(int num)
+//void AssemblyTile::setCurrentNumber(int num)
 /*
  Post-Condition: Sets the value of static integer currentNumber to value of num
  */
-{
+//{
 
-}
+//}
 
 QList<freeActiveLabel> &AssemblyTile::getListOfFreeSides()
 /*
  Post-Conditions: listOfFreeSides is returned
  */
 {
-
+    return listOfFreeSides;
 }
 
 bool AssemblyTile::operator==(const AssemblyTile & other)const

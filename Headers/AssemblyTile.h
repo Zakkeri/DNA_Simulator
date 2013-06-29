@@ -82,7 +82,7 @@ public:
      Post-Condition: Sets the index of a tile
      */
 
-    void setCurrentNumber(int num);
+    //void setCurrentNumber(int num);
     /*
      Post-Condition: Sets the value of static integer currentNumber to value of num
      */
@@ -100,7 +100,7 @@ public:
 private:
     QList<ActiveTile> ListOfActiveTiles;
     int NumberOfActiveTiles;
-    QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
+    QMap<QPair<int, int>, ActiveTile*> map	;//will map coordinate to tile
     int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
     QList<freeActiveLabel> listOfFreeSides; //will hold a set of all free sides of the whole Assembly tile
     //static int currentNumber;
