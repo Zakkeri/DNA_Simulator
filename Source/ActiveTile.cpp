@@ -534,6 +534,12 @@
         Side[0] = Side[3];
         Side[3] = Side[2];
         Side[2] = tempSide;
+        ActiveTile *tempNeighbor;
+        tempNeighbor = Neighbors[1];
+        Neighbors[1] = Neighbors[0];
+        Neighbors[0] = Neighbors[3];
+        Neighbors[3] = Neighbors[2];
+        Neighbors[2] = tempNeighbor;
     }
 
 
@@ -560,6 +566,15 @@
     void ActiveTile::setId(int id)
     {
         TileID = id;
+    }
+
+
+
+    // Post-Conditions: Returns true iff the tiles have the same ID
+    bool ActiveTile::operator ==(ActiveTile &otherTile)
+    {
+        if(this->TileID == otherTile.TileID) return true;
+        return false;
     }
 
     // Operator == for signals
