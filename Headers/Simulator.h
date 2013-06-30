@@ -98,10 +98,10 @@ private:
     int ThetaParameter;
     int NumberOfSteps;
 
-    //Not sure about variables below yet
+    /*//Not sure about variables below yet
     int SetOfAssemblyTilesIterator;
     int FirstAssemblyTileIterator;
-    int SecondAssemblyTileIterator;
+    int SecondAssemblyTileIterator;*/
 };
 
 #endif  //_SIMULATOR_H
