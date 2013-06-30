@@ -27,7 +27,8 @@
 	// Post-Conditions: New tile object with Active labels, Inactive labels, Activation signals, and Transmission signals was created. Neighbor pointers are set to null
     
     ActiveTile::ActiveTile(const QList<QList<int> > &ActiveLabels, const QList<QList<int> >  &InactiveLabels,
-                           const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals, int ID)
+                           const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals,
+                           const QList<Signal> &Initiation, int ID)
     {
        // TileID = ActiveTile::counter;
         //ActiveTile::counter++;
@@ -40,6 +41,8 @@
             Side[i].ActivationSignals = ActivationSignals[i];
             Side[i].TransmissionSignals = TransmissionSignals[i];
 		}
+
+        InitiationSignals = Initiation;
 
     }
 
