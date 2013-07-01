@@ -50,6 +50,9 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
     this->rotation = toAssembly->rotation;
     this->tileOffset = toAssembly->tileOffset;
 
+    // Add in the list of free sides from the second tile
+    this->listOfFreeSides << fromAssembly->listOfFreeSides;
+
     // Add the tiles fromt the second assembly tile
     foreach(ActiveTile next, fromAssembly->getListOfActiveTiles())
     {
@@ -62,6 +65,8 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
     {
         ActiveTile *firstTile = this->getTileFromCoordinates(next->x_y);
         ActiveTile *otherTile;
+
+        //Determine which tile is on the other side of the boundary
         switch(next->side)
         {
         case x:
@@ -78,8 +83,19 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
             break;
         }
 
+        // Set the neighbors
         firstTile->setNeighbor(next->side,otherTile);
         otherTile->setNeighbor((direction)(next->side + 2), firstTile);
+
+        // Remove the boundary
+        foreach(freeActiveLabel nextLabel, this->getListOfFreeSides())
+        {
+            if((nextLabel.xyCoord == firstTile->getCoordinates() && nextLabel.side == next->side) ||
+                    (nextLabel.xyCoord == otherTile->getCoordinates() && nextLabel.side == (direction)(next->side + 2)))
+            {
+                this->listOfFreeSides.removeOne(nextLabel);
+            }
+        }
     }
 }
 
