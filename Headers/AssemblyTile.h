@@ -30,6 +30,11 @@ struct freeActiveLabel
         return this->label + l.label == 0;
     }
 
+    bool operator==(const freeActiveLabel other)
+    {
+        return (this->label == other.label) && (this->side == other.side) && (this->xyCoord == other.xyCoord);
+    }
+
     int label;
     direction side;
     QPair<int, int> xyCoord;
