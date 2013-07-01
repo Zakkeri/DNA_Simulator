@@ -35,7 +35,20 @@ struct freeActiveLabel
     QPair<int, int> xyCoord;
 };
 
-struct boundaryPoint;
+
+// Needed to move this here because the compiler was complaining.
+struct boundaryPoint
+{
+    boundaryPoint(const bool tile,const QPair<int, int> coord,const direction dir)
+        : isT1(tile), x_y(coord), side(dir)
+    {
+
+    }
+    bool isT1;  //to tell from which assembly tile the boundary point is infered
+    QPair<int, int> x_y; //coordinates of tile1 on the boundary point
+    direction side; //where the boundary is
+};
+
 
 class AssemblyTile
 {
@@ -72,6 +85,12 @@ public:
     /*
      Post-Condition: List of all active tiles is returned
      */
+
+    void addTile(ActiveTile newTile);
+    /*
+     Post-Condition: The tile is added to the list of active tiles and the tile count is increased
+     */
+
     int getIndex();
     /*
      Post-Condition: Returns the index of a tile
@@ -90,6 +109,11 @@ public:
     bool operator==(const AssemblyTile & other)const;
     /*
      Overloaded equal operator
+     */
+
+    QPair<int, int> nominalToMap(QPair<int, int> coordinate);
+    /*
+     Takes a coordinate of the tile and changes it to the spot in the map
      */
 
 private:

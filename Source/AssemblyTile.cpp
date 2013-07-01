@@ -28,7 +28,59 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
  Post-Condition: Assembly tile object is created from combination of two assembly tiles
  */
 {
+    AssemblyTile *toAssembly;
+    AssemblyTile *fromAssembly;
 
+    // Tells which assembly tile is the on not getting moved, I'm assuming
+    // all boundary points have the same value of isT1.
+    if(boundary->value(0)->isT1)
+    {
+        toAssembly = &T1;
+        fromAssembly = &T2;
+    }else{
+        fromAssembly = &T1;
+        toAssembly = &T2;
+    }
+
+    // Initilize is to be like the one the tiles are moving to
+    this->ListOfActiveTiles = toAssembly->ListOfActiveTiles;
+    this->listOfFreeSides = toAssembly->listOfFreeSides;
+    this->map = toAssembly->map;
+    this->NumberOfActiveTiles = toAssembly->NumberOfActiveTiles;
+    this->rotation = toAssembly->rotation;
+    this->tileOffset = toAssembly->tileOffset;
+
+    // Add the tiles fromt the second assembly tile
+    foreach(ActiveTile next, fromAssembly->getListOfActiveTiles())
+    {
+        this->map.insert(this->nominalToMap(next.getCoordinates()),next);
+        this->addTile(next);
+    }
+
+    // Add new neighbors
+    foreach(boundaryPoint *next, *boundary)
+    {
+        ActiveTile *firstTile = this->getTileFromCoordinates(next->x_y);
+        ActiveTile *otherTile;
+        switch(next->side)
+        {
+        case x:
+            otherTile = this->getTileFromCoordinates(QPair<int, int>(next->x_y.first + 1, next->x_y.second));
+            break;
+        case y:
+            otherTile = this->getTileFromCoordinates(QPair<int, int>(next->x_y.first, next->x_y.second + 1));
+            break;
+        case _x:
+            otherTile = this->getTileFromCoordinates(QPair<int, int>(next->x_y.first - 1, next->x_y.second));
+            break;
+        case _y:
+            otherTile = this->getTileFromCoordinates(QPair<int, int>(next->x_y.first, next->x_y.second - 1));
+            break;
+        }
+
+        firstTile->setNeighbor(next->side,otherTile);
+        otherTile->setNeighbor((direction)(next->side + 2), firstTile);
+    }
 }
 
 AssemblyTile::~AssemblyTile()
@@ -44,28 +96,7 @@ ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
  Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
  */
 {
-    QPair<int, int> modifiedCoordinate;
-
-    // To get the coordinate a tile is within the map, you'll have to take
-    // it's current xy coordinate, undo the rotation, then undo the shift.
-    switch(this->rotation)
-    {
-    case y:
-        modifiedCoordinate = QPair<int, int>(coordinate.second, -coordinate.first);
-        break;
-    case _x:
-        modifiedCoordinate = QPair<int, int>(-coordinate.first, -coordinate.second);
-        break;
-    case _y:
-        modifiedCoordinate = QPair<int, int>(-coordinate.second, coordinate.first);
-        break;
-    default:
-        modifiedCoordinate = coordinate;
-        break;
-    }
-    modifiedCoordinate.first -= this->tileOffset.first;
-    modifiedCoordinate.second -= this->tileOffset.second;
-    return &map[modifiedCoordinate];
+    return &map[this->nominalToMap(coordinate)];
 }
 
 void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
@@ -198,4 +229,36 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
     }
 
     return false;
+}
+
+QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)
+{
+    QPair<int, int> modifiedCoordinate;
+
+    // To get the coordinate a tile is within the map, you'll have to take
+    // it's current xy coordinate, undo the rotation, then undo the shift.
+    switch(this->rotation)
+    {
+    case y:
+        modifiedCoordinate = QPair<int, int>(coordinate.second, -coordinate.first);
+        break;
+    case _x:
+        modifiedCoordinate = QPair<int, int>(-coordinate.first, -coordinate.second);
+        break;
+    case _y:
+        modifiedCoordinate = QPair<int, int>(-coordinate.second, coordinate.first);
+        break;
+    default:
+        modifiedCoordinate = coordinate;
+        break;
+    }
+    modifiedCoordinate.first -= this->tileOffset.first;
+    modifiedCoordinate.second -= this->tileOffset.second;
+    return modifiedCoordinate;
+}
+
+void AssemblyTile::addTile(ActiveTile newTile)
+{
+    this->ListOfActiveTiles.append(newTile);
+    this->NumberOfActiveTiles++;
 }

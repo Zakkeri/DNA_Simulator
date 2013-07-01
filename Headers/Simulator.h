@@ -30,17 +30,6 @@ typedef struct fittingSpot
     int rotation;
 }FitPlace;
 
-struct boundaryPoint
-{
-    boundaryPoint(const bool tile,const QPair<int, int> coord,const direction dir)
-        : isT1(tile), x_y(coord), side(dir)
-    {
-
-    }
-    bool isT1;  //to tell from which assembly tile the boundary point is infered
-    QPair<int, int> x_y; //coordinates of tile1 on the boundary point
-    direction side; //where the boundary is
-};
 
 class Simulator
 {
