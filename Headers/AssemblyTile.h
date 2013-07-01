@@ -15,7 +15,7 @@
 #include<QPair>
 #include<QList>
 #include<QMap>
-#include"ActiveTile.h";
+#include"ActiveTile.h"
 //#include"../Headers/Simulator.h"
 struct freeActiveLabel
 {

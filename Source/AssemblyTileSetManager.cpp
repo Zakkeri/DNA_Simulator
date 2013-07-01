@@ -86,7 +86,7 @@ void AssemblyTileSetManager::storeSetOnHardrive(int index) const
  Post-Condition: Set that corresponds to index is stored on the hardrive
  */
 {
-
+    return;
 }
 
 void AssemblyTileSetManager::loadSetFromHardrive(int index)const
@@ -94,5 +94,5 @@ void AssemblyTileSetManager::loadSetFromHardrive(int index)const
  Post-Condition: Set that corresponds to index is retrived from the hardrive
  */
 {
-
+    return;
 }
