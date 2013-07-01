@@ -18,7 +18,22 @@ AssemblyTile::AssemblyTile(ActiveTile &T)
  Post-Condition: Assembly tile object that consists of only one tile is created
  */
 {
+    T.setCoordinates(QPair<int, int>(0,0));
+    ListOfActiveTiles << T;
+    NumberOfActiveTiles = 1;
 
+
+    tileOffset = QPair<int, int>(0,0);
+    rotation = x;
+    map[QPair<int, int>(0,0)] = ListOfActiveTiles.first();
+
+    for(int dir = 0; dir < 4; dir++)
+    {
+        foreach(int label, T.getActiveLabels((direction)dir))
+        {
+            listOfFreeSides << freeActiveLabel(label, (direction) dir, T.getCoordinates());
+        }
+    }
 
 }
 
