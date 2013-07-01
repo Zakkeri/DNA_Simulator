@@ -54,9 +54,15 @@
 	ActiveTile::ActiveTile(const ActiveTile &otherTile)
 	{
         X_Y_Coordinates = otherTile.X_Y_Coordinates;
-        //TileID = counter;
-        //counter++;
         TileID = otherTile.getId();
+        this->InitiationSignals = otherTile.InitiationSignals;
+        for(int dir = 0; dir < 4; dir++)
+        {
+            this->Side[dir].ActivationSignals = otherTile.Side[dir].ActivationSignals;
+            this->Side[dir].ActiveLabels = otherTile.Side[dir].ActiveLabels;
+            this->Side[dir].InactiveLabels = otherTile.Side[dir].InactiveLabels;
+            this->Side[dir].TransmissionSignals = otherTile.Side[dir].TransmissionSignals;
+        }
 	}
 
 
