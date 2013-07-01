@@ -141,6 +141,62 @@ void Simulator::startSimulation()
     }
 
     qDebug()<<"Simulation is over!";
+#ifdef DEBUG
+    qDebug()<<"Outputing result:";
+    foreach(SetOfAssemblyTiles *S, manager.getListOfSets())
+    {
+        foreach(AssemblyTile T, S->getListOfAssemblyTiles())
+        {
+            qDebug()<<"Tile "<<T.getIndex();
+            foreach(ActiveTile t, T.getListOfActiveTiles())
+            {
+                qDebug()<<"Active tile "<<t.getId()<<" Coordinate "<<t.getCoordinates().first<<" "<<t.getCoordinates().second;
+                for(int side = 0; side < 4; side++)
+                {
+                    qDebug()<<"Side "<<side;
+                    qDebug()<<"Active Labels:";
+                    foreach(int label, t.getActiveLabels((direction)side))
+                    {
+                        qDebug()<<label;
+                    }
+                    qDebug()<<"Inactive Labels:";
+                    foreach(int label, t.getInactiveLabels((direction)side))
+                    {
+                        qDebug()<<label;
+                    }
+                    qDebug()<<"Activation signals coming from this side:";
+                    foreach(Signal sig, t.getActivationSignals((direction)side))
+                    {
+                        qDebug()<<"Label - "<<sig.label<<" Target Side - "<<sig.Target;
+                    }
+                    qDebug()<<"Transmission signals coming from this side:";
+                    foreach(Signal sig, t.getTransmissionSignals((direction)side))
+                    {
+                        qDebug()<<"Label - "<<sig.label<<" Target Side - "<<sig.Target;
+                    }
+
+                    ActiveTile* neigh = t.getNeighbor((direction) side);
+                    if(neigh == 0)
+                    {
+                        qDebug()<<"No neighbor on this side:";
+                    }
+                    else
+                    {
+                        qDebug()<<"Neighbor tile on this side: "<<neigh->getId();
+                    }
+
+                }
+                qDebug()<<"Initiation Signals:";
+                foreach(Signal sig, t.getInitiationSignals())
+                {
+                    qDebug()<<"Label - "<<sig.label<<" Target Side - "<<sig.Target;
+                }
+
+            }
+        }
+    }
+
+#endif
 
 }
 
