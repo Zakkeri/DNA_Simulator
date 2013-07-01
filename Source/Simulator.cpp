@@ -11,14 +11,16 @@
  #include <QQueue>
 #include <QDebug>
 #include "../Headers/Simulator.h"
-
+#define DEBUG
 Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
     : manager(S), StrengthMap(StrengthFunction), ThetaParameter(Theta), NumberOfSteps(StepNumber)
 {
-
+#ifdef DEBUG
+    qDebug()<<"Constructing Simulator object";
+#endif
 }
 
 void Simulator::initialize()
@@ -26,6 +28,9 @@ void Simulator::initialize()
  Post-Condition: All initialization goes here
  */
 {
+#ifdef DEBUG
+    qDebug()<<"Initializing constructor";
+#endif
     currentStep = 1;
 }
 
@@ -34,44 +39,85 @@ void Simulator::startSimulation()
  Main function that starts simulation
  */
 {
+#ifdef DEBUG
+    qDebug()<<"Simulation for "<<NumberOfSteps<<" steps was started";
+#endif
     for(currentStep; currentStep <= NumberOfSteps; currentStep++)   //Perform simulation, until the number of required steps is reached
     {
+#ifdef DEBUG
+    qDebug()<<"Beginig step #"<<currentStep;
+#endif
         SetOfAssemblyTiles *newSet = new SetOfAssemblyTiles;  //New empty set of Assembly tiles
+#ifdef DEBUG
+    qDebug()<<"New set of tiles was created";
+#endif
         SetOfAssemblyTiles currentSet = selectMostCurrentSetOfAssemblyTiles();  //most up to date set of assembly tiles
+#ifdef DEBUG
+    qDebug()<<"Current set was selected";
+#endif
         QList<AssemblyTile>::Iterator i;
         for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
         {
             AssemblyTile t1 = *i;   //get next first assembly tile t1
+#ifdef DEBUG
+            qDebug()<<"Assembly tile "<<t1.getIndex()<<" was selected as first tile";
+#endif
             QList<SetOfAssemblyTiles*>::Iterator j;
             for(j = manager.getListOfSets().begin(); j!=manager.getListOfSets().end(); j++)//iterate through every set of assembly tiles
             {
                 SetOfAssemblyTiles temp = **j;   //get temporal set of assembly tiles for picking the second assembly tile
+#ifdef DEBUG
+                qDebug()<<"Set "<<temp.getSetId()<<" was selected to iterate through";
+#endif
                 QList<AssemblyTile>::Iterator k;
                 for(k = temp.getListOfAssemblyTiles().begin(); k!=temp.getListOfAssemblyTiles().end(); k++)    //each tile in temp iterate through and try to combine two tiles
                 {
                     AssemblyTile t2 = *k;  //chose second assembly tile
+#ifdef DEBUG
+                    qDebug()<<"Second assembly tile "<<t2.getIndex()<<" was selected";
+#endif
                     if(&temp == &currentSet && t2.getIndex() < t1.getIndex()) //check for redundant tiles
                     {
+#ifdef DEBUG
+    qDebug()<<"This tile is redundant one";
+#endif
                         continue;
                     }
                     QList<FitPlace*> *spots;
+#ifdef DEBUG
+    qDebug()<<"Attempting to find fitting spots";
+#endif
                     spots = findFittingSpots(t1, t2);   //get all fitting spots
                     if(spots->isEmpty())   //check if there are any fitting spot
                     {
+#ifdef DEBUG
+    qDebug()<<"No fitting spot was found";
+#endif
                         delete spots;   //free memory
                         continue;
                     }
                     QList<FitPlace*>::Iterator fit;
+#ifdef DEBUG
+    qDebug()<<"Starting iteration through fitting spots";
+#endif
                     for(fit = spots->begin(); fit!=spots->end(); fit++)  //iterata through each fitting spot
                     {
                         FitPlace * next = *fit;   //get next spot
+#ifdef DEBUG
+    qDebug()<<"Attempting to combine two tiles";
+#endif
                         AssemblyTile* combined = attemptToCombine(t1, t2, next);
                         delete next;    //free the memory
                         if(combined == 0)   //check if tiles were combined
                         {
+#ifdef DEBUG
+    qDebug()<<"Failed to combine";
+#endif
                             continue;
                         }
-
+#ifdef DEBUG
+    qDebug()<<"Tiles were combined succesfuly, pushing it into a set of new tiles";
+#endif
                         newSet->addAssemblyTile(*combined);
                     }
 
@@ -82,9 +128,15 @@ void Simulator::startSimulation()
          }
         if(newSet->isEmpty())    //check if new set is empty
         {
+#ifdef DEBUG
+            qDebug()<<"No new tiles were created, exiting simulation at step "<<currentStep;
+#endif
             delete newSet;
             break;
         }
+#ifdef DEBUG
+    qDebug()<<"Adding new set to the manager";
+#endif
         manager.addSet(newSet);
     }
 
@@ -93,7 +145,7 @@ void Simulator::startSimulation()
 }
 
 /*SetOfAssemblyTiles & Simulator::createNewSetOfAssemblyTiles()
-/*
+
  Post-Condition: New empty set of assembly tiles is created and returned
  /
 {
@@ -112,13 +164,23 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
  Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
  */
 {
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+    qDebug()<<"Inside findFittingSpots function";
+#endif
     QList<FitPlace*> *fitPlaces = new QList<FitPlace*>; //create a new list of fit places
+#ifdef DEBUG
+    qDebug()<<"New list of fit places was initialized, starting iteration loop";
+#endif
     foreach(freeActiveLabel label1, T1.getListOfFreeSides())    //for each free side of T1
     {
         foreach(freeActiveLabel label2, T2.getListOfFreeSides())//find a matching label from T2
         {
             if(label1.match(label2))    //if two labels match, then create a new fitting spot
             {
+#ifdef DEBUG
+                qDebug()<<"Found two matching labels: "<<label1.label<<" and "<<label2.label;
+#endif
                 QPair<int, int> coord;
                 switch(label1.side) //calculate first coordinate
                 {
@@ -142,10 +204,17 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
                 int rotation = (label1.side - ((label2.side + 2)%4)) % 4;   //calculate rotation
                 FitPlace *match = new FitPlace(coord, label2.xyCoord, rotation);    //create FirPlace and append it to the list
                 fitPlaces->append(match);
+#ifdef DEBUG
+                qDebug()<<"New fit place was created: \ncoordinate of the first tile - "<<match->firstTile.first<<" "<<match->firstTile.second<<
+                          "\ncoordinate of the second tile - "<<match->secondtTile.first<<" "<<match->secondtTile.second<<
+                          "\nrotation - "<<match->rotation;
+#endif
             }
         }
     }
-
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+#endif
     return fitPlaces;
 }
 
@@ -155,14 +224,29 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
  If not successful, NULL is returned
  */
 {
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+    qDebug()<<"Inside attemptToCombine function";
+#endif
+#ifdef DEBUG
+    qDebug()<<"Rotating Assembly Tile "<<T2.getIndex();
+#endif
     T2.rotateAssemblyTile(place->secondtTile, place->rotation); //rotate second tile
 
     QPair<int, int> shift(place->firstTile.first - place->secondtTile.first, place->firstTile.second - place->secondtTile.second);
+#ifdef DEBUG
+    qDebug()<<"Shifting Assembly Tile "<<T2.getIndex();
+#endif
     T2.moveAssemblyTile(shift); //shift second tile
-
+#ifdef DEBUG
+    qDebug()<<"Checking if tiles overlap or have the right bond strength";
+#endif
     QList<boundaryPoint*> boundaryList;
     if(checkOverlapAndStrength(T1, T2, &boundaryList)) //check if two tiles overlap and have enough bond strength
     {
+#ifdef DEBUG
+    qDebug()<<"Tiles can't be combined";
+#endif
         foreach(boundaryPoint* next, boundaryList)  //if not, free the memory and return 0
         {
             delete next;
@@ -171,16 +255,22 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
         return 0;
     }
 
-
+#ifdef DEBUG
+    qDebug()<<"Creating new combined Assembly Tile";
+#endif
     AssemblyTile *newTile = new AssemblyTile(T1, T2, &boundaryList);    //if yes, create a new tile
-
+#ifdef DEBUG
+    qDebug()<<"Applying tile modification function";
+#endif
     tileModificationFunction(*newTile, &boundaryList);  //apply tile modificattion function
 
     if(!boundaryList.isEmpty())
     {
         qDebug()<<"Error!!! List must be empty";
     }
-
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+#endif
     return newTile;
 }
 
@@ -190,14 +280,24 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
  return true, if there is an overlap, and false otherwise. Also construct a list of boundary points, and check bond strength
  */
 {
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+    qDebug()<<"Inside checkOverlapAndStrength function";
+#endif
     int strength = 0;
     if(T1.getListOfActiveTiles().length() > T2.getListOfActiveTiles().length()) //if T2 has less active tiles, then process it
     {
+#ifdef DEBUG
+    qDebug()<<"Going to iterate through Assembly Tile "<<T2.getIndex();
+#endif
         foreach(ActiveTile t2, T2.getListOfActiveTiles())   //for each active tile in T2
         {
             ActiveTile *temp = T1.getTileFromCoordinates(t2.getCoordinates());  //check if there is an overlap
             if(temp != 0)   //if there is an overlap, then return true
             {
+#ifdef DEBUG
+    qDebug()<<"Assembly Tiles overlap, can't combine";
+#endif
                 return true;
             }
 
@@ -221,6 +321,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)0);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
 
                     }
                          break;
@@ -233,6 +337,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)1);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
                     }
                      break;
 
@@ -244,6 +352,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)2);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
                     }
                      break;
 
@@ -255,6 +367,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(false, t2.getCoordinates(), (direction)3);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
                     }
                      break;
                 }
@@ -267,9 +383,15 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
     {
         foreach(ActiveTile t1, T1.getListOfActiveTiles())   //else T1 has less active tiles, so process all active tiles of T1
         {
+#ifdef DEBUG
+    qDebug()<<"Going to iterate through Assembly Tile "<<T1.getIndex();
+#endif
             ActiveTile *temp = T2.getTileFromCoordinates(t1.getCoordinates());  //check if there is an overlap
             if(temp != 0)   //if there is an overlap, then return 0
             {
+#ifdef DEBUG
+    qDebug()<<"Assembly Tiles overlap, can't combine";
+#endif
                 return true;
             }
 
@@ -293,6 +415,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)0);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
 
                     }
                          break;
@@ -305,6 +431,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)1);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
                     }
                      break;
 
@@ -316,6 +446,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)2);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
                     }
                      break;
 
@@ -327,6 +461,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
                         }
                         boundaryPoint * bound = new boundaryPoint(true, t1.getCoordinates(), (direction)3);
                         boundary->append(bound);
+#ifdef DEBUG
+                        qDebug()<<"Boundary point was added:\nTile coordinate - "<<bound->x_y.first<<" "<<bound->x_y.second<<
+                                  "\nSide - "<<(int)bound->side;
+#endif
                     }
                      break;
                 }
@@ -338,8 +476,15 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
 
     if(strength < this->ThetaParameter)
     {
+#ifdef DEBUG
+    qDebug()<<"Theta parameter was not satisfied";
+#endif
         return true;
     }
+#ifdef DEBUG
+    qDebug()<<"Can combine two tiles";
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+#endif
 
     return false;
 }
@@ -349,6 +494,10 @@ bool Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boun
  Post-Condition: returns the highest bond strenghth of tile t1 and t2 at specified direction of tile t1
  */
 {
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+    qDebug()<<"Inside getBondStrength function";
+#endif
     int strength = 0;
     foreach(int label1, t1.getActiveLabels(boundary))
     {
@@ -360,7 +509,10 @@ bool Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boun
             }
         }
     }
-
+#ifdef DEBUG
+    qDebug()<<"Returning strength value: "<<strength;
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+#endif
     return strength;
 
 }
@@ -370,16 +522,29 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
  Post-Condition: Apply tile modification function to tile T, also make boundary list empty at the end
  */
 {
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+    qDebug()<<"Inside tileModificationFunction";
+#endif
     foreach(boundaryPoint* next, *boundary) //process every boundary
     {
+#ifdef DEBUG
+    qDebug()<<"Processing next boundary point";
+#endif
         ActiveTile* mainTile = T.getTileFromCoordinates(next->x_y); //get main tile of the boundary
         ActiveTile* connectedTile = mainTile->getNeighbor(next->side);  //get connected to the boundary tile
 
         foreach(Signal init, connectedTile->getInitiationSignals())  //for each initiation signal of the connected tile
         {
+#ifdef DEBUG
+    qDebug()<<"Processing next initiation signal of the connected tile: "<<init.label;
+#endif
 
             if(init.Target != (direction)(next->side + 2))// process only initiation signals that point to the boundary direction
             {
+#ifdef DEBUG
+    qDebug()<<"This signal points in the wrong direction";
+#endif
                 continue;
             }
 
@@ -394,9 +559,15 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
 
         foreach(Signal init, mainTile->getInitiationSignals())  //next, pass all initiation signals from the maintile to the connectedtile
         {
+#ifdef DEBUG
+    qDebug()<<"Processing next initiation signal of the main tile: "<<init.label;
+#endif
 
             if(init.Target != (direction)(next->side))// process only initiation signals that point to the boundary direction
             {
+#ifdef DEBUG
+    qDebug()<<"This signal points in the wrong direction";
+#endif
                 continue;
             }
 
@@ -407,7 +578,9 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
             mainTile->RemoveInitiationSignal(init);
 
         }
-
+#ifdef DEBUG
+    qDebug()<<"Calling clearSide functions";
+#endif
         //next, we can clear all signals that can't be used
         mainTile->clearSide(next->side);
         connectedTile->clearSide((direction)(next->side + 2));
@@ -416,4 +589,7 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
         boundary->removeOne(next);
         delete next;
     }
+#ifdef DEBUG
+    qDebug()<<"-------------------------------------------------------------------------------------------------";
+#endif
 }
