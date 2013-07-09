@@ -116,7 +116,7 @@ public:
      Overloaded equal operator
      */
 
-    QPair<int, int> nominalToMap(QPair<int, int> coordinate);
+    QPair<int, int> nominalToMap(QPair<int, int> coordinate) const;
     /*
      Takes a coordinate of the tile and changes it to the spot in the map
      */

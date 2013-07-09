@@ -132,11 +132,11 @@ public:
     void RemoveInitiationSignals(QList<Signal> signalList);
 
 	// Post-Conditions:  Returns a list of a side's Labels or Signals
-    QList<int> getActiveLabels(direction side);
-    QList<int> getInactiveLabels(direction side);
-    QList<Signal> getActivationSignals(direction side);
-    QList<Signal> getTransmissionSignals(direction side);
-    QList<Signal> getInitiationSignals();
+    QList<int> &getActiveLabels(direction side);
+    QList<int> &getInactiveLabels(direction side);
+    QList<Signal> &getActivationSignals(direction side);
+    QList<Signal> &getTransmissionSignals(direction side);
+    QList<Signal> &getInitiationSignals();
 
 
     /*Post-Conditions: signal is received from the side and is processed. As a result:
