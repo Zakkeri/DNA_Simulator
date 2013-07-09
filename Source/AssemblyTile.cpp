@@ -100,13 +100,13 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
 
         // Set the neighbors
         firstTile->setNeighbor(next->side,otherTile);
-        otherTile->setNeighbor((direction)((next->side + 2)%4), firstTile);
+        otherTile->setNeighbor((direction)(next->side + 2), firstTile);
 
         // Remove the boundary
         foreach(freeActiveLabel nextLabel, this->getListOfFreeSides())
         {
             if((nextLabel.xyCoord == firstTile->getCoordinates() && nextLabel.side == next->side) ||
-                    (nextLabel.xyCoord == otherTile->getCoordinates() && nextLabel.side == (direction)((next->side + 2)%4)))
+                    (nextLabel.xyCoord == otherTile->getCoordinates() && nextLabel.side == (direction)(next->side + 2)))
             {
                 this->listOfFreeSides.removeOne(nextLabel);
             }
@@ -127,14 +127,7 @@ ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
  Post-Condition: Reference to the ActiveTile that is placed on asked coordinate is returned
  */
 {
-    if(map.contains(this->nominalToMap(coordinate)))
-    {
-        return &map[this->nominalToMap(coordinate)];
-    }
-    else
-    {
-        return NULL;
-    }
+    return &map[this->nominalToMap(coordinate)];
 }
 
 void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
@@ -142,11 +135,11 @@ void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
  Post-Condition: Whole assembly tile is moved
  */
 {
-    //ActiveTile currentTile;
-    QList<ActiveTile>::Iterator i;
-    for(i = ListOfActiveTiles.begin(); i != ListOfActiveTiles.end(); i++)
+    ActiveTile currentTile;
+
+    foreach(currentTile, this->ListOfActiveTiles)
     {
-        i->moveTile(shift);
+        currentTile.moveTile(shift);
     }
 
     this->tileOffset.first -= shift.first;
@@ -169,17 +162,17 @@ void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
     case 1:
         // For counter-clockwise rotation, x->y, y->-x
         this->tileOffset = QPair<int, int>(-this->tileOffset.second, this->tileOffset.first);
-        this->rotation = (direction)((this->rotation + 1)%4);
+        this->rotation = (direction)(this->rotation + 1);
         break;
     case 2:
         // For 180 degree rotation, x->-x, y->-y
         this->tileOffset = QPair<int, int>(-this->tileOffset.first, -this->tileOffset.second);
-        this->rotation = (direction)((this->rotation + 2)%4);
+        this->rotation = (direction)(this->rotation + 2);
         break;
     case 3:
         // For clockwise rotation, x->-y, y->x
         this->tileOffset = QPair<int, int>(this->tileOffset.second, -this->tileOffset.first);
-        this->rotation = (direction)((this->rotation + 3)%4);
+        this->rotation = (direction)(this->rotation + 3);
         break;
     }
 
@@ -246,16 +239,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
         // See if the lists match
         for(int j = 0; j < tileCoords.length(); j++)
         {
-            //check if coordinate are equal
             if(tileCoords[j] != QPair<int, int>(otherCoords[j].first + shift.first, otherCoords[j].second + shift.second))
-
-            {
-                matching = false;
-                break;
-            }
-
-            //if coordinates are equal, then check if tiles are equal
-            if(map[this->nominalToMap(tileCoords[j])].getId() != other.map[other.nominalToMap(tileCoords[j])].getId())
             {
                 matching = false;
                 break;
@@ -278,7 +262,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
     return false;
 }
 
-QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)const
+QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)
 {
     QPair<int, int> modifiedCoordinate;
 

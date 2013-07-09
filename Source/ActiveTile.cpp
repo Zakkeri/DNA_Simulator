@@ -44,10 +44,6 @@
 
         InitiationSignals = Initiation;
 
-        for(int i = 0; i < 4; i++)
-        {
-            Neighbors[i] = NULL;
-        }
     }
 
 
@@ -66,12 +62,6 @@
             this->Side[dir].ActiveLabels = otherTile.Side[dir].ActiveLabels;
             this->Side[dir].InactiveLabels = otherTile.Side[dir].InactiveLabels;
             this->Side[dir].TransmissionSignals = otherTile.Side[dir].TransmissionSignals;
-        }
-
-        //So far, neighbors are all equal to NULL
-        for(int i = 0; i < 4; i++)
-        {
-            Neighbors[i] = NULL;
         }
 	}
 
@@ -283,7 +273,7 @@
                 ActiveTile* neighbor = getNeighbor(transm.Target);  //try to get a neighbor
                 if(neighbor != 0) //check if there is a neighbor
                 {
-                    neighbor->processSignal((direction)((transm.Target + 2)%4), transm); //if neighbor exist, then send the transmission signal to it
+                    neighbor->processSignal((direction)(transm.Target + 2), transm); //if neighbor exist, then send the transmission signal to it
                 }
                 else    //if there is no neighbor
                 {
@@ -318,7 +308,7 @@
             }
             foreach(Signal transm, neighbor->getTransmissionSignals((direction)dir)) //for every transmission signal of that side
             {
-                if(transm.Target == (direction)((side + 2)%4))// if signal goes on the boundary direction, then
+                if(transm.Target == (direction)(side + 2))// if signal goes on the boundary direction, then
                 {
                     listOfTranmsmSignals << transm; //add it to the list
                 }
@@ -327,9 +317,9 @@
 
         foreach(Signal activ, Side[side].ActivationSignals) //process all activation signals, and remove if necessary
         {
-            if(listOfTranmsmSignals.contains(Signal(activ.label, (direction)((side + 2)%4))))   //if there is a corresponding transmission signal
+            if(listOfTranmsmSignals.contains(Signal(activ.label, (direction)(side + 2))))   //if there is a corresponding transmission signal
             {
-                listOfTranmsmSignals.removeOne(Signal(activ.label, (direction)((side + 2)%4))); //remove signal from the list
+                listOfTranmsmSignals.removeOne(Signal(activ.label, (direction)(side + 2))); //remove signal from the list
                 // This is another place where having both an activation signal and trasmission signal
                 // from the same side could cause problems in the code.
                 continue; //check for next activation signal
@@ -369,18 +359,18 @@
 
         foreach(Signal transm, Side[side].TransmissionSignals)  //process all transmission signals, and remove if necessary
         {
-            if(listOfTranmsmSignals.contains(Signal(transm.label, (direction)((side + 2)%4)))) //check if transmission signal can be received
+            if(listOfTranmsmSignals.contains(Signal(transm.label, (direction)(side + 2)))) //check if transmission signal can be received
             {
                 ActiveTile *neighborForTransm = getNeighbor(transm.Target);//get neighbor tile to which signal is supposed to be transmited
                 if(neighborForTransm == 0)  //if there is no neighbor, then
                 {
-                    listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)((side + 2)%4))); //remove signal, since we need to keep it
+                    listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)(side + 2))); //remove signal, since we need to keep it
                     continue;
                 }
 
                 //else check if signal can be transmited
                 bool canTransm = false;
-                foreach(Signal activ, neighborForTransm->getActivationSignals((direction)((transm.Target + 2)%4))) //check for activation signals first
+                foreach(Signal activ, neighborForTransm->getActivationSignals((direction)(transm.Target + 2))) //check for activation signals first
                 {
                     if(activ.label == transm.label) //if labels match
                     {
@@ -391,7 +381,7 @@
 
                 if(canTransm)   //if can transmit, then
                 {
-                    listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)((side + 2)%4))); //remove signal, since we need to keep it
+                    listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)(side + 2))); //remove signal, since we need to keep it
                     continue;
                 }
 
@@ -400,7 +390,7 @@
                 // signals regardless of whether it finds them first, so isn't it redundant to use
                 // the same if statement twice?
 
-                foreach(Signal neighTransm, neighborForTransm->getTransmissionSignals((direction)((transm.Target + 2)%4)))
+                foreach(Signal neighTransm, neighborForTransm->getTransmissionSignals((direction)(transm.Target + 2)))
                 {
                     if(neighTransm.label == transm.label)//if can transmit
                     {
@@ -411,16 +401,16 @@
 
                 if(canTransm) //if can transmit, then
                 {
-                    listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)((side + 2)%4))); //remove signal, since we need to keep it
+                    listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)(side + 2))); //remove signal, since we need to keep it
                     continue;
                 }
 
                 //else, I can not transmit signal, so I need to remove the whole chain of transmission signals
-                listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)((side + 2)%4))); //remove signal, since it will be removed
+                listOfTranmsmSignals.removeOne(Signal(transm.label, (direction)(side + 2))); //remove signal, since it will be removed
                 RemoveTransmissionSignal(side, transm); //remove transmission signal in current tile
 
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!New Function to implement
-                getNeighbor(side)->removeUpwardChain((direction)((side + 2)%4), transm.label);
+                getNeighbor(side)->removeUpwardChain((direction)(side + 2), transm.label);
             }
 
             else    //if transmision signal can not be received, then remove all transmission and activation signals down the chain
@@ -430,7 +420,7 @@
                 if(getNeighbor(transm.Target) != 0) //if there is a tile for transmission signal, then delete all not needed signals and side labels
                 {
                     // !!!!!!!!!!!!!!!!!!New Function to Implement
-                    getNeighbor(transm.Target)->removeDownwardChain((direction)((transm.Target + 2)%4), transm.label);
+                    getNeighbor(transm.Target)->removeDownwardChain((direction)(transm.Target + 2), transm.label);
                 }
             }
         }
@@ -479,35 +469,35 @@
             if(transm.label == label)   //if it is a correct transmission signal, then
             {
                 RemoveTransmissionSignal(fromSide, transm); // remove it
-                getNeighbor(transm.Target)->removeDownwardChain((direction)((transm.Target + 2)%4), label); //and remove all signals down the chain
+                getNeighbor(transm.Target)->removeDownwardChain((direction)(transm.Target + 2), label); //and remove all signals down the chain
             }
         }
     }
 
 	// Post-Conditions:  Returns a list of a side's Labels or Signals
 
-    QList<int> &ActiveTile::getActiveLabels(direction side)
+    QList<int> ActiveTile::getActiveLabels(direction side)
 	{
 		return Side[side].ActiveLabels;
 	}
 
-    QList<int> &ActiveTile::getInactiveLabels(direction side)
+    QList<int> ActiveTile::getInactiveLabels(direction side)
 	{
 		return Side[side].InactiveLabels;
 	}
 
-    QList<Signal> &ActiveTile::getActivationSignals(direction side)
+    QList<Signal> ActiveTile::getActivationSignals(direction side)
 	{
 		return Side[side].ActivationSignals;
 	}
 
-    QList<Signal> &ActiveTile::getTransmissionSignals(direction side)
+    QList<Signal> ActiveTile::getTransmissionSignals(direction side)
 	{
 		return Side[side].TransmissionSignals;
 	}
 
 
-    QList<Signal> &ActiveTile::getInitiationSignals()
+    QList<Signal> ActiveTile::getInitiationSignals()
     {
         return this->InitiationSignals;
     }
