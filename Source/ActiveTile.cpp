@@ -521,6 +521,10 @@
         {
             Side[activationSignal.Target].ActiveLabels << activationSignal.label;
         }
+        else if(Side[activationSignal.Target].InactiveLabels.removeOne(-activationSignal.label))
+        {
+            Side[activationSignal.Target].ActiveLabels << -activationSignal.label;
+        }
     }
 
 	// Post-Conditions: Get functions for various properties, they return their appropriate type

@@ -77,13 +77,14 @@ void Simulator::startSimulation()
 #ifdef DEBUG
                     qDebug()<<"Second assembly tile "<<t2.getIndex()<<" was selected";
 #endif
-                    if(&temp == &currentSet && t2.getIndex() < t1.getIndex()) //check for redundant tiles
+                    if(temp.getSetId() == currentSet.getSetId() && t2.getIndex() < t1.getIndex()) //check for redundant tiles
                     {
 #ifdef DEBUG
     qDebug()<<"This tile is redundant one";
 #endif
                         continue;
                     }
+
                     QList<FitPlace*> *spots;
 #ifdef DEBUG
     qDebug()<<"Attempting to find fitting spots";
@@ -143,12 +144,13 @@ void Simulator::startSimulation()
 
     qDebug()<<"Simulation is over!";
 #ifdef DEBUG
-    qDebug()<<"Outputing result:";
+    qDebug()<<"Outputing result:\n\n";
     foreach(SetOfAssemblyTiles *S, manager.getListOfSets())
     {
+        qDebug()<<"Results for set "<<S->getSetId()<<"\n";
         foreach(AssemblyTile T, S->getListOfAssemblyTiles())
         {
-            qDebug()<<"Tile "<<T.getIndex();
+            qDebug()<<"AssemblyTile "<<T.getIndex()<<"\n";
             foreach(ActiveTile t, T.getListOfActiveTiles())
             {
                 qDebug()<<"Active tile "<<t.getId()<<" Coordinate "<<t.getCoordinates().first<<" "<<t.getCoordinates().second;
@@ -194,7 +196,9 @@ void Simulator::startSimulation()
                 }
 
             }
+            qDebug()<<"\n---------------------------------------------------------------------------------------\n";
         }
+        qDebug()<<"\n-------------------------------------------------------------------------------------------\n\n";
     }
 
 #endif

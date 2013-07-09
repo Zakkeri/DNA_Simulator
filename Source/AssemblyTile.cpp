@@ -300,8 +300,9 @@ QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)const
         modifiedCoordinate = coordinate;
         break;
     }
-    modifiedCoordinate.first -= this->tileOffset.first;
-    modifiedCoordinate.second -= this->tileOffset.second;
+    //Changed minus to plus!!!
+    modifiedCoordinate.first += this->tileOffset.first;
+    modifiedCoordinate.second += this->tileOffset.second;
     return modifiedCoordinate;
 }
 
