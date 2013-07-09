@@ -32,6 +32,7 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile &A)
 }
 
 SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
+
 /*
  Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
  */

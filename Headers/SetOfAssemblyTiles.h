@@ -20,6 +20,7 @@
 class SetOfAssemblyTiles
 {
 public:
+
 	SetOfAssemblyTiles();
     /*
      Default Constructor

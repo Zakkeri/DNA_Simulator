@@ -18,6 +18,7 @@
 class AssemblyTileSetManager
 {
 public:
+
 	AssemblyTileSetManager();
     /*
      Default constructor

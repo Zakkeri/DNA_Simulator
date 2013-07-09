@@ -79,6 +79,7 @@ void AssemblyTileSetManager::deleteSet(SetOfAssemblyTiles * S)
     }
 
     return;
+
 }
 
 void AssemblyTileSetManager::storeSetOnHardrive(int index) const

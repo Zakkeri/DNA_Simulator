@@ -13,6 +13,7 @@
 #include "../Headers/Simulator.h"
 #define DEBUG
 Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
+
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
@@ -42,7 +43,7 @@ void Simulator::startSimulation()
 #ifdef DEBUG
     qDebug()<<"Simulation for "<<NumberOfSteps<<" steps was started";
 #endif
-    for(currentStep; currentStep <= NumberOfSteps; currentStep++)   //Perform simulation, until the number of required steps is reached
+    for(; currentStep <= NumberOfSteps; currentStep++)   //Perform simulation, until the number of required steps is reached
     {
 #ifdef DEBUG
     qDebug()<<"Beginig step #"<<currentStep;
@@ -437,8 +438,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
     }
     else
     {
-        foreach(ActiveTile t1, T1.getListOfActiveTiles())   //else T1 has less active tiles, so process all active tiles of T1
+        for(QList<ActiveTile>::iterator activeTileIterator = T1.getListOfActiveTiles().begin();
+            activeTileIterator != T1.getListOfActiveTiles().end(); activeTileIterator++)   //else T1 has less active tiles, so process all active tiles of T1
         {
+            ActiveTile t1 = *activeTileIterator;
 #ifdef DEBUG
     qDebug()<<"Going to iterate through Assembly Tile "<<T1.getIndex();
 #endif
@@ -557,7 +560,7 @@ bool Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boun
     int strength = 0;
     foreach(int label1, t1.getActiveLabels(boundary))
     {
-        foreach(int label2, t2.getActiveLabels((direction)(boundary + 2)))
+        foreach(int label2, t2.getActiveLabels((direction)((boundary + 2)%4)))
         {
             if(label1 + label2 == 0)
             {
@@ -596,7 +599,7 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
     qDebug()<<"Processing next initiation signal of the connected tile: "<<init.label;
 #endif
 
-            if(init.Target != (direction)(next->side + 2))// process only initiation signals that point to the boundary direction
+            if(init.Target != (direction)((next->side + 2)%4))// process only initiation signals that point to the boundary direction
             {
 #ifdef DEBUG
     qDebug()<<"This signal points in the wrong direction";
@@ -628,7 +631,7 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
             }
 
             //else tell ActiveTile to process signal
-            connectedTile->processSignal((direction)(next->side + 2), init);
+            connectedTile->processSignal((direction)((next->side + 2)%4), init);
 
             //remove initiation signal, since it was processed
             mainTile->RemoveInitiationSignal(init);
@@ -639,7 +642,7 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
 #endif
         //next, we can clear all signals that can't be used
         mainTile->clearSide(next->side);
-        connectedTile->clearSide((direction)(next->side + 2));
+        connectedTile->clearSide((direction)((next->side + 2)%4));
 
         //make boundary list empty
         boundary->removeOne(next);
