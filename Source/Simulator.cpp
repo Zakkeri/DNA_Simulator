@@ -52,28 +52,28 @@ void Simulator::startSimulation()
 #ifdef DEBUG
     qDebug()<<"New set of tiles was created";
 #endif
-        SetOfAssemblyTiles currentSet = selectMostCurrentSetOfAssemblyTiles();  //most up to date set of assembly tiles
+        SetOfAssemblyTiles &currentSet = selectMostCurrentSetOfAssemblyTiles();  //most up to date set of assembly tiles
 #ifdef DEBUG
     qDebug()<<"Current set was selected";
 #endif
         QList<AssemblyTile>::Iterator i;
         for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
         {
-            AssemblyTile t1 = *i;   //get next first assembly tile t1
+            AssemblyTile &t1 = *i;   //get next first assembly tile t1
 #ifdef DEBUG
             qDebug()<<"Assembly tile "<<t1.getIndex()<<" was selected as first tile";
 #endif
             QList<SetOfAssemblyTiles*>::Iterator j;
             for(j = manager.getListOfSets().begin(); j!=manager.getListOfSets().end(); j++)//iterate through every set of assembly tiles
             {
-                SetOfAssemblyTiles temp = **j;   //get temporal set of assembly tiles for picking the second assembly tile
+                SetOfAssemblyTiles &temp = **j;   //get temporal set of assembly tiles for picking the second assembly tile
 #ifdef DEBUG
                 qDebug()<<"Set "<<temp.getSetId()<<" was selected to iterate through";
 #endif
                 QList<AssemblyTile>::Iterator k;
                 for(k = temp.getListOfAssemblyTiles().begin(); k!=temp.getListOfAssemblyTiles().end(); k++)    //each tile in temp iterate through and try to combine two tiles
                 {
-                    AssemblyTile t2 = *k;  //chose second assembly tile
+                    AssemblyTile &t2 = *k;  //chose second assembly tile
 #ifdef DEBUG
                     qDebug()<<"Second assembly tile "<<t2.getIndex()<<" was selected";
 #endif
@@ -552,7 +552,7 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
     return false;
 }
 
-bool Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boundary)
+int Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boundary)
 /*
  Post-Condition: returns the highest bond strenghth of tile t1 and t2 at specified direction of tile t1
  */

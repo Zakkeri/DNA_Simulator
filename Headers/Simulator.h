@@ -71,7 +71,7 @@ private:
      Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
      return true, if there is an overlap, and false otherwise. Also construct a list of boundary points, and check bond strength
      */
-    bool getBondStrength(ActiveTile &t1, ActiveTile &t2, direction boundary);
+    int getBondStrength(ActiveTile &t1, ActiveTile &t2, direction boundary);
     /*
      Post-Condition: returns the highest bond strenghth of tile t1 and t2 at specified direction of tile t1
      */
