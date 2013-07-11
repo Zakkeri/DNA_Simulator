@@ -69,6 +69,12 @@ public:
      Constructor with for assembly tile
      Post-Condition: Assembly tile object is created from combination of two assembly tiles
      */
+
+   // AssemblyTile(AssemblyTile &T);
+    /*
+     Copy-constructor
+     */
+
 	~AssemblyTile();
     /*
      Default destructor
@@ -105,6 +111,11 @@ public:
     void setIndex(int ind);
     /*
      Post-Condition: Sets the index of a tile
+     */
+
+    QMap<QPair<int, int>, ActiveTile> & getMap();
+    /*
+     Map is returned
      */
 
     QList<freeActiveLabel> & getListOfFreeSides();

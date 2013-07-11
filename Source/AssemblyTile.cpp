@@ -114,6 +114,14 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
     }
 }
 
+//AssemblyTile::AssemblyTile(AssemblyTile &T)
+/*
+ Copy-constructor
+ */
+//{
+
+//}
+
 AssemblyTile::~AssemblyTile()
 /*
  Default destructor
@@ -211,6 +219,13 @@ void AssemblyTile::setIndex(int ind)
     index = ind;
 }
 
+QMap<QPair<int, int>, ActiveTile> & AssemblyTile::getMap()
+/*
+ Map is returned
+ */
+{
+    return this->map;
+}
 QList<freeActiveLabel> &AssemblyTile::getListOfFreeSides()
 /*
  Post-Conditions: listOfFreeSides is returned
