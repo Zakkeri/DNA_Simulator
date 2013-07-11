@@ -242,7 +242,7 @@ QMap<QPair<int, int>, ActiveTile> & AssemblyTile::getMap()
  Map is returned
  */
 {
-    return map;
+    return this->map;
 }
 QList<freeActiveLabel> &AssemblyTile::getListOfFreeSides()
 /*
@@ -344,3 +344,4 @@ void AssemblyTile::addTile(ActiveTile newTile)
     this->ListOfActiveTiles.append(newTile);
     this->NumberOfActiveTiles++;
 }
+

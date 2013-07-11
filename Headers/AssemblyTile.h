@@ -137,6 +137,7 @@ public:
      Takes a coordinate of the tile and changes it to the spot in the map
      */
 
+
 private:
     QList<ActiveTile> ListOfActiveTiles;
     int NumberOfActiveTiles;

@@ -147,14 +147,18 @@ void Simulator::startSimulation()
     qDebug()<<"Simulation is over!";
 #ifdef DEBUG
     qDebug()<<"Outputing result:\n\n";
-    foreach(SetOfAssemblyTiles *S, manager.getListOfSets())
+    for(QList<SetOfAssemblyTiles*>::iterator iter1 = manager.getListOfSets().begin(); iter1 != manager.getListOfSets().end(); ++iter1)
     {
-        qDebug()<<"Results for set "<<S->getSetId()<<"\n";
-        foreach(AssemblyTile T, S->getListOfAssemblyTiles())
+        SetOfAssemblyTiles &S = **iter1;
+        qDebug()<<"Results for set "<<S.getSetId()<<"\n";
+        for(QList<AssemblyTile>::iterator iter2 = S.getListOfAssemblyTiles().begin(); iter2 != S.getListOfAssemblyTiles().end(); ++iter2)
         {
+            AssemblyTile &T = *iter2;
             qDebug()<<"AssemblyTile "<<T.getIndex()<<"\n";
-            foreach(ActiveTile t, T.getListOfActiveTiles())
+            for(QMap<QPair<int, int>, ActiveTile>::iterator iter3 = T.getMap().begin(); iter3 != T.getMap().end(); ++iter3)
             {
+                const QPair<int, int> & p = iter3.key();
+                ActiveTile &t = T.getMap()[p];
                 qDebug()<<"Active tile "<<t.getId()<<" Coordinate "<<t.getCoordinates().first<<" "<<t.getCoordinates().second;
                 for(int side = 0; side < 4; side++)
                 {
@@ -447,7 +451,7 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
         for(QList<ActiveTile>::iterator activeTileIterator = T1.getListOfActiveTiles().begin();
             activeTileIterator != T1.getListOfActiveTiles().end(); activeTileIterator++)   //else T1 has less active tiles, so process all active tiles of T1
         {
-            ActiveTile t1 = *activeTileIterator;
+            ActiveTile &t1 = *activeTileIterator;
 #ifdef DEBUG
     qDebug()<<"Going to iterate through Assembly Tile "<<T1.getIndex();
 #endif
