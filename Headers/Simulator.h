@@ -16,7 +16,7 @@
 #include"AssemblyTileSetManager.h"
 #include<QMap>
 #include<QString>
-
+#define DEBUG
 typedef struct fittingSpot
 {
     fittingSpot(const QPair<int, int>& c1, const QPair<int, int> &c2,const int num)

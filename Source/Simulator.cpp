@@ -11,7 +11,7 @@
  #include <QQueue>
 #include <QDebug>
 #include "../Headers/Simulator.h"
-#define DEBUG
+
 Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
 
 /*
@@ -60,7 +60,9 @@ void Simulator::startSimulation()
         for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
         {
             AssemblyTile &t1 = *i;   //get next first assembly tile t1
+
 #ifdef DEBUG
+
             qDebug()<<"Assembly tile "<<t1.getIndex()<<" was selected as first tile";
 #endif
             QList<SetOfAssemblyTiles*>::Iterator j;

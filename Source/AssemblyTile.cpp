@@ -12,12 +12,22 @@
 
 #include "../Headers/AssemblyTile.h"
 
+
+#ifdef DEBUG
+    int AssemblyTile::ID = 0;   //unique id for everytile
+#endif
 AssemblyTile::AssemblyTile(ActiveTile &T)
 /*
  Constructor with one tile
  Post-Condition: Assembly tile object that consists of only one tile is created
  */
 {
+#ifdef DEBUG
+    this->uniqueID = AssemblyTile::ID;
+    AssemblyTile::ID++;
+#endif
+
+
     T.setCoordinates(QPair<int, int>(0,0));
     ListOfActiveTiles << T;
     NumberOfActiveTiles = 1;
@@ -43,6 +53,11 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
  Post-Condition: Assembly tile object is created from combination of two assembly tiles
  */
 {
+#ifdef DEBUG
+    this->uniqueID = AssemblyTile::ID;
+    AssemblyTile::ID++;
+#endif
+
     AssemblyTile *toAssembly;
     AssemblyTile *fromAssembly;
 
@@ -118,10 +133,13 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
 /*
  Copy-constructor
  */
-//{
-
-//}
-
+/*{
+#ifdef DEBUG
+    this->uniqueID = AssemblyTile::ID;
+    AssemblyTile::ID++;
+#endif
+}
+*/
 AssemblyTile::~AssemblyTile()
 /*
  Default destructor
@@ -224,7 +242,7 @@ QMap<QPair<int, int>, ActiveTile> & AssemblyTile::getMap()
  Map is returned
  */
 {
-    return this->map;
+    return map;
 }
 QList<freeActiveLabel> &AssemblyTile::getListOfFreeSides()
 /*

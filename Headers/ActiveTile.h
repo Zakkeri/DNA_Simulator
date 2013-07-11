@@ -16,7 +16,7 @@
 #include<QSet>
 #include<QList>
 #include<QPair>
-
+#define DEBUG
 using namespace std;
 
 enum direction{x, y, _x, _y};	//for tile's sides
@@ -54,6 +54,10 @@ typedef struct TileSide
 class ActiveTile
 {
 public:
+
+#ifdef DEBUG
+    static int ID;   //unique id for everytile
+#endif
 	// Default Constructor
     ActiveTile();
 
@@ -193,8 +197,12 @@ private:
     ActiveTile *Neighbors[4];
 	TileSide Side[4];
     QList<Signal> InitiationSignals;
+
+#ifdef DEBUG
+    int uniqueID;   //unique id for everytile
+#endif
 };
 
-//int ActiveTile::counter = 0;
+
 
 #endif  //_ACTIVETILE_H

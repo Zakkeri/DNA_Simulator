@@ -15,11 +15,15 @@
 #include"AssemblyTile.h"
 #include<QList>
 
-
+#define DEBUG
 
 class SetOfAssemblyTiles
 {
 public:
+
+#ifdef DEBUG
+    static int ID;   //unique id for everytile
+#endif
 
 	SetOfAssemblyTiles();
     /*
@@ -83,6 +87,12 @@ private:
     QList<AssemblyTile> listOfAssemblyTiles;
     int numberOfAssemblyTiles;
     int setID_StepNumber;
+
+#ifdef DEBUG
+    int uniqueID;
+#endif
+
 };
+
 
 #endif  //_SETOFASSEMBLYTILES_H

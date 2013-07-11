@@ -10,13 +10,20 @@
 //
 
 #include "../Headers/ActiveTile.h"
-    
+
+
+#ifdef DEBUG
+    int ActiveTile::ID = 0;   //unique id for everytile
+#endif
 	// Default Constructor
 
 	ActiveTile::ActiveTile()
 	{
-        //TileID = ActiveTile::counter;
-       // ActiveTile::counter++;
+#ifdef DEBUG
+
+    this->uniqueID = ActiveTile::ID;
+    ActiveTile::ID++;
+#endif
         TileID = 0;
 
 	}
@@ -30,8 +37,11 @@
                            const QList<QList<Signal> > &ActivationSignals, const QList<QList<Signal> > &TransmissionSignals,
                            const QList<Signal> &Initiation, int ID)
     {
-       // TileID = ActiveTile::counter;
-        //ActiveTile::counter++;
+#ifdef DEBUG
+
+    this->uniqueID = ActiveTile::ID;
+    ActiveTile::ID++;
+#endif
         TileID = ID;
 
 		for(int i = 0; i < 4; i++)
@@ -57,6 +67,11 @@
 
 	ActiveTile::ActiveTile(const ActiveTile &otherTile)
 	{
+#ifdef DEBUG
+
+    this->uniqueID = ActiveTile::ID;
+    ActiveTile::ID++;
+#endif
         X_Y_Coordinates = otherTile.X_Y_Coordinates;
         TileID = otherTile.getId();
         this->InitiationSignals = otherTile.InitiationSignals;

@@ -12,12 +12,20 @@
 
 #include "../Headers/SetOfAssemblyTiles.h"
 
+#ifdef DEBUG
+    int SetOfAssemblyTiles::ID = 0;   //unique id for everytile
+#endif
+
 SetOfAssemblyTiles::SetOfAssemblyTiles()
 /*
  Default Constructor
  */
     :  numberOfAssemblyTiles(0), setID_StepNumber(-1)
 {
+#ifdef DEBUG
+    this->uniqueID = SetOfAssemblyTiles::ID;
+    SetOfAssemblyTiles::ID++;
+#endif
 
 }
 
@@ -27,6 +35,10 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile &A)
  */
     :  numberOfAssemblyTiles(1), setID_StepNumber(-1)
 {
+#ifdef DEBUG
+    this->uniqueID = SetOfAssemblyTiles::ID;
+    SetOfAssemblyTiles::ID++;
+#endif
     listOfAssemblyTiles.append(A);
     A.setIndex(0);
 }
@@ -38,6 +50,10 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
  */
     : numberOfAssemblyTiles(n), setID_StepNumber(-1)
 {
+#ifdef DEBUG
+    this->uniqueID = SetOfAssemblyTiles::ID;
+    SetOfAssemblyTiles::ID++;
+#endif
     for(int i = 0; i < n; i++)
     {
         listOfAssemblyTiles.append(A[i]);

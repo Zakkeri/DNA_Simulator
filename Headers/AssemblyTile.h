@@ -16,6 +16,7 @@
 #include<QList>
 #include<QMap>
 #include"ActiveTile.h"
+#define DEBUG
 //#include"../Headers/Simulator.h"
 struct freeActiveLabel
 {
@@ -59,6 +60,9 @@ class AssemblyTile
 {
 public:
 
+#ifdef DEBUG
+    static int ID;   //unique id for everytile
+#endif
     AssemblyTile(ActiveTile &T);
     /*
      Constructor with one tile
@@ -113,7 +117,7 @@ public:
      Post-Condition: Sets the index of a tile
      */
 
-    QMap<QPair<int, int>, ActiveTile> & getMap();
+    QMap<QPair<int, int>, ActiveTile> &getMap();
     /*
      Map is returned
      */
@@ -141,8 +145,12 @@ private:
     QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
     int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
     QList<freeActiveLabel> listOfFreeSides; //will hold a set of all free sides of the whole Assembly tile
-    //static int currentNumber;
+#ifdef DEBUG
+    int uniqueID;   //unique id for everytile
+#endif
+
+
 
 };
-//int AssemblyTile::currentNumber = 0;
+
 #endif  //_ASSEMBLYTILE_H
