@@ -267,6 +267,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
     if(other.NumberOfActiveTiles != this->NumberOfActiveTiles) return false;
 
     bool matching = true;
+    int rotations = 0;
     QList<QPair<int, int> > tileCoords, otherCoords;
     QPair<int, int> shift;
 
@@ -294,7 +295,9 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
             }
 
             //if coordinates are equal, then check if tiles are equal
-            if(map[this->nominalToMap(tileCoords[j])]->getId() != other.map[other.nominalToMap(tileCoords[j])]->getId())
+            ActiveTile tile1 = this->map[this->nominalToMap(tileCoords[j])];
+            ActiveTile tile2 = other.map[other.nominalToMap(tileCoords[j])];
+            if(!(tile1 == tile2))
             {
                 matching = false;
                 break;
@@ -304,9 +307,10 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
         // If they don't match, rotate the other tile, resort the list and try again
         if(!matching)
         {
-            for(QList<QPair<int, int> >::iterator currentPair = otherCoords.begin(); currentPair != otherCoords.end(); ++currentPair)
+            for(QList<QPair<int, int> >::iterator currentPair = otherCoords.begin(); currentPair != otherCoords.end(); currentPair++)
             {
-                *currentPair = QPair<int, int>(-(currentPair->second), currentPair->first);
+                *currentPair = QPair<int, int>(-currentPair->second, currentPair->first);
+                rotations++;
             }
             qSort(otherCoords);
         }else{
