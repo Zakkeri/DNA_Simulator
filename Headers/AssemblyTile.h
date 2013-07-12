@@ -63,7 +63,7 @@ public:
 #ifdef DEBUG
     static int ID;   //unique id for everytile
 #endif
-    AssemblyTile(ActiveTile &T);
+    AssemblyTile(ActiveTile *T);
     /*
      Constructor with one tile
      Post-Condition: Assembly tile object that consists of only one tile is created
@@ -74,7 +74,7 @@ public:
      Post-Condition: Assembly tile object is created from combination of two assembly tiles
      */
 
-   // AssemblyTile(AssemblyTile &T);
+   AssemblyTile(AssemblyTile &T);
     /*
      Copy-constructor
      */
@@ -97,12 +97,12 @@ public:
      Post-Condition: Assembly tile is rotated required amount of times along reference point
      */
 
-    QList<ActiveTile> & getListOfActiveTiles();
+    QList<ActiveTile *> &getListOfActiveTiles();
     /*
      Post-Condition: List of all active tiles is returned
      */
 
-    void addTile(ActiveTile newTile);
+    void addTile(ActiveTile *newTile);
     /*
      Post-Condition: The tile is added to the list of active tiles and the tile count is increased
      */
@@ -117,7 +117,7 @@ public:
      Post-Condition: Sets the index of a tile
      */
 
-    QMap<QPair<int, int>, ActiveTile> &getMap();
+    QMap<QPair<int, int>, ActiveTile *> &getMap();
     /*
      Map is returned
      */
@@ -139,11 +139,11 @@ public:
 
 
 private:
-    QList<ActiveTile> ListOfActiveTiles;
+    QList<ActiveTile*> ListOfActiveTiles;
     int NumberOfActiveTiles;
     QPair<int, int> tileOffset;
     direction rotation;
-    QMap<QPair<int, int>, ActiveTile> map	;//will map coordinate to tile
+    QMap<QPair<int, int>, ActiveTile*> map	;//will map coordinate to tile
     int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
     QList<freeActiveLabel> listOfFreeSides; //will hold a set of all free sides of the whole Assembly tile
 #ifdef DEBUG

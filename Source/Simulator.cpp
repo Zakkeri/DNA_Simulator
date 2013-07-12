@@ -155,36 +155,36 @@ void Simulator::startSimulation()
         {
             AssemblyTile &T = *iter2;
             qDebug()<<"AssemblyTile "<<T.getIndex()<<"\n";
-            for(QMap<QPair<int, int>, ActiveTile>::iterator iter3 = T.getMap().begin(); iter3 != T.getMap().end(); ++iter3)
+            for(QMap<QPair<int, int>, ActiveTile*>::iterator iter3 = T.getMap().begin(); iter3 != T.getMap().end(); ++iter3)
             {
                 const QPair<int, int> & p = iter3.key();
-                ActiveTile &t = T.getMap()[p];
-                qDebug()<<"Active tile "<<t.getId()<<" Coordinate "<<t.getCoordinates().first<<" "<<t.getCoordinates().second;
+                ActiveTile *t = T.getMap()[p];
+                qDebug()<<"Active tile "<<t->getId()<<" Coordinate "<<t->getCoordinates().first<<" "<<t->getCoordinates().second;
                 for(int side = 0; side < 4; side++)
                 {
                     qDebug()<<"Side "<<side;
                     qDebug()<<"Active Labels:";
-                    foreach(int label, t.getActiveLabels((direction)side))
+                    foreach(int label, t->getActiveLabels((direction)side))
                     {
                         qDebug()<<label;
                     }
                     qDebug()<<"Inactive Labels:";
-                    foreach(int label, t.getInactiveLabels((direction)side))
+                    foreach(int label, t->getInactiveLabels((direction)side))
                     {
                         qDebug()<<label;
                     }
                     qDebug()<<"Activation signals coming from this side:";
-                    foreach(Signal sig, t.getActivationSignals((direction)side))
+                    foreach(Signal sig, t->getActivationSignals((direction)side))
                     {
                         qDebug()<<"Label - "<<sig.label<<" Target Side - "<<sig.Target;
                     }
                     qDebug()<<"Transmission signals coming from this side:";
-                    foreach(Signal sig, t.getTransmissionSignals((direction)side))
+                    foreach(Signal sig, t->getTransmissionSignals((direction)side))
                     {
                         qDebug()<<"Label - "<<sig.label<<" Target Side - "<<sig.Target;
                     }
 
-                    ActiveTile* neigh = t.getNeighbor((direction) side);
+                    ActiveTile* neigh = t->getNeighbor((direction) side);
                     if(neigh == 0)
                     {
                         qDebug()<<"No neighbor on this side:";
@@ -196,7 +196,7 @@ void Simulator::startSimulation()
 
                 }
                 qDebug()<<"Initiation Signals:";
-                foreach(Signal sig, t.getInitiationSignals())
+                foreach(Signal sig, t->getInitiationSignals())
                 {
                     qDebug()<<"Label - "<<sig.label<<" Target Side - "<<sig.Target;
                 }
@@ -357,8 +357,9 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
 #ifdef DEBUG
     qDebug()<<"Going to iterate through Assembly Tile "<<T2.getIndex();
 #endif
-        foreach(ActiveTile t2, T2.getListOfActiveTiles())   //for each active tile in T2
+    for(QList<ActiveTile*>::iterator iter_t2 = T2.getListOfActiveTiles().begin(); iter_t2 != T2.getListOfActiveTiles().end(); ++iter_t2)   //for each active tile in T2
         {
+            ActiveTile & t2 = **iter_t2;
             ActiveTile *temp = T1.getTileFromCoordinates(t2.getCoordinates());  //check if there is an overlap
             if(temp != 0)   //if there is an overlap, then return true
             {
@@ -448,10 +449,10 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
     }
     else
     {
-        for(QList<ActiveTile>::iterator activeTileIterator = T1.getListOfActiveTiles().begin();
+        for(QList<ActiveTile*>::iterator activeTileIterator = T1.getListOfActiveTiles().begin();
             activeTileIterator != T1.getListOfActiveTiles().end(); activeTileIterator++)   //else T1 has less active tiles, so process all active tiles of T1
         {
-            ActiveTile &t1 = *activeTileIterator;
+            ActiveTile &t1 = **activeTileIterator;
 #ifdef DEBUG
     qDebug()<<"Going to iterate through Assembly Tile "<<T1.getIndex();
 #endif

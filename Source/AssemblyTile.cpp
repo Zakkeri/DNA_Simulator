@@ -16,7 +16,7 @@
 #ifdef DEBUG
     int AssemblyTile::ID = 0;   //unique id for everytile
 #endif
-AssemblyTile::AssemblyTile(ActiveTile &T)
+AssemblyTile::AssemblyTile(ActiveTile *T)
 /*
  Constructor with one tile
  Post-Condition: Assembly tile object that consists of only one tile is created
@@ -28,7 +28,7 @@ AssemblyTile::AssemblyTile(ActiveTile &T)
 #endif
 
 
-    T.setCoordinates(QPair<int, int>(0,0));
+    T->setCoordinates(QPair<int, int>(0,0));
     ListOfActiveTiles << T;
     NumberOfActiveTiles = 1;
 
@@ -39,9 +39,9 @@ AssemblyTile::AssemblyTile(ActiveTile &T)
 
     for(int dir = 0; dir < 4; dir++)
     {
-        foreach(int label, T.getActiveLabels((direction)dir))
+        foreach(int label, T->getActiveLabels((direction)dir))
         {
-            listOfFreeSides << freeActiveLabel(label, (direction) dir, T.getCoordinates());
+            listOfFreeSides << freeActiveLabel(label, (direction) dir, T->getCoordinates());
         }
     }
 
@@ -84,10 +84,10 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
     this->listOfFreeSides << fromAssembly->listOfFreeSides;
 
     // Add the tiles fromt the second assembly tile
-    foreach(ActiveTile next, fromAssembly->getListOfActiveTiles())
+    for(QList<ActiveTile*>::iterator next = fromAssembly->getListOfActiveTiles().begin(); next != fromAssembly->getListOfActiveTiles().end(); ++next)
     {
-        this->map.insert(this->nominalToMap(next.getCoordinates()),next);
-        this->addTile(next);
+        this->map.insert(this->nominalToMap((*next)->getCoordinates()), *next);
+        this->addTile(*next);
     }
 
     // Add new neighbors
@@ -129,22 +129,28 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
     }
 }
 
-//AssemblyTile::AssemblyTile(AssemblyTile &T)
+AssemblyTile::AssemblyTile(AssemblyTile &T)
 /*
  Copy-constructor
  */
-/*{
+{
 #ifdef DEBUG
     this->uniqueID = AssemblyTile::ID;
     AssemblyTile::ID++;
 #endif
+
 }
-*/
+
 AssemblyTile::~AssemblyTile()
 /*
  Default destructor
  */
 {
+    //Delete each ActiveTile from the list
+    for(QList<ActiveTile*>::iterator tile = this->ListOfActiveTiles.begin(); tile != this->ListOfActiveTiles.end(); ++tile)
+    {
+        delete *tile;
+    }
 
 }
 
@@ -155,7 +161,7 @@ ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
 {
     if(map.contains(this->nominalToMap(coordinate)))
     {
-        return &map[this->nominalToMap(coordinate)];
+        return map[this->nominalToMap(coordinate)];
     }
     else
     {
@@ -169,10 +175,10 @@ void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
  */
 {
     //ActiveTile currentTile;
-    QList<ActiveTile>::Iterator i;
+    QList<ActiveTile*>::Iterator i;
     for(i = ListOfActiveTiles.begin(); i != ListOfActiveTiles.end(); i++)
     {
-        i->moveTile(shift);
+        (*i)->moveTile(shift);
     }
 
     this->tileOffset.first -= shift.first;
@@ -213,7 +219,7 @@ void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
     this->moveAssemblyTile(refPoint);
 }
 
-QList<ActiveTile> & AssemblyTile::getListOfActiveTiles()
+QList<ActiveTile*> & AssemblyTile::getListOfActiveTiles()
 /*
  Post-Condition: List of all active tiles is returned
  */
@@ -237,7 +243,7 @@ void AssemblyTile::setIndex(int ind)
     index = ind;
 }
 
-QMap<QPair<int, int>, ActiveTile> & AssemblyTile::getMap()
+QMap<QPair<int, int>, ActiveTile*> & AssemblyTile::getMap()
 /*
  Map is returned
  */
@@ -262,7 +268,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
 
     bool matching = true;
     QList<QPair<int, int> > tileCoords, otherCoords;
-    QPair<int, int> currentPair, shift;
+    QPair<int, int> shift;
 
     // Extract the list of keys from either, please note that these are
     // automatically in ascending order, with the lowest tiles being the
@@ -288,7 +294,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
             }
 
             //if coordinates are equal, then check if tiles are equal
-            if(map[this->nominalToMap(tileCoords[j])].getId() != other.map[other.nominalToMap(tileCoords[j])].getId())
+            if(map[this->nominalToMap(tileCoords[j])]->getId() != other.map[other.nominalToMap(tileCoords[j])]->getId())
             {
                 matching = false;
                 break;
@@ -298,9 +304,9 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
         // If they don't match, rotate the other tile, resort the list and try again
         if(!matching)
         {
-            foreach(currentPair, otherCoords)
+            for(QList<QPair<int, int> >::iterator currentPair = otherCoords.begin(); currentPair != otherCoords.end(); ++currentPair)
             {
-                currentPair = QPair<int, int>(-currentPair.second, currentPair.first);
+                *currentPair = QPair<int, int>(-(currentPair->second), currentPair->first);
             }
             qSort(otherCoords);
         }else{
@@ -339,7 +345,7 @@ QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)const
     return modifiedCoordinate;
 }
 
-void AssemblyTile::addTile(ActiveTile newTile)
+void AssemblyTile::addTile(ActiveTile *newTile)
 {
     this->ListOfActiveTiles.append(newTile);
     this->NumberOfActiveTiles++;
