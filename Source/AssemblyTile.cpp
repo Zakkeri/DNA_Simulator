@@ -139,6 +139,37 @@ AssemblyTile::AssemblyTile(AssemblyTile &T)
     AssemblyTile::ID++;
 #endif
 
+    this->index = T.index;
+    this->listOfFreeSides = T.listOfFreeSides;
+    this->NumberOfActiveTiles = T.NumberOfActiveTiles;
+    this->rotation = T.rotation;
+    this->tileOffset = T.tileOffset;
+
+    //iterate through the list of ActiveTiles and add tiles to the list and map
+    for(QList<ActiveTile*>::iterator it = T.getListOfActiveTiles().begin(); it != T.getListOfActiveTiles().end(); ++it)
+    {
+        ActiveTile &next = **it;
+        ActiveTile * addTile = new ActiveTile(next);
+        this->ListOfActiveTiles<< addTile;
+        this->map[next.getCoordinates()] = addTile;
+    }
+
+    //iterate second time to assign neighbors
+    for(QList<ActiveTile*>::iterator it = T.getListOfActiveTiles().begin(); it != T.getListOfActiveTiles().end(); ++it)
+    {
+        ActiveTile &next = **it;    //get tile
+        ActiveTile &correspondingTile = *(this->map[next.getCoordinates()]);    //get corresponding tile
+        for(int i = 0; i < 4; i++)  //set all 4 neighbors
+        {
+            ActiveTile * neigh = next.getNeighbor((direction)i);
+            if(neigh == NULL)
+            {
+                continue;
+            }
+            correspondingTile.setNeighbor((direction)i, this->map[neigh->getCoordinates()]);
+        }
+
+    }
 }
 
 AssemblyTile::~AssemblyTile()
