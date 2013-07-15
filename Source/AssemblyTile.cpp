@@ -297,8 +297,8 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
     // Check to see if they have the same number of tiles
     if(other.NumberOfActiveTiles != this->NumberOfActiveTiles) return false;
 
+    AssemblyTile otherTile = other;
     bool matching = true;
-    int rotations = 0;
     QList<QPair<int, int> > tileCoords, otherCoords;
     QPair<int, int> shift;
 
@@ -306,7 +306,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
     // automatically in ascending order, with the lowest tiles being the
     // ones furthest to the left, then furthest down.
     tileCoords = this->map.keys();
-    otherCoords = other.map.keys();
+    otherCoords = otherTile.map.keys();
 
     // Need to check if the two lists are the same for all four rotations
     for(int i = 0; i < 4; i++)
@@ -327,7 +327,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
 
             //if coordinates are equal, then check if tiles are equal
             ActiveTile tile1 = this->map[this->nominalToMap(tileCoords[j])];
-            ActiveTile tile2 = other.map[other.nominalToMap(tileCoords[j])];
+            ActiveTile tile2 = otherTile.map[otherTile.nominalToMap(tileCoords[j])];
             if(!(tile1 == tile2))
             {
                 matching = false;
@@ -341,8 +341,8 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
             for(QList<QPair<int, int> >::iterator currentPair = otherCoords.begin(); currentPair != otherCoords.end(); currentPair++)
             {
                 *currentPair = QPair<int, int>(-currentPair->second, currentPair->first);
-                rotations++;
             }
+            otherTile.rotateAssemblyTile(QPair<int,int>(0,0),1);
             qSort(otherCoords);
         }else{
             return true;

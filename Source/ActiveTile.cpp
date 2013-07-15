@@ -603,7 +603,7 @@
     //Post-Conditions: Set functions for various properties
     void ActiveTile::setId(int id)
     {
-        TileID = id;
+        this->ID = id;
     }
 
 

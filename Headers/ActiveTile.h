@@ -172,14 +172,11 @@ public:
     QPair<int, int> getCoordinates();
     ActiveTile * getNeighbor(direction from);
 
-    //Post-Conditions: Set functions for various properties
-    void setId(int id);
-
-
     // Post-Conditions: Tile is rotated counterclockwise required number of times
     void rotateTile(int times);
 
-
+    //Post-Conditions: Set functions for various properties
+    void setId(int id);
 
 	// Post-Conditions: Tile is translated according to the shift coordinates
     void moveTile(QPair<int, int> shift);
