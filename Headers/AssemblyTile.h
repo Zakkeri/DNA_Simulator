@@ -74,7 +74,7 @@ public:
      Post-Condition: Assembly tile object is created from combination of two assembly tiles
      */
 
-   AssemblyTile(AssemblyTile &T);
+   AssemblyTile(const AssemblyTile &T);
     /*
      Copy-constructor
      */

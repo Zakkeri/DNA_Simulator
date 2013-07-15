@@ -129,7 +129,7 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
     }
 }
 
-AssemblyTile::AssemblyTile(AssemblyTile &T)
+AssemblyTile::AssemblyTile(const AssemblyTile &T)
 /*
  Copy-constructor
  */
@@ -146,7 +146,7 @@ AssemblyTile::AssemblyTile(AssemblyTile &T)
     this->tileOffset = T.tileOffset;
 
     //iterate through the list of ActiveTiles and add tiles to the list and map
-    for(QList<ActiveTile*>::iterator it = T.getListOfActiveTiles().begin(); it != T.getListOfActiveTiles().end(); ++it)
+    for(QList<ActiveTile*>::const_iterator it = T.ListOfActiveTiles.begin(); it != T.ListOfActiveTiles.end(); ++it)
     {
         ActiveTile &next = **it;
         ActiveTile * addTile = new ActiveTile(next);
@@ -155,7 +155,7 @@ AssemblyTile::AssemblyTile(AssemblyTile &T)
     }
 
     //iterate second time to assign neighbors
-    for(QList<ActiveTile*>::iterator it = T.getListOfActiveTiles().begin(); it != T.getListOfActiveTiles().end(); ++it)
+    for(QList<ActiveTile*>::const_iterator it = T.ListOfActiveTiles.begin(); it != T.ListOfActiveTiles.end(); ++it)
     {
         ActiveTile &next = **it;    //get tile
         ActiveTile &correspondingTile = *(this->map[next.getCoordinates()]);    //get corresponding tile
@@ -326,9 +326,9 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
             }
 
             //if coordinates are equal, then check if tiles are equal
-            ActiveTile tile1 = this->map[this->nominalToMap(tileCoords[j])];
-            ActiveTile tile2 = otherTile.map[otherTile.nominalToMap(tileCoords[j])];
-            if(!(tile1 == tile2))
+            ActiveTile *tile1 = this->map[this->nominalToMap(tileCoords[j])];
+            ActiveTile *tile2 = otherTile.map[otherTile.nominalToMap(tileCoords[j])];
+            if(!(*tile1 == *tile2))
             {
                 matching = false;
                 break;
