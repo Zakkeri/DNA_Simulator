@@ -45,6 +45,8 @@ AssemblyTile::AssemblyTile(ActiveTile *T)
         }
     }
 
+    isCopy = false; //Workaround
+
 }
 
 AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoint *> *boundary)
@@ -127,6 +129,8 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
             }
         }
     }
+
+    this->isCopy = false;   //Workaround
 }
 
 AssemblyTile::AssemblyTile(const AssemblyTile &T)
@@ -170,6 +174,8 @@ AssemblyTile::AssemblyTile(const AssemblyTile &T)
         }
 
     }
+
+    this->isCopy = true; //Workaround
 }
 
 AssemblyTile::~AssemblyTile()
@@ -177,10 +183,13 @@ AssemblyTile::~AssemblyTile()
  Default destructor
  */
 {
-    //Delete each ActiveTile from the list
-    for(QList<ActiveTile*>::iterator tile = this->ListOfActiveTiles.begin(); tile != this->ListOfActiveTiles.end(); ++tile)
+    if(!isCopy) //if it not a copy, then delete tiles
     {
-        delete *tile;
+        //Delete each ActiveTile from the list
+        for(QList<ActiveTile*>::iterator tile = this->ListOfActiveTiles.begin(); tile != this->ListOfActiveTiles.end(); ++tile)
+        {
+            delete *tile;
+        }
     }
 
 }

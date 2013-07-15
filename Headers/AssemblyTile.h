@@ -146,6 +146,10 @@ private:
     QMap<QPair<int, int>, ActiveTile*> map	;//will map coordinate to tile
     int index;  //in each set tiles will be numbered by index, so we can easily choose first and second tile from the same set
     QList<freeActiveLabel> listOfFreeSides; //will hold a set of all free sides of the whole Assembly tile
+
+    //Current workaround
+    bool isCopy;
+
 #ifdef DEBUG
     int uniqueID;   //unique id for everytile
 #endif
