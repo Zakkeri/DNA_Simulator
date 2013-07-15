@@ -35,9 +35,9 @@ AssemblyTileSetManager::~AssemblyTileSetManager()
  Default destructor
  */
 {
-    foreach(SetOfAssemblyTiles* next, listOfAssemblyTileSets)
+    for(QList<SetOfAssemblyTiles*>::iterator next = this->listOfAssemblyTileSets.begin(); next != this->listOfAssemblyTileSets.end(); ++next)
     {
-        delete next;
+        delete *next;
     }
 }
 
@@ -73,10 +73,15 @@ void AssemblyTileSetManager::deleteSet(SetOfAssemblyTiles * S)
  Post-Condition: If set S is in the collection, it is deleted
  */
 {
-    if(listOfAssemblyTileSets.contains(S))
+    for(QList<SetOfAssemblyTiles *>::const_iterator it = this->listOfAssemblyTileSets.begin(); it != this->listOfAssemblyTileSets.end(); ++it)
     {
-        listOfAssemblyTileSets.removeOne(S);
+        if(**it == *S)
+        {
+            this->listOfAssemblyTileSets.removeOne(S);
+            break;
+        }
     }
+
 
     return;
 

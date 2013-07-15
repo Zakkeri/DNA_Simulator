@@ -29,7 +29,7 @@ SetOfAssemblyTiles::SetOfAssemblyTiles()
 
 }
 
-SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile &A)
+SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile *A)
 /*
  Post-Condition: Set of assembly Tiles is created with one assembly tile in it
  */
@@ -40,10 +40,10 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile &A)
     SetOfAssemblyTiles::ID++;
 #endif
     listOfAssemblyTiles.append(A);
-    A.setIndex(0);
+    A->setIndex(0);
 }
 
-SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
+SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile *A[], int n)
 
 /*
  Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
@@ -57,7 +57,7 @@ SetOfAssemblyTiles::SetOfAssemblyTiles(AssemblyTile A [], int n)
     for(int i = 0; i < n; i++)
     {
         listOfAssemblyTiles.append(A[i]);
-        A[i].setIndex(i);
+        A[i]->setIndex(i);
     }
 }
 
@@ -66,54 +66,59 @@ SetOfAssemblyTiles::~SetOfAssemblyTiles()
  Default destructor
  */
 {
-
+    for(QList<AssemblyTile*>::iterator it = this->listOfAssemblyTiles.begin(); it != this->listOfAssemblyTiles.end(); ++it)
+    {
+        delete *it;
+    }
 }
 
-void SetOfAssemblyTiles::addAssemblyTile(AssemblyTile &T)
+void SetOfAssemblyTiles::addAssemblyTile(AssemblyTile * const T)
 /*
  Post-Condition: If assembly tile is not in the set, then it is added to the set
  */
 {
-    if(listOfAssemblyTiles.contains(T))
+    if(listOfAssemblyTiles.isEmpty())   //first check if list is empty
     {
-        return;
+        T->setIndex(0); //if it is, then set index to 0
     }
 
-    if(listOfAssemblyTiles.isEmpty())
+    else if(this->contains(T))    //if list is not empty, then check if tile is already in the set
     {
-        T.setIndex(0);
+        return; //if so, then return
     }
+
 
     else
     {
-        T.setIndex(listOfAssemblyTiles.last().getIndex() + 1);
+        T->setIndex(listOfAssemblyTiles.last()->getIndex() + 1);  //else assign next index to the tile
     }
 
-    listOfAssemblyTiles.append(T);
-    numberOfAssemblyTiles++;
+    listOfAssemblyTiles.append(T);  //add it to the list
+    numberOfAssemblyTiles++;    //increase # of tiles
     return;
 
 }
 
-void SetOfAssemblyTiles::removeAssemblyTile(const AssemblyTile &T)
+void SetOfAssemblyTiles::removeAssemblyTile(AssemblyTile * const T)
 /*
  Post-Condition: If assembly tile is in the set, then it is removed from the set
  */
 {
-    if(!listOfAssemblyTiles.contains(T))
+    if(!(this->contains(T)))
     {
         return;
     }
+
     listOfAssemblyTiles.removeOne(T);
     numberOfAssemblyTiles--;
 }
 
-bool SetOfAssemblyTiles::checkIfTileIsInTheSet(const AssemblyTile &T)const
+bool SetOfAssemblyTiles::checkIfTileIsInTheSet(const AssemblyTile * const T)const
 /*
  Post-Condition: If T is in the set, then function returns true, and false otherwise
  */
 {
-    return listOfAssemblyTiles.contains(T);
+    return this->contains(T);
 }
 
 AssemblyTile & SetOfAssemblyTiles::getAssemblyTile(int index)
@@ -121,10 +126,10 @@ AssemblyTile & SetOfAssemblyTiles::getAssemblyTile(int index)
  Post-Condition: Return an assembly tile corresponding to the index
  */
 {
-    return listOfAssemblyTiles[index];
+    return *(listOfAssemblyTiles[index]);
 }
 
-QList<AssemblyTile> & SetOfAssemblyTiles::getListOfAssemblyTiles()
+QList<AssemblyTile *> &SetOfAssemblyTiles::getListOfAssemblyTiles()
 /*
  Post-Condition: Returns list of all assembly tiles
  */
@@ -166,11 +171,27 @@ bool SetOfAssemblyTiles::operator==(const SetOfAssemblyTiles& other)const
     }
     for(int i = 0; i < this->numberOfAssemblyTiles; i++)
     {
-        if(!(this->listOfAssemblyTiles[i] == other.listOfAssemblyTiles[i]))
+        if(!(*(this->listOfAssemblyTiles[i]) == *(other.listOfAssemblyTiles[i])))
         {
             return false;
         }
     }
 
     return true;
+}
+
+bool SetOfAssemblyTiles::contains(const AssemblyTile * const T)const
+/*
+ Post-Condition: returns true if set already has tile T, and false otherwise
+ */
+{
+    for(QList<AssemblyTile*>::const_iterator it = this->listOfAssemblyTiles.begin(); it != this->listOfAssemblyTiles.end(); ++it)
+    {
+        if((**it) == (*T))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

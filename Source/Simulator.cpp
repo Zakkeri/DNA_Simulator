@@ -56,10 +56,10 @@ void Simulator::startSimulation()
 #ifdef DEBUG
     qDebug()<<"Current set was selected";
 #endif
-        QList<AssemblyTile>::Iterator i;
+        QList<AssemblyTile*>::Iterator i;
         for(i = currentSet.getListOfAssemblyTiles().begin(); i!=currentSet.getListOfAssemblyTiles().end(); i++)
         {
-            AssemblyTile &t1 = *i;   //get next first assembly tile t1
+            AssemblyTile &t1 = **i;   //get next first assembly tile t1
 
 #ifdef DEBUG
 
@@ -72,10 +72,10 @@ void Simulator::startSimulation()
 #ifdef DEBUG
                 qDebug()<<"Set "<<temp.getSetId()<<" was selected to iterate through";
 #endif
-                QList<AssemblyTile>::Iterator k;
+                QList<AssemblyTile*>::Iterator k;
                 for(k = temp.getListOfAssemblyTiles().begin(); k!=temp.getListOfAssemblyTiles().end(); k++)    //each tile in temp iterate through and try to combine two tiles
                 {
-                    AssemblyTile &t2 = *k;  //chose second assembly tile
+                    AssemblyTile &t2 = **k;  //chose second assembly tile
 #ifdef DEBUG
                     qDebug()<<"Second assembly tile "<<t2.getIndex()<<" was selected";
 #endif
@@ -122,7 +122,7 @@ void Simulator::startSimulation()
 #ifdef DEBUG
     qDebug()<<"Tiles were combined succesfuly, pushing it into a set of new tiles";
 #endif
-                        newSet->addAssemblyTile(*combined);
+                        newSet->addAssemblyTile(combined);
                     }
 
                     delete spots;   //free the memory
@@ -151,9 +151,9 @@ void Simulator::startSimulation()
     {
         SetOfAssemblyTiles &S = **iter1;
         qDebug()<<"Results for set "<<S.getSetId()<<"\n";
-        for(QList<AssemblyTile>::iterator iter2 = S.getListOfAssemblyTiles().begin(); iter2 != S.getListOfAssemblyTiles().end(); ++iter2)
+        for(QList<AssemblyTile*>::iterator iter2 = S.getListOfAssemblyTiles().begin(); iter2 != S.getListOfAssemblyTiles().end(); ++iter2)
         {
-            AssemblyTile &T = *iter2;
+            AssemblyTile &T = **iter2;
             qDebug()<<"AssemblyTile "<<T.getIndex()<<"\n";
             for(QMap<QPair<int, int>, ActiveTile*>::iterator iter3 = T.getMap().begin(); iter3 != T.getMap().end(); ++iter3)
             {

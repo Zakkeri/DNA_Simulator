@@ -29,11 +29,11 @@ public:
     /*
      Default Constructor
      */
-    SetOfAssemblyTiles(AssemblyTile &A);
+    SetOfAssemblyTiles(AssemblyTile *A);
     /*
      Post-Condition: Set of assembly Tiles is created with one assembly tile in it
      */
-	SetOfAssemblyTiles(AssemblyTile A [], int n);
+    SetOfAssemblyTiles(AssemblyTile *A [], int n);
     /*
      Post-Condition: Set of assembly Tiles is created with n assembly tiles in it
      */
@@ -42,16 +42,16 @@ public:
      Default destructor
      */
 
-    void addAssemblyTile(AssemblyTile &T);
+    void addAssemblyTile(AssemblyTile * const T);
     /*
      Post-Condition: If assembly tile is not in the set, then it is added to the set
      */
-    void removeAssemblyTile(const AssemblyTile &T);
+    void removeAssemblyTile(AssemblyTile * const T);
     /*
      Post-Condition: If assembly tile is in the set, then it is removed from the set
      */
 
-    bool checkIfTileIsInTheSet(const AssemblyTile &T) const;
+    bool checkIfTileIsInTheSet(const AssemblyTile * const T) const;
     /*
      Post-Condition: If T is in the set, then function returns true, and false otherwise
      */
@@ -60,7 +60,7 @@ public:
     /*
      Post-Condition: Return an assembly tile corresponding to the index
      */
-    QList<AssemblyTile> & getListOfAssemblyTiles();
+    QList<AssemblyTile*> & getListOfAssemblyTiles();
     /*
      Post-Condition: Returns list of all assembly tiles
      */
@@ -82,9 +82,15 @@ public:
     /*
      Overloaded equal operator
      */
+
+    bool contains(const AssemblyTile * const T)const;
+    /*
+     Post-Condition: returns true if set already has tile T, and false otherwise
+     */
+
 private:
 
-    QList<AssemblyTile> listOfAssemblyTiles;
+    QList<AssemblyTile*> listOfAssemblyTiles;
     int numberOfAssemblyTiles;
     int setID_StepNumber;
 
