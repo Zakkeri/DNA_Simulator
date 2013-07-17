@@ -17,6 +17,11 @@
 #include<QList>
 #include<QPair>
 #define DEBUG
+
+//#include"AssemblyTile.h"
+
+class AssemblyTile;
+
 using namespace std;
 
 enum direction{x, y, _x, _y};	//for tile's sides
@@ -187,6 +192,9 @@ public:
     // Post-Conditions: Returns true iff the tiles have the same ID
     bool operator==(ActiveTile &otherTile);
 
+    // Post-Conditions: Sets parent of this Active Tile
+    void setParent(AssemblyTile* p);
+
 private:
   //  static int counter;
 	int TileID;
@@ -194,6 +202,7 @@ private:
     ActiveTile *Neighbors[4];
 	TileSide Side[4];
     QList<Signal> InitiationSignals;
+    AssemblyTile * parent;
 
 #ifdef DEBUG
     int uniqueID;   //unique id for everytile

@@ -56,7 +56,7 @@ void AssemblyTileSetManager::addSet(SetOfAssemblyTiles * newSet)
 {
     newSet->setID(numberOfSets);
     numberOfSets++;
-    listOfAssemblyTileSets.append(newSet);
+    listOfAssemblyTileSets << newSet;
     return;
 }
 

@@ -66,11 +66,11 @@ void Simulator::startSimulation()
             qDebug()<<"Assembly tile "<<t1.getIndex()<<" was selected as first tile";
 #endif
             QList<SetOfAssemblyTiles*>::Iterator j;
-            for(j = manager.getListOfSets().begin(); j!=manager.getListOfSets().end(); j++)//iterate through every set of assembly tiles
+            for(j = manager.getListOfSets().begin(); j!=manager.getListOfSets().end(); ++j)//iterate through every set of assembly tiles
             {
                 SetOfAssemblyTiles &temp = **j;   //get temporal set of assembly tiles for picking the second assembly tile
 #ifdef DEBUG
-                qDebug()<<"Set "<<temp.getSetId()<<" was selected to iterate through";
+                    qDebug()<<"Set "<<temp.getSetId()<<" was selected to iterate through";
 #endif
                 QList<AssemblyTile*>::Iterator k;
                 for(k = temp.getListOfAssemblyTiles().begin(); k!=temp.getListOfAssemblyTiles().end(); k++)    //each tile in temp iterate through and try to combine two tiles

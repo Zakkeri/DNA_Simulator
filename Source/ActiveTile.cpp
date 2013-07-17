@@ -25,7 +25,7 @@
     ActiveTile::ID++;
 #endif
         TileID = 0;
-
+        parent = 0; //set parent to 0
 	}
 
 
@@ -43,6 +43,7 @@
     ActiveTile::ID++;
 #endif
         TileID = ID;
+        parent = 0; //set parent to 0
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -72,6 +73,8 @@
     this->uniqueID = ActiveTile::ID;
     ActiveTile::ID++;
 #endif
+        this->parent = otherTile.parent;    //set parent to the same parent of the other Tile
+
         X_Y_Coordinates = otherTile.X_Y_Coordinates;
         TileID = otherTile.getId();
         this->InitiationSignals = otherTile.InitiationSignals;
@@ -531,6 +534,7 @@
     //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
     void ActiveTile::activate(direction sourceSide, Signal activationSignal)
     {
+        // !!!!!!!!!!Need to add addition of free side
         Side[sourceSide].ActivationSignals.removeOne(activationSignal);
         if(Side[activationSignal.Target].InactiveLabels.removeOne(activationSignal.label))
         {
@@ -603,7 +607,7 @@
     //Post-Conditions: Set functions for various properties
     void ActiveTile::setId(int id)
     {
-        this->ID = id;
+        this->TileID = id;
     }
 
 
@@ -621,4 +625,11 @@
     {
         if(this->label == otherSignal.label && this->Target == otherSignal.Target) return true;
         return false;
+    }
+
+    // Post-Conditions: Sets parent of this Active Tile
+    void ActiveTile::setParent(AssemblyTile* p)
+    {
+        parent = p;
+
     }

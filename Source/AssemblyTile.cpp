@@ -27,7 +27,7 @@ AssemblyTile::AssemblyTile(ActiveTile *T)
     AssemblyTile::ID++;
 #endif
 
-
+    T->setParent(this); //set tiles' neighboor
     T->setCoordinates(QPair<int, int>(0,0));
     ListOfActiveTiles << T;
     NumberOfActiveTiles = 1;
@@ -156,6 +156,7 @@ AssemblyTile::AssemblyTile(const AssemblyTile &T)
         ActiveTile * addTile = new ActiveTile(next);
         this->ListOfActiveTiles<< addTile;
         this->map[next.getCoordinates()] = addTile;
+        addTile->setParent(this);
     }
 
     //iterate second time to assign neighbors
