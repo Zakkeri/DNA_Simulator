@@ -12,7 +12,7 @@
 
 #ifndef _ASSEMBLYTILESETMANAGER_H
 #define _ASSEMBLYTILESETMANAGER_H
-#include"SetOfAssemblyTiles.h"
+#include"../Headers/SetOfAssemblyTiles.h"
 #include<QList>
 
 class AssemblyTileSetManager

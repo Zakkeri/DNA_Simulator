@@ -396,3 +396,10 @@ void AssemblyTile::addTile(ActiveTile *newTile)
     this->NumberOfActiveTiles++;
 }
 
+void AssemblyTile::addFreeSide(freeActiveLabel side)
+/*
+ Post-Condition: side is added to the list of free sides
+ */
+{
+    this->listOfFreeSides << side;
+}

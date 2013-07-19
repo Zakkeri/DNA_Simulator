@@ -12,8 +12,8 @@
 
 #ifndef _SIMULATOR_H
 #define _SIMULATOR_H
-#include"SetOfAssemblyTiles.h"
-#include"AssemblyTileSetManager.h"
+#include"../Headers/SetOfAssemblyTiles.h"
+#include"../Headers/AssemblyTileSetManager.h"
 #include<QMap>
 #include<QString>
 #define DEBUG

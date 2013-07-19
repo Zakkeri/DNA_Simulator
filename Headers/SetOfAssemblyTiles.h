@@ -12,7 +12,7 @@
 
 #ifndef _SETOFASSEMBLYTILES_H
 #define _SETOFASSEMBLYTILES_H
-#include"AssemblyTile.h"
+#include"../Headers/AssemblyTile.h"
 #include<QList>
 
 #define DEBUG

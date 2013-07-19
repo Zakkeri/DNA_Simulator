@@ -15,46 +15,12 @@
 #include<QPair>
 #include<QList>
 #include<QMap>
-#include"ActiveTile.h"
+#include"../Headers/ActiveTile.h"
 #define DEBUG
 //#include"../Headers/Simulator.h"
-struct freeActiveLabel
-{
-    freeActiveLabel(int l, direction dir, QPair<int, int> xy)
-        :label(l), side(dir), xyCoord(xy)
-    {
+#include"../Headers/AdditionalData.h"
 
-    }
-
-    bool match(const freeActiveLabel& l)const
-    {
-        return this->label + l.label == 0;
-    }
-
-    bool operator==(const freeActiveLabel other)
-    {
-        return (this->label == other.label) && (this->side == other.side) && (this->xyCoord == other.xyCoord);
-    }
-
-    int label;
-    direction side;
-    QPair<int, int> xyCoord;
-};
-
-
-// Needed to move this here because the compiler was complaining.
-struct boundaryPoint
-{
-    boundaryPoint(const bool tile,const QPair<int, int> coord,const direction dir)
-        : isT1(tile), x_y(coord), side(dir)
-    {
-
-    }
-    bool isT1;  //to tell from which assembly tile the boundary point is infered
-    QPair<int, int> x_y; //coordinates of tile1 on the boundary point
-    direction side; //where the boundary is
-};
-
+class ActiveTile;
 
 class AssemblyTile
 {
@@ -137,6 +103,10 @@ public:
      Takes a coordinate of the tile and changes it to the spot in the map
      */
 
+    void addFreeSide(freeActiveLabel side);
+    /*
+     Post-Condition: side is added to the list of free sides
+     */
 
 private:
     QList<ActiveTile*> ListOfActiveTiles;
