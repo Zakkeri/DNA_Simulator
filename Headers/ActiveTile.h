@@ -59,11 +59,11 @@ public:
     void setCoordinates(QPair<int, int> coord);
 
 
-
+/*
 	// Post-Conditions: Object neighbor marked by integer neigh is replaced with newTile
     void setNeighbor(direction neigh, ActiveTile * newTile);
 
-
+*/
 
     // Post-Conditions: Adds/removes active labels or a list of active labels from a given side
     //
@@ -167,7 +167,7 @@ private:
   //  static int counter;
 	int TileID;
     QPair<int, int> X_Y_Coordinates;
-    ActiveTile *Neighbors[4];
+    //ActiveTile *Neighbors[4];
 	TileSide Side[4];
     QList<Signal> InitiationSignals;
     AssemblyTile * parent;

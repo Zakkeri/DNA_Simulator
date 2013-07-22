@@ -55,10 +55,10 @@
 
         InitiationSignals = Initiation;
 
-        for(int i = 0; i < 4; i++)
+        /*for(int i = 0; i < 4; i++)
         {
             Neighbors[i] = NULL;
-        }
+        }*/
     }
 
 
@@ -73,7 +73,7 @@
     this->uniqueID = ActiveTile::ID;
     ActiveTile::ID++;
 #endif
-        this->parent = otherTile.parent;    //set parent to the same parent of the other Tile
+        this->parent = 0;    //set parent to NULL, so it will be set manualy
 
         X_Y_Coordinates = otherTile.X_Y_Coordinates;
         TileID = otherTile.getId();
@@ -87,10 +87,10 @@
         }
 
         //So far, neighbors are all equal to NULL
-        for(int i = 0; i < 4; i++)
+      /*  for(int i = 0; i < 4; i++)
         {
             Neighbors[i] = NULL;
-        }
+        }*/
 	}
 
 
@@ -107,14 +107,14 @@
 
 	}
 
-
+/*
 	// Post-Conditions: Object neighbor marked by integer neigh is replaced with newTile
 
     void ActiveTile::setNeighbor(direction neigh, ActiveTile * newTile)
 	{
         this->Neighbors[neigh] = newTile;
 	}
-
+*/
 
 
 	// Post-Conditions: Adds/removes active labels or a list of active labels from a given side
@@ -534,7 +534,6 @@
     //Post-Conditions: required signal activates corresponding side. That is move inactive label to active set, remove activation signal
     void ActiveTile::activate(direction sourceSide, Signal activationSignal)
     {
-        // !!!!!!!!!!Need to add addition of free side
         Side[sourceSide].ActivationSignals.removeOne(activationSignal);
         if(Side[activationSignal.Target].InactiveLabels.removeOne(activationSignal.label))
         {
@@ -566,9 +565,38 @@
         return X_Y_Coordinates;
 	}
 
+    //Pre-Conditions: parent is not equal to NULL
+    //Post-Condition: Neighbor of current tile from given direction is returned
     ActiveTile * ActiveTile::getNeighbor(direction from)
 	{
-        return this->Neighbors[from];
+        switch(from)
+        {
+        case x:
+
+            return this->parent->getTileFromCoordinates(QPair<int, int>(this->X_Y_Coordinates.first + 1, this->X_Y_Coordinates.second));
+
+            break;
+
+        case y:
+
+            return this->parent->getTileFromCoordinates(QPair<int, int>(this->X_Y_Coordinates.first, this->X_Y_Coordinates.second + 1));
+
+            break;
+
+        case _x:
+
+            return this->parent->getTileFromCoordinates(QPair<int, int>(this->X_Y_Coordinates.first - 1, this->X_Y_Coordinates.second));
+
+            break;
+
+        case _y:
+
+            return this->parent->getTileFromCoordinates(QPair<int, int>(this->X_Y_Coordinates.first, this->X_Y_Coordinates.second - 1));
+
+            break;
+        default:
+            return NULL;
+        }
 	}
 
 
@@ -584,12 +612,15 @@
         Side[0] = Side[3];
         Side[3] = Side[2];
         Side[2] = tempSide;
+
+        /*
         ActiveTile *tempNeighbor;
         tempNeighbor = Neighbors[1];
         Neighbors[1] = Neighbors[0];
         Neighbors[0] = Neighbors[3];
         Neighbors[3] = Neighbors[2];
         Neighbors[2] = tempNeighbor;
+        */
     }
 
 

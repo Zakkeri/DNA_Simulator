@@ -60,7 +60,7 @@ private:
     /*
      Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
      */
-    AssemblyTile * attemptToCombine(AssemblyTile T1, AssemblyTile T2, FitPlace *place);
+    AssemblyTile * attemptToCombine(AssemblyTile *T1, AssemblyTile *T2, FitPlace *place);
     /*
      Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
      If not successful, NULL is returned

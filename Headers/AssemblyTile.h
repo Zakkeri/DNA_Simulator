@@ -70,7 +70,7 @@ public:
 
     void addTile(ActiveTile *newTile);
     /*
-     Post-Condition: The tile is added to the list of active tiles and the tile count is increased
+     Post-Condition: The tile is added to the list of active tiles, map, and the tile count is increased
      */
 
     int getIndex();
@@ -107,6 +107,9 @@ public:
     /*
      Post-Condition: side is added to the list of free sides
      */
+
+    bool getIsCopy();
+
 
 private:
     QList<ActiveTile*> ListOfActiveTiles;

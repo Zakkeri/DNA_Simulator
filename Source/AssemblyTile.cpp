@@ -54,6 +54,7 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
  Constructor with for assembly tile
  Post-Condition: Assembly tile object is created from combination of two assembly tiles
  */
+    :NumberOfActiveTiles(0),tileOffset (0,0), rotation(x), index(0)
 {
 #ifdef DEBUG
     this->uniqueID = AssemblyTile::ID;
@@ -74,6 +75,44 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
         toAssembly = &T2;
     }
 
+    this->listOfFreeSides = toAssembly->listOfFreeSides;
+    // Add in the list of free sides from the second tile
+    this->listOfFreeSides << fromAssembly->listOfFreeSides;
+
+    //First, copy ActiveTiles from toAssembly
+    for(QList<ActiveTile*>::iterator next = toAssembly->getListOfActiveTiles().begin(); next != toAssembly->getListOfActiveTiles().end(); ++next)
+    {
+        ActiveTile * nextTile = new ActiveTile(**next); //copy next ActiveTile
+        nextTile->setParent(this);  //set parent
+        this->addTile(nextTile);    //add tile to the list and map
+    }
+
+    //Next, copy ActiveTiles from fromAssembly
+    for(QList<ActiveTile*>::iterator next = fromAssembly->getListOfActiveTiles().begin(); next != fromAssembly->getListOfActiveTiles().end(); ++next)
+    {
+        ActiveTile * nextTile = new ActiveTile(**next); //copy next ActiveTile
+        nextTile->setParent(this);  //set parent
+        this->addTile(nextTile);    //add tile to the list and map
+    }
+
+    //Remove free labels on the boundary points
+    for(QList<boundaryPoint *>::const_iterator it = boundary->begin(); it != boundary->end(); ++it)
+    {
+        const boundaryPoint nextPoint = **it;
+        ActiveTile *firstTile = this->getTileFromCoordinates(nextPoint.x_y);
+        ActiveTile *otherTile = firstTile->getNeighbor(nextPoint.side);
+
+        foreach(int activeLabel, firstTile->getActiveLabels(nextPoint.side))
+        {
+            this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, nextPoint.side, firstTile->getCoordinates()));
+        }
+
+        foreach(int activeLabel, otherTile->getActiveLabels(direction(nextPoint.side + 2)))
+        {
+            this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, direction(nextPoint.side + 2), otherTile->getCoordinates()));
+        }
+    }
+    /*
     // Initilize is to be like the one the tiles are moving to
     this->ListOfActiveTiles = toAssembly->ListOfActiveTiles;
     this->listOfFreeSides = toAssembly->listOfFreeSides;
@@ -129,7 +168,7 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
             }
         }
     }
-
+*/
     this->isCopy = false;   //Workaround
 }
 
@@ -158,7 +197,7 @@ AssemblyTile::AssemblyTile(const AssemblyTile &T)
         this->map[next.getCoordinates()] = addTile;
         addTile->setParent(this);
     }
-
+/*
     //iterate second time to assign neighbors
     for(QList<ActiveTile*>::const_iterator it = T.ListOfActiveTiles.begin(); it != T.ListOfActiveTiles.end(); ++it)
     {
@@ -175,7 +214,7 @@ AssemblyTile::AssemblyTile(const AssemblyTile &T)
         }
 
     }
-
+*/
     this->isCopy = true; //Workaround
 }
 
@@ -184,13 +223,10 @@ AssemblyTile::~AssemblyTile()
  Default destructor
  */
 {
-    if(!isCopy) //if it not a copy, then delete tiles
+    //Delete each ActiveTile from the list
+    for(QList<ActiveTile*>::iterator tile = this->ListOfActiveTiles.begin(); tile != this->ListOfActiveTiles.end(); ++tile)
     {
-        //Delete each ActiveTile from the list
-        for(QList<ActiveTile*>::iterator tile = this->ListOfActiveTiles.begin(); tile != this->ListOfActiveTiles.end(); ++tile)
-        {
-            delete *tile;
-        }
+        delete *tile;
     }
 
 }
@@ -390,9 +426,14 @@ QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)const
     return modifiedCoordinate;
 }
 
+
 void AssemblyTile::addTile(ActiveTile *newTile)
+/*
+ Post-Condition: The tile is added to the list of active tiles, map, and the tile count is increased
+ */
 {
     this->ListOfActiveTiles.append(newTile);
+    this->map.insert(newTile->getCoordinates(), newTile);
     this->NumberOfActiveTiles++;
 }
 
@@ -402,4 +443,9 @@ void AssemblyTile::addFreeSide(freeActiveLabel side)
  */
 {
     this->listOfFreeSides << side;
+}
+
+bool AssemblyTile::getIsCopy()
+{
+    return this->isCopy;
 }

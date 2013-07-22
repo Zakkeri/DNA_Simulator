@@ -46,7 +46,7 @@ void Simulator::startSimulation()
     for(; currentStep <= NumberOfSteps; currentStep++)   //Perform simulation, until the number of required steps is reached
     {
 #ifdef DEBUG
-    qDebug()<<"Beginig step #"<<currentStep;
+    qDebug()<<"\n\nBeginig step #"<<currentStep;
 #endif
         SetOfAssemblyTiles *newSet = new SetOfAssemblyTiles;  //New empty set of Assembly tiles
 #ifdef DEBUG
@@ -110,7 +110,7 @@ void Simulator::startSimulation()
 #ifdef DEBUG
     qDebug()<<"Attempting to combine two tiles";
 #endif
-                        AssemblyTile* combined = attemptToCombine(t1, t2, next);
+                        AssemblyTile* combined = attemptToCombine(&t1, &t2, next);
                         delete next;    //free the memory
                         if(combined == 0)   //check if tiles were combined
                         {
@@ -285,7 +285,7 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
     return fitPlaces;
 }
 
-AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitPlace *place)
+AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, FitPlace *place)
 /*
  Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
  If not successful, NULL is returned
@@ -295,21 +295,25 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
     qDebug()<<"-------------------------------------------------------------------------------------------------";
     qDebug()<<"Inside attemptToCombine function";
 #endif
+    if(T1 == T2)    //if passing the same tile for T1 and T2
+    {
+        T2 = new AssemblyTile(*T1);
+    }
 #ifdef DEBUG
-    qDebug()<<"Rotating Assembly Tile "<<T2.getIndex();
+    qDebug()<<"Rotating Assembly Tile "<<T2->getIndex();
 #endif
-    T2.rotateAssemblyTile(place->secondtTile, place->rotation); //rotate second tile
+    T2->rotateAssemblyTile(place->secondtTile, place->rotation); //rotate second tile
 
     QPair<int, int> shift(place->firstTile.first - place->secondtTile.first, place->firstTile.second - place->secondtTile.second);
 #ifdef DEBUG
-    qDebug()<<"Shifting Assembly Tile "<<T2.getIndex();
+    qDebug()<<"Shifting Assembly Tile "<<T2->getIndex();
 #endif
-    T2.moveAssemblyTile(shift); //shift second tile
+    T2->moveAssemblyTile(shift); //shift second tile
 #ifdef DEBUG
     qDebug()<<"Checking if tiles overlap or have the right bond strength";
 #endif
     QList<boundaryPoint*> boundaryList;
-    if(checkOverlapAndStrength(T1, T2, &boundaryList)) //check if two tiles overlap and have enough bond strength
+    if(checkOverlapAndStrength(*T1, *T2, &boundaryList)) //check if two tiles overlap and have enough bond strength
     {
 #ifdef DEBUG
     qDebug()<<"Tiles can't be combined";
@@ -318,14 +322,17 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
         {
             delete next;
         }
-
+        if(T2->getIsCopy())
+        {
+            delete T2;
+        }
         return 0;
     }
 
 #ifdef DEBUG
     qDebug()<<"Creating new combined Assembly Tile";
 #endif
-    AssemblyTile *newTile = new AssemblyTile(T1, T2, &boundaryList);    //if yes, create a new tile
+    AssemblyTile *newTile = new AssemblyTile(*T1, *T2, &boundaryList);    //if yes, create a new tile
 #ifdef DEBUG
     qDebug()<<"Applying tile modification function";
 #endif
@@ -338,6 +345,10 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile T1,AssemblyTile T2, FitP
 #ifdef DEBUG
     qDebug()<<"-------------------------------------------------------------------------------------------------";
 #endif
+    if(T2->getIsCopy())
+    {
+        delete T2;
+    }
     return newTile;
 }
 
