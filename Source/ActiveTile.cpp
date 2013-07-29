@@ -538,7 +538,7 @@
         if(Side[activationSignal.Target].InactiveLabels.removeOne(activationSignal.label))
         {
             Side[activationSignal.Target].ActiveLabels << activationSignal.label;
-            if(this->getNeighbor(activationSignal.Target) != 0)
+            if(this->getNeighbor(activationSignal.Target) == 0)
             {
                 parent->addFreeSide(freeActiveLabel(activationSignal.label, activationSignal.Target, this->getCoordinates()));
             }
@@ -546,7 +546,7 @@
         else if(Side[activationSignal.Target].InactiveLabels.removeOne(-activationSignal.label))
         {
             Side[activationSignal.Target].ActiveLabels << -activationSignal.label;
-            if(this->getNeighbor(activationSignal.Target) != 0)
+            if(this->getNeighbor(activationSignal.Target) == 0)
             {
                 parent->addFreeSide(freeActiveLabel(-activationSignal.label, activationSignal.Target, this->getCoordinates()));
             }

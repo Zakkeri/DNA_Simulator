@@ -107,7 +107,7 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
             this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, nextPoint.side, firstTile->getCoordinates()));
         }
 
-        foreach(int activeLabel, otherTile->getActiveLabels(direction(nextPoint.side + 2)))
+        foreach(int activeLabel, otherTile->getActiveLabels(direction((nextPoint.side + 2)%4)))
         {
             this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, direction(nextPoint.side + 2), otherTile->getCoordinates()));
         }
@@ -258,6 +258,12 @@ void AssemblyTile::moveAssemblyTile(QPair<int, int> shift)
         (*i)->moveTile(shift);
     }
 
+    for(QList<freeActiveLabel>::iterator it = this->listOfFreeSides.begin(); it != this->listOfFreeSides.end(); ++it)
+    {
+        it->xyCoord.first += shift.first;
+        it->xyCoord.second += shift.second;
+    }
+
     this->tileOffset.first -= shift.first;
     this->tileOffset.second -= shift.second;
 }
@@ -290,6 +296,12 @@ void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
         this->tileOffset = QPair<int, int>(this->tileOffset.second, -this->tileOffset.first);
         this->rotation = (direction)((this->rotation + 3)%4);
         break;
+    }
+
+    //Next rotate freeLabels
+    for(QList<freeActiveLabel>::iterator it = this->listOfFreeSides.begin(); it != this->listOfFreeSides.end(); ++it)
+    {
+        it->side = (direction)((it->side + times) % 4);
     }
 
     // Then, move the refPoint back to where it should be
