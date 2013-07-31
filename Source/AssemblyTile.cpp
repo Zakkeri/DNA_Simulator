@@ -16,7 +16,7 @@
 #ifdef DEBUG
     int AssemblyTile::ID = 0;   //unique id for everytile
 #endif
-AssemblyTile::AssemblyTile(ActiveTile *T)
+AssemblyTile::AssemblyTile(ActiveTile *T, QMap<int, int> &StrengthFunction)
 /*
  Constructor with one tile
  Post-Condition: Assembly tile object that consists of only one tile is created
@@ -41,7 +41,10 @@ AssemblyTile::AssemblyTile(ActiveTile *T)
     {
         foreach(int label, T->getActiveLabels((direction)dir))
         {
-            listOfFreeSides << freeActiveLabel(label, (direction) dir, T->getCoordinates());
+            if(StrengthFunction[label] != 0)//if label has strength of 0, then don't add it as a free side
+            {
+                listOfFreeSides << freeActiveLabel(label, (direction) dir, T->getCoordinates());
+            }
         }
     }
 
@@ -105,11 +108,12 @@ AssemblyTile::AssemblyTile(AssemblyTile &T1, AssemblyTile &T2, QList<boundaryPoi
         foreach(int activeLabel, firstTile->getActiveLabels(nextPoint.side))
         {
             this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, nextPoint.side, firstTile->getCoordinates()));
+
         }
 
         foreach(int activeLabel, otherTile->getActiveLabels(direction((nextPoint.side + 2)%4)))
         {
-            this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, direction(nextPoint.side + 2), otherTile->getCoordinates()));
+            this->getListOfFreeSides().removeOne(freeActiveLabel(activeLabel, direction((nextPoint.side + 2)%4), otherTile->getCoordinates()));
         }
     }
     /*

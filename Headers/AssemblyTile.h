@@ -29,7 +29,7 @@ public:
 #ifdef DEBUG
     static int ID;   //unique id for everytile
 #endif
-    AssemblyTile(ActiveTile *T);
+    AssemblyTile(ActiveTile *T, QMap<int, int> &StrengthFunction);
     /*
      Constructor with one tile
      Post-Condition: Assembly tile object that consists of only one tile is created
