@@ -122,7 +122,10 @@ void Simulator::startSimulation()
 #ifdef DEBUG
     qDebug()<<"Tiles were combined succesfuly, pushing it into a set of new tiles";
 #endif
-                        newSet->addAssemblyTile(combined);
+                        if(!this->manager.isTileAdded(combined))
+                        {
+                            newSet->addAssemblyTile(combined);
+                        }
                     }
 
                     delete spots;   //free the memory

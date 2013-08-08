@@ -56,6 +56,10 @@ public:
     /*
      Post-Condition: Set that corresponds to index is retrived from the hardrive
      */
+    bool isTileAdded(AssemblyTile * Tile)const;
+    /*
+     Post-Condition: Returns true if Tile was added previously, and false otherwise
+     */
 private:
     QList<SetOfAssemblyTiles*> listOfAssemblyTileSets;
     int numberOfSets;

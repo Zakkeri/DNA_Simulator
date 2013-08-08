@@ -389,7 +389,7 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
 
             //if coordinates are equal, then check if tiles are equal
             ActiveTile *tile1 = this->map[this->nominalToMap(tileCoords[j])];
-            ActiveTile *tile2 = otherTile.map[otherTile.nominalToMap(tileCoords[j])];
+            ActiveTile *tile2 = otherTile.map[otherTile.nominalToMap(otherCoords[j])];
             if(!(*tile1 == *tile2))
             {
                 matching = false;

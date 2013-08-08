@@ -102,3 +102,19 @@ void AssemblyTileSetManager::loadSetFromHardrive(int index)const
 {
     return;
 }
+
+bool AssemblyTileSetManager::isTileAdded(AssemblyTile * Tile)const
+/*
+ Post-Condition: Returns true if Tile was added previously, and false otherwise
+ */
+{
+    for(QList<SetOfAssemblyTiles*>::const_iterator iter = this->listOfAssemblyTileSets.begin(); iter != this->listOfAssemblyTileSets.end(); ++iter)
+    {
+        if((*iter)->contains(Tile))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
