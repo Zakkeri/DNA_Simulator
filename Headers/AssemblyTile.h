@@ -20,6 +20,20 @@
 //#include"../Headers/Simulator.h"
 #include"../Headers/AdditionalData.h"
 
+inline QPair<int, int> unrotate(QPair<int, int> coord, int rotation)
+{
+    switch(rotation)
+    {
+    case 0: return coord;
+    case 1: return QPair<int, int>(coord.second, -coord.first);
+    case 2: return QPair<int, int>(-coord.first, -coord.second);
+    case 3: return QPair<int, int>(-coord.second, coord.first);
+    default:
+        return coord;
+    }
+
+}
+
 class ActiveTile;
 
 class AssemblyTile

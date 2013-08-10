@@ -277,7 +277,7 @@
     {
         foreach(Signal activation, Side[side].ActivationSignals) //first, check if initiation signal have corresponding activation signal
          {
-             if(activation.label != toProcess.label)   //if labels don't match, pick next one
+             if(activation.label != toProcess.label && -activation.label != toProcess.label)   //if labels don't match, pick next one
              {
                 continue;
              }
@@ -292,7 +292,7 @@
 
         foreach(Signal transm, Side[side].TransmissionSignals)  //next, check if any transmission signal can be used
         {
-            if(transm.label != toProcess.label) //if labels don't match, pick next one
+            if(transm.label != toProcess.label && -transm.label != toProcess.label) //if labels don't match, pick next one
             {
                 continue;
             }

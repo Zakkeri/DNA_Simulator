@@ -359,18 +359,18 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
     // Check to see if they have the same number of tiles
     if(other.NumberOfActiveTiles != this->NumberOfActiveTiles) return false;
 
-    AssemblyTile otherTile = other;
-    bool matching = true;
-    QList<QPair<int, int> > tileCoords, otherCoords;
-    QPair<int, int> shift;
+    bool matching = true;   //flag to decide whether two tiles match so far
+    QList<QPair<int, int> > tileCoords, otherCoords;    //coordinate keepers
+    QPair<int, int> shift;  //distance between two tiles
+    int rotation = 0;   //current rotation of the second tile
 
     // Extract the list of keys from either, please note that these are
     // automatically in ascending order, with the lowest tiles being the
     // ones furthest to the left, then furthest down.
     tileCoords = this->map.keys();
-    otherCoords = otherTile.map.keys();
+    otherCoords = other.map.keys();
 
-    // Need to check if the two lists are the same for all four rotations
+    // Check whether two tiles match tile by tile. If they don't, then rotate second tile and try to match again
     for(int i = 0; i < 4; i++)
     {
         // First, figure out how much the offset is, then account for it.
@@ -383,36 +383,46 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
             if(tileCoords[j] != QPair<int, int>(otherCoords[j].first + shift.first, otherCoords[j].second + shift.second))
 
             {
-                matching = false;
+                matching = false;   //coordinates are not equal, thus tiles do not match anymore
                 break;
             }
 
             //if coordinates are equal, then check if tiles are equal
-            ActiveTile *tile1 = this->map[this->nominalToMap(tileCoords[j])];
-            ActiveTile *tile2 = otherTile.map[otherTile.nominalToMap(QPair<int, int>(tileCoords[j].first - shift.first, tileCoords[j].second - shift.second))];
+            ActiveTile *tile1 = this->map[tileCoords[j]];   //get first tile
+
+            //NOTE: otherCoords[j] contains rotated coordinates, thus we need to un rotate them to get tile from the map
+            ActiveTile *tile2 = other.map[unrotate(otherCoords[j], rotation)];  //get second tile
+
+            //Check whether two Active tiles are equal
             if(!(*tile1 == *tile2))
             {
-                matching = false;
+                matching = false;   //Active tiles are not equal, thus Assembly Tiles are not equal anymore
                 break;
             }
         }
 
-        // If they don't match, rotate the other tile, resort the list and try again
+        // If they don't match, rotate the other tile
         if(!matching)
         {
-            matching = true;
+            rotation++; //increase rotation number
+
+            matching = true;    //set matching back to true
+
+            //Rotate each coordinate of the second tile
             for(QList<QPair<int, int> >::iterator currentPair = otherCoords.begin(); currentPair != otherCoords.end(); currentPair++)
             {
                 *currentPair = QPair<int, int>(-currentPair->second, currentPair->first);
             }
-            otherTile.rotateAssemblyTile(QPair<int,int>(0,0),1);
-            qSort(otherCoords);
-        }else{
+
+            qSort(otherCoords); //Sort coordinates
+        }
+        else    //tiles match
+        {
             return true;
         }
     }
 
-    return false;
+    return false;   //tiles don't match for all 4 rotations
 }
 
 QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)const
