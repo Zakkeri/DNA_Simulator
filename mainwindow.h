@@ -29,7 +29,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    int currentTile;
+    int currentTile;    //will keep a count of the tiles that were created
 };
 
 #endif // MAINWINDOW_H

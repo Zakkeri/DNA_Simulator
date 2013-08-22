@@ -16,9 +16,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_6->setVisible(false);
     ui->label_7->setVisible(false);
     ui->activationSignals_table->setVisible(false);
-    ui->activeLabels_list->setVisible(false);
+    ui->activeLabels_listWidget->setVisible(false);
     ui->transmissionSignals_table->setVisible(false);
-    ui->inactiveLabels_list->setVisible(false);
+    ui->inactiveLabels_listWidget->setVisible(false);
+    ui->activeLabel_Add_pushButton->setVisible(false);
+    ui->activeLabel_Remove_pushButton->setVisible(false);
+    ui->inactiveLabel_Add_pushButton->setVisible(false);
+    ui->inactiveLabel_Remove_pushButton->setVisible(false);
+    ui->activationSig_Add_pushButton->setVisible(false);
+    ui->activationSig_Remove_pushButton->setVisible(false);
+    ui->transmissionSig_Add_pushButton->setVisible(false);
+    ui->transmissionSig_Remove_pushButton->setVisible(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -41,9 +50,19 @@ void MainWindow::on_actionNew_Simulation_triggered()
     ui->label_6->setVisible(true);
     ui->label_7->setVisible(true);
     ui->activationSignals_table->setVisible(true);
-    ui->activeLabels_list->setVisible(true);
+    ui->activeLabels_listWidget->setVisible(true);
     ui->transmissionSignals_table->setVisible(true);
-    ui->inactiveLabels_list->setVisible(true);
+    ui->inactiveLabels_listWidget->setVisible(true);
+    ui->activeLabel_Add_pushButton->setVisible(true);
+    ui->activeLabel_Remove_pushButton->setVisible(true);
+    ui->inactiveLabel_Add_pushButton->setVisible(true);
+    ui->inactiveLabel_Remove_pushButton->setVisible(true);
+    ui->activationSig_Add_pushButton->setVisible(true);
+    ui->activationSig_Remove_pushButton->setVisible(true);
+    ui->transmissionSig_Add_pushButton->setVisible(true);
+    ui->transmissionSig_Remove_pushButton->setVisible(true);
+
+
 }
 
 
@@ -51,8 +70,14 @@ void MainWindow::on_actionNew_Simulation_triggered()
 void MainWindow::on_NewTileButton_clicked()
 {
     qDebug()<<"New Tile Button pressed";
+
+    /*QListWidgetItem item("Tile " + QString::number(this->currentTile));
+    item.setFlags(item.flags() | Qt::ItemIsEditable);*/
+
     ui->listWidget->addItem(QString("Tile ") + QString::number(this->currentTile)); //add tile to the list
+
     ui->tile_comboBox->addItem(QString("Tile ") + QString::number(this->currentTile));  //add tile to the combo box
+
     (this->currentTile)++;  //increase counter
 
 
@@ -69,7 +94,9 @@ void MainWindow::on_DeleteTileButton_clicked()
     {
         qDebug()<<"Selected item: "<<ui->listWidget->currentItem()->text()<<"\n";
 
-        delete ui->listWidget->currentItem();   //delete it from the list
+        ui->tile_comboBox->removeItem(ui->listWidget->currentRow());    //remove item from the combo box
+
+        delete ui->listWidget->takeItem(ui->listWidget->currentRow());   //delete it from the list
 
     }
 
@@ -96,9 +123,17 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->label_6->setVisible(true);
         ui->label_7->setVisible(true);
         ui->activationSignals_table->setVisible(true);
-        ui->activeLabels_list->setVisible(true);
+        ui->activeLabels_listWidget->setVisible(true);
         ui->transmissionSignals_table->setVisible(true);
-        ui->inactiveLabels_list->setVisible(true);
+        ui->inactiveLabels_listWidget->setVisible(true);
+        ui->activeLabel_Add_pushButton->setVisible(true);
+        ui->activeLabel_Remove_pushButton->setVisible(true);
+        ui->inactiveLabel_Add_pushButton->setVisible(true);
+        ui->inactiveLabel_Remove_pushButton->setVisible(true);
+        ui->activationSig_Add_pushButton->setVisible(true);
+        ui->activationSig_Remove_pushButton->setVisible(true);
+        ui->transmissionSig_Add_pushButton->setVisible(true);
+        ui->transmissionSig_Remove_pushButton->setVisible(true);
         break;
     case 1:
         qDebug()<<"Index = 1\n";
@@ -112,9 +147,17 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->label_6->setVisible(true);
         ui->label_7->setVisible(true);
         ui->activationSignals_table->setVisible(true);
-        ui->activeLabels_list->setVisible(true);
+        ui->activeLabels_listWidget->setVisible(true);
         ui->transmissionSignals_table->setVisible(true);
-        ui->inactiveLabels_list->setVisible(true);
+        ui->inactiveLabels_listWidget->setVisible(true);
+        ui->activeLabel_Add_pushButton->setVisible(true);
+        ui->activeLabel_Remove_pushButton->setVisible(true);
+        ui->inactiveLabel_Add_pushButton->setVisible(true);
+        ui->inactiveLabel_Remove_pushButton->setVisible(true);
+        ui->activationSig_Add_pushButton->setVisible(true);
+        ui->activationSig_Remove_pushButton->setVisible(true);
+        ui->transmissionSig_Add_pushButton->setVisible(true);
+        ui->transmissionSig_Remove_pushButton->setVisible(true);
         break;
     case 2:
         qDebug()<<"Index = 2\n";
@@ -127,9 +170,17 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->label_6->setVisible(false);
         ui->label_7->setVisible(false);
         ui->activationSignals_table->setVisible(false);
-        ui->activeLabels_list->setVisible(false);
+        ui->activeLabels_listWidget->setVisible(false);
         ui->transmissionSignals_table->setVisible(false);
-        ui->inactiveLabels_list->setVisible(false);
+        ui->inactiveLabels_listWidget->setVisible(false);
+        ui->activeLabel_Add_pushButton->setVisible(false);
+        ui->activeLabel_Remove_pushButton->setVisible(false);
+        ui->inactiveLabel_Add_pushButton->setVisible(false);
+        ui->inactiveLabel_Remove_pushButton->setVisible(false);
+        ui->activationSig_Add_pushButton->setVisible(false);
+        ui->activationSig_Remove_pushButton->setVisible(false);
+        ui->transmissionSig_Add_pushButton->setVisible(false);
+        ui->transmissionSig_Remove_pushButton->setVisible(false);
         break;
     case 3:
         qDebug()<<"Index = 3\n";
@@ -142,9 +193,17 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->label_6->setVisible(false);
         ui->label_7->setVisible(false);
         ui->activationSignals_table->setVisible(false);
-        ui->activeLabels_list->setVisible(false);
+        ui->activeLabels_listWidget->setVisible(false);
         ui->transmissionSignals_table->setVisible(false);
-        ui->inactiveLabels_list->setVisible(false);
+        ui->inactiveLabels_listWidget->setVisible(false);
+        ui->activeLabel_Add_pushButton->setVisible(false);
+        ui->activeLabel_Remove_pushButton->setVisible(false);
+        ui->inactiveLabel_Add_pushButton->setVisible(false);
+        ui->inactiveLabel_Remove_pushButton->setVisible(false);
+        ui->activationSig_Add_pushButton->setVisible(false);
+        ui->activationSig_Remove_pushButton->setVisible(false);
+        ui->transmissionSig_Add_pushButton->setVisible(false);
+        ui->transmissionSig_Remove_pushButton->setVisible(false);
         break;
     case 4:
         qDebug()<<"Index = 4\n";
@@ -157,9 +216,17 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->label_6->setVisible(false);
         ui->label_7->setVisible(false);
         ui->activationSignals_table->setVisible(false);
-        ui->activeLabels_list->setVisible(false);
+        ui->activeLabels_listWidget->setVisible(false);
         ui->transmissionSignals_table->setVisible(false);
-        ui->inactiveLabels_list->setVisible(false);
+        ui->inactiveLabels_listWidget->setVisible(false);
+        ui->activeLabel_Add_pushButton->setVisible(false);
+        ui->activeLabel_Remove_pushButton->setVisible(false);
+        ui->inactiveLabel_Add_pushButton->setVisible(false);
+        ui->inactiveLabel_Remove_pushButton->setVisible(false);
+        ui->activationSig_Add_pushButton->setVisible(false);
+        ui->activationSig_Remove_pushButton->setVisible(false);
+        ui->transmissionSig_Add_pushButton->setVisible(false);
+        ui->transmissionSig_Remove_pushButton->setVisible(false);
         break;
     default:
         qDebug()<<"default: Index = "<<index<<"\n";

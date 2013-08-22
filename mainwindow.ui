@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>799</width>
-    <height>506</height>
+    <height>556</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <x>-4</x>
       <y>-1</y>
       <width>281</width>
-      <height>461</height>
+      <height>501</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -37,7 +37,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>380</y>
+        <y>420</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -50,7 +50,7 @@
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>380</y>
+        <y>420</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -65,7 +65,7 @@
         <x>10</x>
         <y>10</y>
         <width>261</width>
-        <height>361</height>
+        <height>391</height>
        </rect>
       </property>
       <property name="editTriggers">
@@ -76,6 +76,9 @@
       </property>
       <property name="dragDropOverwriteMode">
        <bool>false</bool>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
       </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::SingleSelection</enum>
@@ -100,6 +103,9 @@
       </property>
       <property name="text">
        <string>Tile</string>
+      </property>
+      <property name="buddy">
+       <cstring>tile_comboBox</cstring>
       </property>
      </widget>
      <widget class="QTableWidget" name="tableWidget_2">
@@ -143,6 +149,9 @@
       <property name="text">
        <string>Initiation Signals</string>
       </property>
+      <property name="buddy">
+       <cstring>tableWidget_2</cstring>
+      </property>
      </widget>
      <widget class="QComboBox" name="tile_comboBox">
       <property name="geometry">
@@ -152,6 +161,32 @@
         <width>111</width>
         <height>22</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="initiationSig_Add_button">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>370</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="initiationSig_Remove_button">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>370</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove</string>
       </property>
      </widget>
     </widget>
@@ -199,6 +234,9 @@
       <property name="text">
        <string>Theta Parameter</string>
       </property>
+      <property name="buddy">
+       <cstring>ThetaParam_SpinBox</cstring>
+      </property>
      </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
@@ -211,6 +249,9 @@
       </property>
       <property name="text">
        <string>Number of Steps</string>
+      </property>
+      <property name="buddy">
+       <cstring>NumberOfSteps_SpinBox</cstring>
       </property>
      </widget>
      <widget class="QSpinBox" name="ThetaParam_SpinBox">
@@ -231,6 +272,9 @@
         <width>51</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="maximum">
+       <number>1000</number>
       </property>
      </widget>
      <widget class="QPushButton" name="BeginSim_Button">
@@ -287,13 +331,16 @@
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>260</y>
+      <y>290</y>
       <width>91</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
      <string>Activation Signals</string>
+    </property>
+    <property name="buddy">
+     <cstring>activationSignals_table</cstring>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -303,7 +350,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>260</y>
+      <y>290</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -311,31 +358,8 @@
     <property name="text">
      <string>Transmission Signals</string>
     </property>
-   </widget>
-   <widget class="QListView" name="activeLabels_list">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>110</y>
-      <width>151</width>
-      <height>131</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListView" name="inactiveLabels_list">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>110</y>
-      <width>151</width>
-      <height>131</height>
-     </rect>
+    <property name="buddy">
+     <cstring>transmissionSignals_table</cstring>
     </property>
    </widget>
    <widget class="QTableWidget" name="activationSignals_table">
@@ -345,7 +369,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>290</y>
+      <y>320</y>
       <width>201</width>
       <height>131</height>
      </rect>
@@ -389,7 +413,7 @@
     <property name="geometry">
      <rect>
       <x>570</x>
-      <y>290</y>
+      <y>320</y>
       <width>201</width>
       <height>131</height>
      </rect>
@@ -475,6 +499,130 @@
      <string>Side -Y</string>
     </property>
    </widget>
+   <widget class="QListWidget" name="activeLabels_listWidget">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>110</y>
+      <width>151</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="inactiveLabels_listWidget">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>110</y>
+      <width>151</width>
+      <height>131</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="activeLabel_Add_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>250</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="activeLabel_Remove_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>250</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="inactiveLabel_Remove_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>250</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="inactiveLabel_Add_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>250</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="activationSig_Remove_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="activationSig_Add_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="transmissionSig_Add_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="transmissionSig_Remove_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -491,7 +639,11 @@
     </property>
     <addaction name="separator"/>
     <addaction name="actionNew_Simulation"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_2"/>
     <addaction name="actionLoad"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -516,6 +668,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionNew_Simulation"/>
+   <addaction name="actionSave_2"/>
    <addaction name="actionLoad"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -532,6 +685,21 @@
   <action name="actionLoad">
    <property name="text">
     <string>Load</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save As..</string>
+   </property>
+  </action>
+  <action name="actionSave_2">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
