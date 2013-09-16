@@ -108,7 +108,7 @@
        <cstring>tile_comboBox</cstring>
       </property>
      </widget>
-     <widget class="QTableWidget" name="tableWidget_2">
+     <widget class="QTableWidget" name="initiation_signals_tableWidget">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -150,7 +150,7 @@
        <string>Initiation Signals</string>
       </property>
       <property name="buddy">
-       <cstring>tableWidget_2</cstring>
+       <cstring>initiation_signals_tableWidget</cstring>
       </property>
      </widget>
      <widget class="QComboBox" name="tile_comboBox">
@@ -194,7 +194,7 @@
      <attribute name="title">
       <string>Strength Function</string>
      </attribute>
-     <widget class="QTableWidget" name="tableWidget">
+     <widget class="QTableWidget" name="strength_func_tableWidget">
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -216,6 +216,32 @@
         <string>Strength</string>
        </property>
       </column>
+     </widget>
+     <widget class="QPushButton" name="strengthFunc_Add_Button">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>430</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="strengthFunc_Remove_Button">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>430</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -298,7 +324,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>400</x>
       <y>80</y>
       <width>71</width>
       <height>16</height>
@@ -502,7 +528,7 @@
    <widget class="QListWidget" name="activeLabels_listWidget">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>360</x>
       <y>110</y>
       <width>151</width>
       <height>131</height>
@@ -522,7 +548,7 @@
    <widget class="QPushButton" name="activeLabel_Add_pushButton">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>360</x>
       <y>250</y>
       <width>75</width>
       <height>23</height>
@@ -535,7 +561,7 @@
    <widget class="QPushButton" name="activeLabel_Remove_pushButton">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>440</x>
       <y>250</y>
       <width>75</width>
       <height>23</height>
@@ -623,6 +649,38 @@
      <string>Remove</string>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>70</y>
+      <width>441</width>
+      <height>381</height>
+     </rect>
+    </property>
+   </widget>
+   <zorder>graphicsView</zorder>
+   <zorder>tabWidget</zorder>
+   <zorder>label_4</zorder>
+   <zorder>label_5</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_7</zorder>
+   <zorder>activationSignals_table</zorder>
+   <zorder>transmissionSignals_table</zorder>
+   <zorder>radioButton_SideX</zorder>
+   <zorder>radioButton_SideY</zorder>
+   <zorder>radioButton_Side_X</zorder>
+   <zorder>radioButton_Side_Y</zorder>
+   <zorder>activeLabels_listWidget</zorder>
+   <zorder>inactiveLabels_listWidget</zorder>
+   <zorder>activeLabel_Add_pushButton</zorder>
+   <zorder>activeLabel_Remove_pushButton</zorder>
+   <zorder>inactiveLabel_Remove_pushButton</zorder>
+   <zorder>inactiveLabel_Add_pushButton</zorder>
+   <zorder>activationSig_Remove_pushButton</zorder>
+   <zorder>activationSig_Add_pushButton</zorder>
+   <zorder>transmissionSig_Add_pushButton</zorder>
+   <zorder>transmissionSig_Remove_pushButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
