@@ -6,6 +6,9 @@
 #include <QTableWidget>
 #include <QComboBox>
 #include <QMap>
+#include <QPainter>
+#include <QGraphicsScene>
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/displaytile.h"
 namespace Ui {
 class MainWindow;
 }
@@ -211,6 +214,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void updateEntries(short side);   //update all entries with current tile value
+    void paintCurrentTile();
     
 private slots:
 

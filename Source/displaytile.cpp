@@ -1,4 +1,4 @@
-#include "displaytile.h"
+#include "../Headers/displaytile.h"
 
 DisplayTile::DisplayTile()
 {

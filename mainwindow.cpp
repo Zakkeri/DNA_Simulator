@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QDebug>
-#include <QGraphicsScene>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -35,12 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->radioButton_SideX->setChecked(true);
     currentSide = 0;
     selectedTile = 0;
-    /*QPainter paint;
-    paint.begin(ui->graphicsView);
+    /*QPainter paint(ui->graphicsView);
+
     paint.setPen(QPen(Qt::black, 4, Qt::SolidLine));
     paint.drawLine(0,0,10,10);
+*/
 
-    paint.end();*/
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +52,36 @@ MainWindow::~MainWindow()
         delete (*iter);
     }
     delete ui;
+}
+
+void MainWindow::paintCurrentTile()
+{
+    if(selectedTile == 0) return;
+    DisplayTile tilePainting(10, 10, 100);
+    for(int i = 0; i < 4; i++)
+    {
+        for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->activeLabels[i].begin();
+            iter != selectedTile->activeLabels[i].end(); iter++)
+        {
+            tilePainting.addLabel(DisplayLabel(i, QColor(255, 0, 0), true));
+        }
+
+        for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->inactiveLabels[i].begin();
+            iter != selectedTile->inactiveLabels[i].end(); iter++)
+        {
+            tilePainting.addLabel(DisplayLabel(i, QColor(0, 0, 255), false));
+        }
+    }
+
+    QPainter painter(ui->graphicsView);
+    /*if(painter.begin(ui->graphicsView) == false)
+    {
+        qDebug()<<"Painter can't paint on the current device";
+        return;
+    }*/
+    tilePainting.drawTile(painter);
+
+
 }
 
 void MainWindow::on_actionNew_Simulation_triggered()
@@ -263,29 +293,29 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         break;
     case 2:
         qDebug()<<"Index = 2\n";
-        ui->radioButton_SideX->setVisible(false);
-        ui->radioButton_SideY->setVisible(false);
-        ui->radioButton_Side_X->setVisible(false);
-        ui->radioButton_Side_Y->setVisible(false);
-        ui->label_4->setVisible(false);
-        ui->label_5->setVisible(false);
-        ui->label_6->setVisible(false);
-        ui->label_7->setVisible(false);
-        ui->activationSignals_table->setVisible(false);
-        ui->activeLabels_listWidget->setVisible(false);
-        ui->transmissionSignals_table->setVisible(false);
-        ui->inactiveLabels_listWidget->setVisible(false);
-        ui->activeLabel_Add_pushButton->setVisible(false);
-        ui->activeLabel_Remove_pushButton->setVisible(false);
-        ui->inactiveLabel_Add_pushButton->setVisible(false);
-        ui->inactiveLabel_Remove_pushButton->setVisible(false);
-        ui->activationSig_Add_pushButton->setVisible(false);
-        ui->activationSig_Remove_pushButton->setVisible(false);
-        ui->transmissionSig_Add_pushButton->setVisible(false);
-        ui->transmissionSig_Remove_pushButton->setVisible(false);
+        ui->radioButton_SideX->setVisible(true);
+        ui->radioButton_SideY->setVisible(true);
+        ui->radioButton_Side_X->setVisible(true);
+        ui->radioButton_Side_Y->setVisible(true);
+        ui->label_4->setVisible(true);
+        ui->label_5->setVisible(true);
+        ui->label_6->setVisible(true);
+        ui->label_7->setVisible(true);
+        ui->activationSignals_table->setVisible(true);
+        ui->activeLabels_listWidget->setVisible(true);
+        ui->transmissionSignals_table->setVisible(true);
+        ui->inactiveLabels_listWidget->setVisible(true);
+        ui->activeLabel_Add_pushButton->setVisible(true);
+        ui->activeLabel_Remove_pushButton->setVisible(true);
+        ui->inactiveLabel_Add_pushButton->setVisible(true);
+        ui->inactiveLabel_Remove_pushButton->setVisible(true);
+        ui->activationSig_Add_pushButton->setVisible(true);
+        ui->activationSig_Remove_pushButton->setVisible(true);
+        ui->transmissionSig_Add_pushButton->setVisible(true);
+        ui->transmissionSig_Remove_pushButton->setVisible(true);
 
 
-        ui->graphicsView->setVisible(true);
+        ui->graphicsView->setVisible(false);
         break;
     case 3:
         qDebug()<<"Index = 3\n";
@@ -310,31 +340,11 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(false);
         ui->transmissionSig_Remove_pushButton->setVisible(false);
 
-        ui->graphicsView->setVisible(true);
+        ui->graphicsView->setVisible(true); //show graphics
+        //Paint tile
+        this->paintCurrentTile();
         break;
-   /* case 4:
-        qDebug()<<"Index = 4\n";
-        ui->radioButton_SideX->setVisible(false);
-        ui->radioButton_SideY->setVisible(false);
-        ui->radioButton_Side_X->setVisible(false);
-        ui->radioButton_Side_Y->setVisible(false);
-        ui->label_4->setVisible(false);
-        ui->label_5->setVisible(false);
-        ui->label_6->setVisible(false);
-        ui->label_7->setVisible(false);
-        ui->activationSignals_table->setVisible(false);
-        ui->activeLabels_listWidget->setVisible(false);
-        ui->transmissionSignals_table->setVisible(false);
-        ui->inactiveLabels_listWidget->setVisible(false);
-        ui->activeLabel_Add_pushButton->setVisible(false);
-        ui->activeLabel_Remove_pushButton->setVisible(false);
-        ui->inactiveLabel_Add_pushButton->setVisible(false);
-        ui->inactiveLabel_Remove_pushButton->setVisible(false);
-        ui->activationSig_Add_pushButton->setVisible(false);
-        ui->activationSig_Remove_pushButton->setVisible(false);
-        ui->transmissionSig_Add_pushButton->setVisible(false);
-        ui->transmissionSig_Remove_pushButton->setVisible(false);
-        break;*/
+
     default:
         qDebug()<<"default: Index = "<<index<<"\n";
         break;
