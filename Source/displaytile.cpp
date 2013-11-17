@@ -1,4 +1,5 @@
 #include "../Headers/displaytile.h"
+#include <QDebug>
 
 DisplayTile::DisplayTile()
 {
@@ -63,6 +64,9 @@ void DisplayTile::addSignal(const DisplaySignal &newSignal)
 void DisplayTile::drawOutline(QPainter &painter) const
 {
     QPen tilePen;
+    QVector<qreal> dashPattern;
+    dashPattern << 2 << 7;
+    tilePen.setWidth(this->size / 100);
 
     for(int i = 0; i < 8; i++)
     {
@@ -103,17 +107,18 @@ void DisplayTile::drawOutline(QPainter &painter) const
             lineType = Qt::SolidLine;
         else
         {
-            lineType = Qt::DashLine;
+            lineType = Qt::CustomDashLine;
+            tilePen.setDashPattern(dashPattern);
             if(startX > x)
-                startX -= size * .01;
+                startX -= size * .02;
             else
-                startX += size * .01;
+                startX += size * .02;
             if(startY > y)
-                startY -= size * .01;
+                startY -= size * .02;
             else
-                startY += size * .01;
-            yInc *= .98;
-            xInc *= .98;
+                startY += size * .02;
+            yInc *= .96;
+            xInc *= .96;
         }
 
         for(QList<DisplayLabel>::ConstIterator next = labels[i].begin();
@@ -134,15 +139,20 @@ void DisplayTile::drawOutline(QPainter &painter) const
 }
 
 
-void DisplayTile::drawSignals(QPainter &painter) const
+void DisplayTile::drawSignals(QPainter &painter)
 {
     float areaWeight[6] = {0,0,0,0,0,0};
     float currentHalfTotal;
     QPoint arrowPoints[3];
     QPoint start, end;
-    QPen tilePen;
+    QPen tilePen, arrowPen;
     QBrush arrowBrush;
+    QVector<qreal> dashPattern;
+    dashPattern << 2 << 5;
+    arrowPen.setStyle(Qt::SolidLine);
     arrowBrush.setStyle(Qt::SolidPattern);
+
+    tilePen.setWidth(this->size / 200);
 
     areaWeight[0] = area[0].size() / 2.0 + area[2].size() / 2.0;
     areaWeight[1] = area[5].size();
@@ -165,8 +175,11 @@ void DisplayTile::drawSignals(QPainter &painter) const
         if(area[i].empty())
             continue;
 
+        qSort(area[i]);
+
         float xInc;
         float yInc;
+
         switch(i)
         {
         case 0:
@@ -207,19 +220,21 @@ void DisplayTile::drawSignals(QPainter &painter) const
             break;
         }
 
-        for(QList<DisplaySignal>::ConstIterator next = area[i].begin();
+        for(QList<DisplaySignal>::iterator next = area[i].begin();
             next != area[i].end(); next++)
         {
             tilePen.setColor((*next).color);
             arrowBrush.setColor((*next).color);
+            arrowPen.setColor((*next).color);
             painter.setBrush(arrowBrush);
-
             if((*next).activation)
-                tilePen.setStyle(Qt::DashLine);
-            else
+            {
+                tilePen.setDashPattern(dashPattern);
+            }else{
                 tilePen.setStyle(Qt::SolidLine);
+            }
 
-            painter.setPen(tilePen);
+            painter.setPen(arrowPen);
             if(i < 4)
             {
                 start.rx() += xInc;
@@ -238,6 +253,7 @@ void DisplayTile::drawSignals(QPainter &painter) const
                     painter.drawPolygon(arrowPoints, 3);
                 }
 
+                painter.setPen(tilePen);
                 painter.drawLine(start, mid);
                 painter.drawLine(mid, end);
             }else{
@@ -250,6 +266,7 @@ void DisplayTile::drawSignals(QPainter &painter) const
 
                 QPoint realStart = start;
                 QPoint realEnd = end;
+
 
                 if((*next).target == 0)
                 {
@@ -294,13 +311,14 @@ void DisplayTile::drawSignals(QPainter &painter) const
                 }
 
                 painter.drawPolygon(arrowPoints, 3);
+                painter.setPen(tilePen);
                 painter.drawLine(realStart,realEnd);
             }
         }
     }
 }
 
-void DisplayTile::drawTile(QPainter &painter) const
+void DisplayTile::drawTile(QPainter &painter)
 {
     this->drawOutline(painter);
     this->drawSignals(painter);

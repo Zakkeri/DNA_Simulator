@@ -14,6 +14,7 @@
 #define _SIMULATOR_H
 #include"../Headers/SetOfAssemblyTiles.h"
 #include"../Headers/AssemblyTileSetManager.h"
+#include "../Headers/displaytile.h"
 #include<QMap>
 #include<QString>
 #define DEBUG
@@ -35,7 +36,7 @@ class Simulator
 {
 public:
 
-    Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber);
+    Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> C);
     /*
      Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
      */
@@ -47,6 +48,13 @@ public:
     /*
      Main function that starts simulation
      */
+
+    QList<DisplayTile> toDisplayTile(AssemblyTile * T);
+    //Converts Assembly tile into Display tile, returns it as a list of display tiles
+
+    QList<SetOfAssemblyTiles *> &getAssemblies();
+    //Get the list of all sets of assembly tiles
+
 private:
    // SetOfAssemblyTiles & createNewSetOfAssemblyTiles();
     /*
@@ -87,6 +95,7 @@ private:
     QMap<int, int> StrengthMap;
     int ThetaParameter;
     int NumberOfSteps;
+    QMap<int, QColor> ColorMap;
 
     /*//Not sure about variables below yet
     int SetOfAssemblyTilesIterator;

@@ -25,8 +25,39 @@ struct DisplaySignal
         else
             activation = false;
     }
+
     bool operator==(const DisplaySignal &other) const{
         return (source == other.source && target == other.target && color == other.color && activation == other.activation);
+    }
+
+    bool operator<(const DisplaySignal &other) const{
+        if(this->activation || other.activation)
+        {
+            if(this->activation)
+            {
+                if(other.activation)
+                    return this->source > other.source;
+                else
+                    return true;
+            }else{
+                return false;
+            }
+        }
+
+        if(this->source == -1 || other.source == -1)
+        {
+            if(this->source == -1)
+            {
+                if(other.source == -1)
+                    return this->target > other.target;
+                else
+                    return false;
+            }else{
+                return true;
+            }
+        }
+
+        return this->target > other.target;
     }
 };
 
@@ -75,8 +106,8 @@ class DisplayTile
 {
 private:
     QList<DisplayLabel> labels[8];
-    QList<DisplaySignal> area[6];
     int size, x, y;
+    QList<DisplaySignal> area[6];
 
 public:
     DisplayTile();
@@ -84,8 +115,8 @@ public:
     void addLabel(const DisplayLabel &newLabel); //Adds a label to the correct list.
     void addSignal(const DisplaySignal &newSignal); // Adds a signal to the correct area.
     void drawOutline(QPainter &painter) const; // Draws the labels of the tile.
-    void drawSignals(QPainter &painter) const; // Draws the signals of the tile.
-    void drawTile(QPainter &painter) const; // Draws the whole tile.
+    void drawSignals(QPainter &painter); // Draws the signals of the tile.
+    void drawTile(QPainter &painter); // Draws the whole tile.
     void moveTile(int newX, int newY); // Moves the tile to a new destination.
     DisplayTile &operator <<(const DisplayLabel &label); // Overload to add a new Label.
     DisplayTile &operator <<(const DisplaySignal &signal); // Overload to add a new Signal

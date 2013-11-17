@@ -12,12 +12,12 @@
 #include <QDebug>
 #include "../Headers/Simulator.h"
 
-Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber)
+Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> C)
 
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
-    : manager(S), StrengthMap(StrengthFunction), ThetaParameter(Theta), NumberOfSteps(StepNumber)
+    : manager(S), StrengthMap(StrengthFunction), ThetaParameter(Theta), NumberOfSteps(StepNumber), ColorMap(C)
 {
 #ifdef DEBUG
     qDebug()<<"Constructing Simulator object";
@@ -676,4 +676,76 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
 #ifdef DEBUG
     qDebug()<<"-------------------------------------------------------------------------------------------------";
 #endif
+}
+
+QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
+{
+    QList<DisplayTile> displayTiles;
+
+    if(T->getListOfActiveTiles().back()->getCoordinates().first < 0)
+    {
+        T->moveAssemblyTile(QPair<int, int>(abs(T->getListOfActiveTiles().back()->getCoordinates().first), 0));
+    }
+    if(T->getListOfActiveTiles().back()->getCoordinates().second < 0)
+    {
+        T->moveAssemblyTile(QPair<int, int>(0, abs(T->getListOfActiveTiles().back()->getCoordinates().second)));
+    }
+
+    for(QList<ActiveTile *>::const_iterator iter = T->getListOfActiveTiles().begin(); iter != T->getListOfActiveTiles().end(); iter++)
+    {
+        DisplayTile t(10 + (*iter)->getCoordinates().first*100, 10 + (*iter)->getCoordinates().second*100, 100);
+
+        for(int side = 0; side < 4; side++) //add labels and signals for each side
+        {
+            if(!(*iter)->getActiveLabels((direction)(side)).isEmpty())
+            {
+                for(QList<int>::const_iterator activeIter = (*iter)->getActiveLabels((direction)(side)).begin(); activeIter != (*iter)->getActiveLabels((direction)(side)).end(); activeIter++)
+                {
+                    t.addLabel(DisplayLabel(side, ColorMap[*activeIter], true));
+                }
+            }
+
+            if(!(*iter)->getInactiveLabels((direction)(side)).isEmpty())
+            {
+                for(QList<int>::const_iterator inactiveIter = (*iter)->getInactiveLabels((direction)(side)).begin(); inactiveIter != (*iter)->getActiveLabels((direction)(side)).end(); inactiveIter++)
+                {
+                    t.addLabel(DisplayLabel(side, ColorMap[(*inactiveIter)], false));
+                }
+            }
+
+            if(!(*iter)->getActivationSignals((direction)(side)).isEmpty())
+            {
+                for(QList<Signal>::const_iterator activationIter = (*iter)->getActivationSignals((direction)(side)).begin(); activationIter != (*iter)->getActivationSignals((direction)(side)).end(); activationIter++)
+                {
+                    t.addSignal(DisplaySignal(side, (int)(*activationIter).Target, ColorMap[(*activationIter).label], true));
+                }
+            }
+
+            if(!(*iter)->getTransmissionSignals((direction)(side)).isEmpty())
+            {
+                for(QList<Signal>::const_iterator transmIter = (*iter)->getTransmissionSignals((direction)(side)).begin(); transmIter != (*iter)->getTransmissionSignals((direction)(side)).end(); transmIter++)
+                {
+                    t.addSignal(DisplaySignal(side, (int)(*transmIter).Target, ColorMap[(*transmIter).label], false));
+                }
+            }
+        }
+        //add initiation signals
+        if(!(*iter)->getInitiationSignals().isEmpty())
+        {
+            for(QList<Signal>::const_iterator initIter = (*iter)->getInitiationSignals().begin(); initIter != (*iter)->getInitiationSignals().end(); initIter++)
+            {
+                t.addSignal(DisplaySignal(-1, (int)(*initIter).Target, ColorMap[(*initIter).label], false));
+            }
+        }
+
+        displayTiles.append(t); //append tile to the list
+    }
+
+    return displayTiles;
+}
+
+QList<SetOfAssemblyTiles *> &Simulator::getAssemblies()
+//Get the list of all sets of assembly tiles
+{
+    return this->manager.getListOfSets();
 }
