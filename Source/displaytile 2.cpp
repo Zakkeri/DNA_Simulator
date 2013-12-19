@@ -1,17 +1,16 @@
-#include "../Headers/displaytile.h"
+#include "displaytile.h"
 #include <QDebug>
 
-DisplayTile::DisplayTile()
-{
-    x = y = 0;
-    size = 100;
-}
+void drawSquare(QPainter *p);
 
-DisplayTile::DisplayTile(int x, int y, int size)
+DisplayTile::DisplayTile(int size)
 {
     this->size = size;
-    this->x = x;
-    this->y = y;
+}
+
+QRectF DisplayTile::boundingRect() const
+{
+    return QRectF(-55,-55,110,110);
 }
 
 void DisplayTile::addLabel(const DisplayLabel &newLabel)
@@ -77,8 +76,8 @@ void DisplayTile::drawOutline(QPainter &painter) const
 
         Qt::PenStyle lineType;
 
-        int startX = x;
-        int startY = y;
+        int startX = -50;
+        int startY = -50;
         int xInc = 0;
         int yInc = 0;
 
@@ -86,22 +85,23 @@ void DisplayTile::drawOutline(QPainter &painter) const
         {
         case 0:
         case 4:
-            startX = x + size;
+            startX = 50;
             yInc = (float)size / labels[i].size();
             break;
         case 1:
         case 5:
-            startY = y + size;
+            startY = 50;
+
             xInc = (float)size / labels[i].size();
             break;
         case 2:
         case 6:
-            startX = x;
+            startX = -50;
             yInc = (float)size / labels[i].size();
             break;
         case 3:
         case 7:
-            startY = y;
+            startY = -50;
             xInc = (float)size / labels[i].size();
             break;
         }
@@ -112,11 +112,11 @@ void DisplayTile::drawOutline(QPainter &painter) const
         {
             lineType = Qt::CustomDashLine;
             tilePen.setDashPattern(dashPattern);
-            if(startX > x)
+            if(startX > -50)
                 startX -= size * .02;
             else
                 startX += size * .02;
-            if(startY > y)
+            if(startY > -50)
                 startY -= size * .02;
             else
                 startY += size * .02;
@@ -157,14 +157,14 @@ void DisplayTile::drawSignals(QPainter &painter)
 
     tilePen.setWidth(this->size / 200);
 
-    areaWeight[0] = area[0].size() / 2.0 + area[2].size() / 2.0;
-    areaWeight[1] = area[5].size();
-    areaWeight[2] = area[1].size() / 2.0 + area[3].size() / 2.0;
-    areaWeight[3] = area[0].size() / 2.0 + area[1].size() / 2.0;
-    areaWeight[4] = area[4].size();
-    areaWeight[5] = area[2].size() / 2.0 + area[3].size() / 2.0;
+    areaWeight[0] = area[0].size() / 2.0 + area[2].size() / 2.0 + 1.0;
+    areaWeight[1] = area[5].size() + 1.0;
+    areaWeight[2] = area[1].size() / 2.0 + area[3].size() / 2.0 + 1.0;
+    areaWeight[3] = area[0].size() / 2.0 + area[1].size() / 2.0 + 1.0;
+    areaWeight[4] = area[4].size() + 1.0;
+    areaWeight[5] = area[2].size() / 2.0 + area[3].size() / 2.0 + 1.0;
 
-    currentHalfTotal = areaWeight[0] + areaWeight[1] + areaWeight[2] + 1;
+    currentHalfTotal = areaWeight[0] + areaWeight[1] + areaWeight[2] + 3;
     areaWeight[0] /= currentHalfTotal;
     areaWeight[1] /= currentHalfTotal;
     areaWeight[2] /= currentHalfTotal;
@@ -188,37 +188,37 @@ void DisplayTile::drawSignals(QPainter &painter)
         case 0:
             xInc = areaWeight[0] * size / (area[i].size());
             yInc = areaWeight[3] * size / (area[i].size());
-            start = end = QPoint(x,y);
+            start = end = QPoint(-50,-50);
             break;
         case 1:
             xInc = areaWeight[2] * size / (area[i].size());
             yInc = areaWeight[3] * size / (area[i].size());
-            start = end = QPoint(x + size, y);
+            start = end = QPoint(50, -50);
             xInc *= -1;
             break;
         case 2:
             xInc = areaWeight[0] * size / (area[i].size());
             yInc = areaWeight[5] * size / (area[i].size());
-            start = end = QPoint(x, y + size);
+            start = end = QPoint(-50, 50);
             yInc *= -1;
             break;
         case 3:
             xInc = areaWeight[2] * size / (area[i].size());
             yInc = areaWeight[5] * size / (area[i].size());
-            start = end = QPoint(x + size, y + size);
+            start = end = QPoint(50, 50);
             xInc *= -1;
             yInc *= -1;
             break;
         case 4:
             xInc = 0;
             yInc = areaWeight[4] * size / (area[i].size());
-            start = QPoint(x, y + areaWeight[3] * size);
+            start = QPoint(-50, -50 + areaWeight[3] * size);
             end = start + QPoint(size, 0);
             break;
         case 5:
             xInc = areaWeight[1] * size / (area[i].size());
             yInc = 0;
-            start = QPoint(x + areaWeight[0] * size, y);
+            start = QPoint(-50 + areaWeight[0] * size, 50);
             end = start + QPoint(0, size);
             break;
         }
@@ -327,10 +327,31 @@ void DisplayTile::drawTile(QPainter &painter)
     this->drawSignals(painter);
 }
 
-void DisplayTile::moveTile(int newX, int newY)
+void DisplayTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    this->x = newX;
-    this->y = newY;
+    /*const QPoint UL(-50,-50), UR(50,-50), LL(-50,50), LR(50,50);
+    QPainterPath path;
+    painter->setPen(Qt::black);
+
+    path.moveTo(UL);
+    path.lineTo(UR);
+    path.lineTo(LR);
+    path.lineTo(LL);
+    path.lineTo(UL);
+
+
+    painter->drawPath(path);*/
+
+    //drawSquare(painter);
+
+    this->drawOutline(*painter);
+    this->drawSignals(*painter);
+}
+
+void drawSquare(QPainter *p)
+{
+    p->setPen(Qt::black);
+    p->drawRect(-50,-50,100,100);
 }
 
 DisplayTile &DisplayTile::operator <<(const DisplayLabel &label)
@@ -344,3 +365,4 @@ DisplayTile &DisplayTile::operator <<(const DisplaySignal &signal)
     this->addSignal(signal);
     return *this;
 }
+
