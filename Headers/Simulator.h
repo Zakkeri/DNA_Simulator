@@ -36,7 +36,7 @@ class Simulator
 {
 public:
 
-    Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> C);
+    Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> &C);
     /*
      Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
      */

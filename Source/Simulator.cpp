@@ -12,7 +12,7 @@
 #include <QDebug>
 #include "../Headers/Simulator.h"
 
-Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> C)
+Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> &C)
 
 /*
  Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
@@ -701,7 +701,7 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
             {
                 for(QList<int>::const_iterator activeIter = (*iter)->getActiveLabels((direction)(side)).begin(); activeIter != (*iter)->getActiveLabels((direction)(side)).end(); activeIter++)
                 {
-                    t.addLabel(DisplayLabel(side, ColorMap[*activeIter], true));
+                    t.addLabel(DisplayLabel(side, ColorMap[(*activeIter)], true));
                 }
             }
 
