@@ -9,7 +9,7 @@
 #define DEBUG
 //#define TEST1
 //#define TEST2
-#define TEST3
+//#define TEST3
 int main(int argc, char *argv[])
 {
 
@@ -525,6 +525,7 @@ qDebug()<<"DOOOOONNNNNEEEEEEEE!!!!!!!!!!!!!!!!!!!";
     int theta = 2;
     int steps = 20;
     QMap<int, int> StrengthFunction;
+    QMap<int, QColor> ColorMap;
 /*
  1 - black
  2 - green
@@ -860,7 +861,7 @@ qDebug()<<"Adding Assembly tiles to the set";
 
     qDebug()<<"Creating simulator";
 
-    Simulator sim(simulationSet, StrengthFunction, theta, steps);
+    Simulator sim(simulationSet, StrengthFunction, theta, steps, ColorMap);
 
     sim.initialize();
 

@@ -6,16 +6,23 @@
 #include <QTableWidget>
 #include <QComboBox>
 #include <QMap>
+#include <QString>
 #include <QPainter>
 #include <QGraphicsScene>
 #include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/displaytile.h"
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/ActiveTile.h"
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/AssemblyTile.h"
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/SetOfAssemblyTiles.h"
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/Simulator.h"
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/AdditionalData.h"
+#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/AssemblyTileSetManager.h"
 namespace Ui {
 class MainWindow;
 }
 
 struct tablePair
 {
-    tablePair(QTableWidgetItem * f, QComboBox * s)
+    tablePair(QTableWidgetItem * f, QTableWidgetItem * s)
     {
         first = f;
         second = s;
@@ -28,7 +35,7 @@ struct tablePair
     }
 
     QTableWidgetItem * first;
-    QComboBox * second;
+    QTableWidgetItem * second;
 };
 
 struct a_tile   //struct that will hold all information about a single tile
@@ -42,99 +49,6 @@ struct a_tile   //struct that will hold all information about a single tile
     {
         delete Tile;
 
-       /* for(QList<QListWidgetItem *>::iterator iter = activeLabelsX.begin(); iter != activeLabelsX.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = activeLabels_X.begin(); iter != activeLabels_X.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = activeLabelsY.begin(); iter != activeLabelsY.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = activeLabels_Y.begin(); iter != activeLabels_Y.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = inactiveLabelsX.begin(); iter != inactiveLabelsX.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = inactiveLabels_X.begin(); iter != inactiveLabels_X.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = inactiveLabelsY.begin(); iter != inactiveLabelsY.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QListWidgetItem *>::iterator iter = inactiveLabels_Y.begin(); iter != inactiveLabels_Y.end(); iter++)
-        {
-            delete (*iter);
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = activationSignalsX.begin(); iter != activationSignalsX.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = activationSignals_X.begin(); iter != activationSignals_X.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = activationSignalsY.begin(); iter != activationSignalsY.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = activationSignals_Y.begin(); iter != activationSignals_Y.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = transmissionSignalsX.begin(); iter != transmissionSignalsX.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = transmissionSignals_X.begin(); iter != transmissionSignals_X.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = transmissionSignalsY.begin(); iter != transmissionSignalsY.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = transmissionSignals_Y.begin(); iter != transmissionSignals_Y.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }
-
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = initiationSignals.begin(); iter != initiationSignals.end(); iter++)
-        {
-            delete (*iter).first;
-            delete (*iter).second;
-        }*/
         for(int i = 0; i < 4; i++)
         {
             for(QList<QListWidgetItem *>::iterator iter = activeLabels[i].begin(); iter != activeLabels[i].end(); iter++)
@@ -153,19 +67,17 @@ struct a_tile   //struct that will hold all information about a single tile
                 delete (*iter);
             }
 
-            for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = transmissionSignals[i].begin();
+            for(QList<tablePair*>::iterator iter = transmissionSignals[i].begin();
                 iter != transmissionSignals[i].end(); iter++)
             {
-                delete (*iter).first;
-                delete (*iter).second;
+                delete (*iter);
             }
         }
 
-        for(QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> >::iterator iter = initiationSignals.begin();
+        for(QList<tablePair*>::iterator iter = initiationSignals.begin();
             iter != initiationSignals.end(); iter++)
         {
-            delete (*iter).first;
-            delete (*iter).second;
+            delete (*iter);
         }
     }
 
@@ -195,7 +107,7 @@ struct a_tile   //struct that will hold all information about a single tile
     QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > activationSignals_Y;
 */
     //Transmission Signals
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignals[4];
+    QList<tablePair *> transmissionSignals[4];
     /*
     QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignalsX;
     QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignals_X;
@@ -203,7 +115,7 @@ struct a_tile   //struct that will hold all information about a single tile
     QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignals_Y;
 */
     //Initiation Signals
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > initiationSignals;
+    QList<tablePair*> initiationSignals;
 };
 
 class MainWindow : public QMainWindow
@@ -265,6 +177,22 @@ private slots:
 
     void on_inactiveLabels_listWidget_itemChanged(QListWidgetItem *item);
 
+    void on_strength_func_tableWidget_itemChanged(QTableWidgetItem *item);
+
+    void on_strength_func_tableWidget_cellDoubleClicked(int row, int column);
+
+    void on_initiationSig_Add_button_clicked();
+
+    void on_initiationSig_Remove_button_clicked();
+
+    void on_treeWidget_clicked(const QModelIndex &index);
+
+    void on_actionSave_triggered();
+
+    void on_actionSave_2_triggered();
+
+    void on_actionLoad_triggered();
+
 private:
     Ui::MainWindow *ui;
     int currentTile;    //will keep a count of the tiles that were created
@@ -272,6 +200,13 @@ private:
     a_tile * selectedTile;
     short currentSide;
     QMap<int, int> strengthFunction;
+    QMap<int, QColor> colorFunction;
+    Simulator * sim;
+
+    //For saving and loading
+    QString filePath; //path of currently saved/loaded tiles
+    bool modified; //if file was modified
+
 };
 
 #endif // MAINWINDOW_H
