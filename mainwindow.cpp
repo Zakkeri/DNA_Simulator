@@ -111,24 +111,24 @@ void MainWindow::paintCurrentTile()
 {
     qDebug()<<"Going to paint current tile";
     if(selectedTile == 0) return;
-    DisplayTile tilePainting(10, 10, 200);
-    for(int i = 0; i < 4; i++)
+    DisplayTile tilePainting(10, 10, 200); //new DisplayTile object to draw
+    for(int i = 0; i < 4; i++) //for all 4 sides
     {
         for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->activeLabels[i].begin();
             iter != selectedTile->activeLabels[i].end(); iter++)
-        {
+        { //add active labels
             tilePainting.addLabel(DisplayLabel(i, this->colorFunction[(*iter)->text().toInt()], true));
         }
 
         for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->inactiveLabels[i].begin();
             iter != selectedTile->inactiveLabels[i].end(); iter++)
-        {
+        { //add inactive labels
             tilePainting.addLabel(DisplayLabel(i, this->colorFunction[(*iter)->text().toInt()], false));
         }
 
         for(QList<tablePair *>::const_iterator iter = selectedTile->activationSignals[i].begin();
             iter != selectedTile->activationSignals[i].end(); iter++)
-        {
+        { //add activation signals
             QString tstr = (*iter)->second->text();
             int t;
             if(tstr == "X" || tstr == "x") t = 0;
@@ -140,7 +140,7 @@ void MainWindow::paintCurrentTile()
 
         for(QList<tablePair *>::const_iterator iter = selectedTile->transmissionSignals[i].begin();
             iter != selectedTile->transmissionSignals[i].end(); iter++)
-        {
+        { //add transmission signals
             QString tstr = (*iter)->second->text();
             int t;
             if(tstr == "X" || tstr == "x") t = 0;
@@ -153,7 +153,7 @@ void MainWindow::paintCurrentTile()
 
     for(QList<tablePair *>::const_iterator iter = selectedTile->initiationSignals.begin();
         iter != selectedTile->initiationSignals.end(); iter++)
-    {
+    { //add initiation signals
         QString tstr = (*iter)->second->text();
         int t;
         if(tstr == "X" || tstr == "x") t = 0;
@@ -164,22 +164,22 @@ void MainWindow::paintCurrentTile()
     }
 
     //QImage image(140, 140, QImage::Format_ARGB32);
-    QImage image(300, 300, QImage::Format_ARGB32);
-    QPainter painter(&image);
+    QImage image(300, 300, QImage::Format_ARGB32); //create Q image object
+    QPainter painter(&image); //paint tile on QImage object first
     /*if(painter.begin(ui->graphicsView) == false)
     {
         qDebug()<<"Painter can't paint on the current device";
         return;
     }*/
-    tilePainting.drawTile(painter);
+    tilePainting.drawTile(painter); //perform painting operation
 
-    QGraphicsScene* scene = new QGraphicsScene();
-    scene->addPixmap(QPixmap::fromImage(image));
-    scene->setSceneRect(0,0,image.width(),image.height());
-    QGraphicsScene* currentScene = ui->graphicsView->scene();
-    if(currentScene != 0)
+    QGraphicsScene* scene = new QGraphicsScene(); //new scene for QGraphicsView
+    scene->addPixmap(QPixmap::fromImage(image)); //add QImage to the scene
+    scene->setSceneRect(0,0,image.width(),image.height()); //set scene dimensions
+    QGraphicsScene* currentScene = ui->graphicsView->scene(); //get current scene of QGraphics view
+    if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
         delete currentScene;
-    ui->graphicsView->setScene(scene);
+    ui->graphicsView->setScene(scene); //add scene with tile image to the QGraphics view
 
 }
 
@@ -1030,64 +1030,79 @@ void MainWindow::on_actionSave_2_triggered()
         {
             save.writeStartElement("Side" + QString::number(i));
             //save active labels
-            save.writeStartElement("ActiveLabels");
-            for(QList<QListWidgetItem *>::const_iterator actIter = (*iter)->activeLabels[i].begin();
-                actIter != (*iter)->activeLabels[i].end(); actIter++)
+            if(!(*iter)->activeLabels[i].isEmpty())
             {
-                save.writeStartElement("label");
-                save.writeCharacters((*actIter)->text());
-                save.writeEndElement(); //end of label
+                save.writeStartElement("ActiveLabels");
+                for(QList<QListWidgetItem *>::const_iterator actIter = (*iter)->activeLabels[i].begin();
+                    actIter != (*iter)->activeLabels[i].end(); actIter++)
+                {
+                    save.writeStartElement("label");
+                    save.writeCharacters((*actIter)->text());
+                    save.writeEndElement(); //end of label
+                }
+                save.writeEndElement(); //end of ActiveLabels
             }
-            save.writeEndElement(); //end of ActiveLabels
 
             //save inactive labels
-            save.writeStartElement("InactiveLabels");
-            for(QList<QListWidgetItem *>::const_iterator inactIter = (*iter)->inactiveLabels[i].begin();
-                inactIter != (*iter)->inactiveLabels[i].end(); inactIter++)
+            if(!(*iter)->inactiveLabels[i].isEmpty())
             {
-                save.writeStartElement("label");
-                save.writeCharacters((*inactIter)->text());
-                save.writeEndElement(); //end of label
+                save.writeStartElement("InactiveLabels");
+                for(QList<QListWidgetItem *>::const_iterator inactIter = (*iter)->inactiveLabels[i].begin();
+                    inactIter != (*iter)->inactiveLabels[i].end(); inactIter++)
+                {
+                    save.writeStartElement("label");
+                    save.writeCharacters((*inactIter)->text());
+                    save.writeEndElement(); //end of label
+                }
+                save.writeEndElement(); //end of InactiveLabels
             }
-            save.writeEndElement(); //end of InactiveLabels
 
             //save activation signals
-            save.writeStartElement("ActivationSignals");
-            for(QList<tablePair *>::const_iterator asigIter = (*iter)->activationSignals[i].begin();
-                asigIter != (*iter)->activationSignals[i].end(); asigIter++)
+            if(!(*iter)->activationSignals[i].isEmpty())
             {
-                save.writeStartElement("signal");
-                save.writeAttribute("label", (*asigIter)->first->text());
-                save.writeAttribute("target", (*asigIter)->second->text());
-                save.writeEndElement(); //end of signal
+                save.writeStartElement("ActivationSignals");
+                for(QList<tablePair *>::const_iterator asigIter = (*iter)->activationSignals[i].begin();
+                    asigIter != (*iter)->activationSignals[i].end(); asigIter++)
+                {
+                    save.writeStartElement("signal");
+                    save.writeAttribute("label", (*asigIter)->first->text());
+                    save.writeAttribute("target", (*asigIter)->second->text());
+                    save.writeEndElement(); //end of signal
+                }
+                save.writeEndElement(); //end of ActivationSignals
             }
-            save.writeEndElement(); //end of ActivationSignals
 
             //save transmission signals
-            save.writeStartElement("TransmissionSignals");
-            for(QList<tablePair *>::const_iterator tsigIter = (*iter)->transmissionSignals[i].begin();
-                tsigIter != (*iter)->transmissionSignals[i].end(); tsigIter++)
+            if(!(*iter)->transmissionSignals[i].isEmpty())
             {
-                save.writeStartElement("signal");
-                save.writeAttribute("label", (*tsigIter)->first->text());
-                save.writeAttribute("target", (*tsigIter)->second->text());
-                save.writeEndElement(); //end of signal
+                save.writeStartElement("TransmissionSignals");
+                for(QList<tablePair *>::const_iterator tsigIter = (*iter)->transmissionSignals[i].begin();
+                    tsigIter != (*iter)->transmissionSignals[i].end(); tsigIter++)
+                {
+                    save.writeStartElement("signal");
+                    save.writeAttribute("label", (*tsigIter)->first->text());
+                    save.writeAttribute("target", (*tsigIter)->second->text());
+                    save.writeEndElement(); //end of signal
+                }
+                save.writeEndElement(); //end of TransmissionSignals
             }
-            save.writeEndElement(); //end of TransmissionSignals
             save.writeEndElement(); //write end for side
         }
 
         //save Initiation signals
-        save.writeStartElement("InitiationSignals");
-        for(QList<tablePair *>::const_iterator isigIter = (*iter)->initiationSignals.begin();
-            isigIter != (*iter)->initiationSignals.end(); isigIter++)
+        if(!(*iter)->initiationSignals.isEmpty())
         {
-            save.writeStartElement("signal");
-            save.writeAttribute("label", (*isigIter)->first->text());
-            save.writeAttribute("target", (*isigIter)->second->text());
-            save.writeEndElement(); //end of signal
+            save.writeStartElement("InitiationSignals");
+            for(QList<tablePair *>::const_iterator isigIter = (*iter)->initiationSignals.begin();
+                isigIter != (*iter)->initiationSignals.end(); isigIter++)
+            {
+                save.writeStartElement("signal");
+                save.writeAttribute("label", (*isigIter)->first->text());
+                save.writeAttribute("target", (*isigIter)->second->text());
+                save.writeEndElement(); //end of signal
+            }
+            save.writeEndElement(); //write end for InitiationSignals
         }
-        save.writeEndElement(); //write end for InitiationSignals
         save.writeEndElement();//end tile element
     }
     //write strength function block
