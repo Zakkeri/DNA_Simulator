@@ -707,7 +707,7 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
 
             if(!(*iter)->getInactiveLabels((direction)(side)).isEmpty())
             {
-                for(QList<int>::const_iterator inactiveIter = (*iter)->getInactiveLabels((direction)(side)).begin(); inactiveIter != (*iter)->getActiveLabels((direction)(side)).end(); inactiveIter++)
+                for(QList<int>::const_iterator inactiveIter = (*iter)->getInactiveLabels((direction)(side)).begin(); inactiveIter != (*iter)->getInactiveLabels((direction)(side)).end(); inactiveIter++)
                 {
                     t.addLabel(DisplayLabel(side, ColorMap[(*inactiveIter)], false));
                 }

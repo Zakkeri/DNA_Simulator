@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include<QDebug>
+#include <QDebug>
 #include <QImage>
 #include <QGraphicsPixmapItem>
 #include <QColorDialog>
@@ -8,7 +8,6 @@
 #include <QTreeWidgetItem>
 #include <QXmlStreamWriter>
 #include <QFileDialog>
-#define TEST1
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -64,48 +63,6 @@ MainWindow::~MainWindow()
     }
     delete ui;
 }
-
-/*QColor getColor()
-{
-    static int counter = 0;
-    switch(counter)
-    {
-    case 0:
-        counter++;
-        return QColor(255, 0, 0);
-
-    case 1:
-        counter++;
-        return QColor(0, 255, 0);
-
-    case 2:
-        counter++;
-        return QColor(0, 0, 255);
-    case 3:
-        counter++;
-        return QColor(0, 255, 255);
-    case 4:
-        counter++;
-        return QColor(255, 0, 255);
-    case 5:
-        counter++;
-        return QColor(255, 255, 0);
-    case 6:
-        counter++;
-        return QColor(255, 127, 0);
-    case 7:
-        counter++;
-        return QColor(0, 0, 0);
-    case 8:
-        counter++;
-        return QColor(204, 153, 255);
-    case 9:
-        counter=0;
-        return QColor(255, 153, 153);
-
-    }
-    return QColor(0, 0, 0);
-}*/
 
 void MainWindow::paintCurrentTile()
 {
@@ -973,13 +930,9 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
     QList<DisplayTile> tiles = this->sim->toDisplayTile(
                 this->sim->getAssemblies().at(setInd)->getListOfAssemblyTiles().at(tileInd));
 
-    QImage image(300, 300, QImage::Format_ARGB32);
+    QImage image(400, 400, QImage::Format_ARGB32);
     QPainter painter(&image);
-    /*if(painter.begin(ui->graphicsView) == false)
-    {
-        qDebug()<<"Painter can't paint on the current device";
-        return;
-    }*/
+
     for(QList<DisplayTile>::iterator iter = tiles.begin(); iter != tiles.end(); iter++)
     {
         iter->drawTile(painter);
@@ -990,9 +943,10 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
     scene->setSceneRect(0,0,image.width(),image.height());
     QGraphicsScene* currentScene = ui->graphicsView->scene();
     if(currentScene != 0)
-        delete currentScene;
+           delete currentScene;
     ui->graphicsView->setScene(scene);
-
+    ui->graphicsView->setVisible(false);
+    ui->graphicsView->setVisible(true);
 }
 
 //Save as function
