@@ -9,13 +9,13 @@
 #include <QString>
 #include <QPainter>
 #include <QGraphicsScene>
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/displaytile.h"
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/ActiveTile.h"
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/AssemblyTile.h"
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/SetOfAssemblyTiles.h"
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/Simulator.h"
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/AdditionalData.h"
-#include "../../../../../Users/Zakkeri/DNA_Simulator/Headers/AssemblyTileSetManager.h"
+#include "Headers/displaytile.h"
+#include "Headers/ActiveTile.h"
+#include "Headers/AssemblyTile.h"
+#include "Headers/SetOfAssemblyTiles.h"
+#include "Headers/Simulator.h"
+#include "Headers/AdditionalData.h"
+#include "Headers/AssemblyTileSetManager.h"
 namespace Ui {
 class MainWindow;
 }
