@@ -1,4 +1,4 @@
-#include "displaytile.h"
+#include "../Headers/displaytile2.h"
 #include <QDebug>
 
 void drawSquare(QPainter *p);
@@ -58,6 +58,74 @@ void DisplayTile::addSignal(const DisplaySignal &newSignal)
         else
             area[4].append(newSignal);
     }
+}
+
+void DisplayTile::drawArrow(QPainter &painter, int startX, int startY, int endX, int endY, bool xFirst) const
+{
+    QPainterPath path, arrowPath;
+    QBrush startBrush;
+    int dir;
+
+    startBrush = painter.brush();
+    painter.setBrush(Qt::NoBrush);
+    path.moveTo(startX, startY);
+
+
+    if(xFirst)
+    {
+        path.lineTo(endX, startY);
+        path.lineTo(endX, endY);
+        if(startY < endY)
+            dir = 1;
+        else if(endY < startY)
+            dir = 3;
+        else if(startX < endX)
+            dir = 0;
+        else
+            dir = 2;
+    }else{
+        path.lineTo(startX, endY);
+        path.lineTo(endX, endY);
+        if(startX < endX)
+            dir = 0;
+        else if(endX < startX)
+            dir = 2;
+        else if(startY < endY)
+            dir = 1;
+        else
+            dir = 3;
+    }
+
+    painter.drawPath(path);
+
+    painter.setBrush(startBrush);
+    arrowPath.moveTo(endX, endY);
+
+    switch(dir)
+    {
+    case 0:
+        arrowPath.lineTo(endX - 6, endY - 2);
+        arrowPath.lineTo(endX - 6, endY + 2);
+        arrowPath.lineTo(endX, endY);
+        break;
+    case 1:
+        arrowPath.lineTo(endX - 2, endY - 6);
+        arrowPath.lineTo(endX + 2, endY - 6);
+        arrowPath.lineTo(endX, endY);
+        break;
+    case 2:
+        arrowPath.lineTo(endX + 6, endY - 2);
+        arrowPath.lineTo(endX + 6, endY + 2);
+        arrowPath.lineTo(endX, endY);
+        break;
+    case 3:
+        arrowPath.lineTo(endX - 2, endY + 6);
+        arrowPath.lineTo(endX + 2, endY + 6);
+        arrowPath.lineTo(endX, endY);
+        break;
+    }
+
+    painter.drawPath(arrowPath);
 }
 
 void DisplayTile::drawOutline(QPainter &painter) const
@@ -157,21 +225,21 @@ void DisplayTile::drawSignals(QPainter &painter)
 
     tilePen.setWidth(this->size / 200);
 
-    areaWeight[0] = area[0].size() / 2.0 + area[2].size() / 2.0 + 1.0;
-    areaWeight[1] = area[5].size() + 1.0;
-    areaWeight[2] = area[1].size() / 2.0 + area[3].size() / 2.0 + 1.0;
-    areaWeight[3] = area[0].size() / 2.0 + area[1].size() / 2.0 + 1.0;
-    areaWeight[4] = area[4].size() + 1.0;
-    areaWeight[5] = area[2].size() / 2.0 + area[3].size() / 2.0 + 1.0;
+    areaWeight[0] = qMin(area[0].size() / 2.0 + area[2].size() / 2.0, 1.0);
+    areaWeight[1] = qMin((double)area[5].size(), 1.0);
+    areaWeight[2] = qMin(area[1].size() / 2.0 + area[3].size() / 2.0, 1.0);
+    areaWeight[3] = qMin(area[0].size() / 2.0 + area[1].size() / 2.0, 1.0);
+    areaWeight[4] = qMin((double)area[4].size(), 1.0);
+    areaWeight[5] = qMin(area[2].size() / 2.0 + area[3].size() / 2.0, 1.0);
 
-    currentHalfTotal = areaWeight[0] + areaWeight[1] + areaWeight[2] + 3;
-    areaWeight[0] /= currentHalfTotal;
-    areaWeight[1] /= currentHalfTotal;
-    areaWeight[2] /= currentHalfTotal;
-    currentHalfTotal = areaWeight[3] + areaWeight[4] + areaWeight[5] + 1;
-    areaWeight[3] /= currentHalfTotal;
-    areaWeight[4] /= currentHalfTotal;
-    areaWeight[5] /= currentHalfTotal;
+    currentHalfTotal = areaWeight[0] + areaWeight[1] + areaWeight[2] + 1.0;
+    areaWeight[0] = areaWeight[0] * 100 / currentHalfTotal;
+    areaWeight[1] = areaWeight[1] * 100 / currentHalfTotal;
+    areaWeight[2] = areaWeight[2] * 100 / currentHalfTotal;
+    currentHalfTotal = areaWeight[3] + areaWeight[4] + areaWeight[5] + 1.0;
+    areaWeight[3] = areaWeight[3] * 100 / currentHalfTotal;
+    areaWeight[4] = areaWeight[4] * 100 / currentHalfTotal;
+    areaWeight[5] = areaWeight[5] * 100 / currentHalfTotal;
 
     for(int i = 0; i < 6; i++)
     {

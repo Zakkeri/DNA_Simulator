@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QList>
+#include <qmath.h>
 #include <QPainter>
 
 
@@ -121,6 +122,7 @@ public:
 
     void addLabel(const DisplayLabel &newLabel); //Adds a label to the correct list.
     void addSignal(const DisplaySignal &newSignal); // Adds a signal to the correct area.
+    void drawArrow(QPainter &painter, int startX, int startY, int endX, int endY, bool xFirst = true) const;
     void drawOutline(QPainter &painter) const; // Draws the labels of the tile.
     void drawSignals(QPainter &painter); // Draws the signals of the tile.
     void drawTile(QPainter &painter); // Draws the whole tile.
