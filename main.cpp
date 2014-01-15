@@ -1,10 +1,10 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include<QMap>
-#include"../../../../../Users/Zakkeri/DNA_Simulator/Headers/SetOfAssemblyTiles.h"
-#include"../../../../../Users/Zakkeri/DNA_Simulator/Headers/Simulator.h"
-#include"../../../../../Users/Zakkeri/DNA_Simulator/Headers/ActiveTile.h"
-#include"../../../../../Users/Zakkeri/DNA_Simulator/Headers/AssemblyTile.h"
+#include"Headers/SetOfAssemblyTiles.h"
+#include"Headers/Simulator.h"
+#include"Headers/ActiveTile.h"
+#include"Headers/AssemblyTile.h"
 #include<QDebug>
 #define DEBUG
 //#define TEST1
