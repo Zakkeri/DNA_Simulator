@@ -47,26 +47,25 @@ void DisplayTile::addSignal(const DisplaySignal &newSignal)
         area[3].append(newSignal);
     else if((newSignal.source == 0 && newSignal.target == 2) ||
             (newSignal.source == 2 && newSignal.target == 0))
-        area[4].append(newSignal);
+        area[5].append(newSignal);
     else if((newSignal.source == 1 && newSignal.target == 3) ||
             (newSignal.source == 3 && newSignal.target == 1))
-        area[5].append(newSignal);
+        area[4].append(newSignal);
     else if(newSignal.source == -1)
     {
         if(newSignal.target % 2)
-            area[5].append(newSignal);
-        else
             area[4].append(newSignal);
+        else
+            area[5].append(newSignal);
     }
 }
 
 void DisplayTile::drawArrow(QPainter &painter, int startX, int startY, int endX, int endY, bool xFirst) const
 {
     QPainterPath path, arrowPath;
-    QBrush startBrush;
+    const QBrush startBrush = painter.brush();
     int dir;
 
-    startBrush = painter.brush();
     painter.setBrush(Qt::NoBrush);
     path.moveTo(startX, startY);
 
@@ -98,7 +97,9 @@ void DisplayTile::drawArrow(QPainter &painter, int startX, int startY, int endX,
 
     painter.drawPath(path);
 
+    painter.setPen(painter.pen().color());
     painter.setBrush(startBrush);
+
     arrowPath.moveTo(endX, endY);
 
     switch(dir)
@@ -214,178 +215,235 @@ void DisplayTile::drawSignals(QPainter &painter)
 {
     float areaWeight[6] = {0,0,0,0,0,0};
     float currentHalfTotal;
-    QPoint arrowPoints[3];
-    QPoint start, end;
-    QPen tilePen, arrowPen;
+    QPen arrowPen;
     QBrush arrowBrush;
     QVector<qreal> dashPattern;
     dashPattern << 2 << 5;
     arrowPen.setStyle(Qt::SolidLine);
     arrowBrush.setStyle(Qt::SolidPattern);
 
-    tilePen.setWidth(this->size / 200);
-
-    areaWeight[0] = qMin(area[0].size() / 2.0 + area[2].size() / 2.0, 1.0);
-    areaWeight[1] = qMin((double)area[5].size(), 1.0);
-    areaWeight[2] = qMin(area[1].size() / 2.0 + area[3].size() / 2.0, 1.0);
-    areaWeight[3] = qMin(area[0].size() / 2.0 + area[1].size() / 2.0, 1.0);
-    areaWeight[4] = qMin((double)area[4].size(), 1.0);
-    areaWeight[5] = qMin(area[2].size() / 2.0 + area[3].size() / 2.0, 1.0);
+    areaWeight[0] = qMax(area[0].size() / 2.0 + area[2].size() / 2.0, 1.0);
+    areaWeight[1] = qMax((double)area[4].size(), 1.0);
+    areaWeight[2] = qMax(area[1].size() / 2.0 + area[3].size() / 2.0, 1.0);
+    areaWeight[3] = qMax(area[0].size() / 2.0 + area[1].size() / 2.0, 1.0);
+    areaWeight[4] = qMax((double)area[5].size(), 1.0);
+    areaWeight[5] = qMax(area[2].size() / 2.0 + area[3].size() / 2.0, 1.0);
 
     currentHalfTotal = areaWeight[0] + areaWeight[1] + areaWeight[2] + 1.0;
-    areaWeight[0] = areaWeight[0] * 100 / currentHalfTotal;
-    areaWeight[1] = areaWeight[1] * 100 / currentHalfTotal;
-    areaWeight[2] = areaWeight[2] * 100 / currentHalfTotal;
+    areaWeight[0] = (areaWeight[0] + 1) * 100 / currentHalfTotal;
+    areaWeight[1] = (areaWeight[1] - 1) * 100 / currentHalfTotal;
+    areaWeight[2] = (areaWeight[2] + 1) * 100 / currentHalfTotal;
     currentHalfTotal = areaWeight[3] + areaWeight[4] + areaWeight[5] + 1.0;
-    areaWeight[3] = areaWeight[3] * 100 / currentHalfTotal;
-    areaWeight[4] = areaWeight[4] * 100 / currentHalfTotal;
-    areaWeight[5] = areaWeight[5] * 100 / currentHalfTotal;
+    areaWeight[3] = (areaWeight[3] + 1) * 100 / currentHalfTotal;
+    areaWeight[4] = (areaWeight[4] - 1) * 100 / currentHalfTotal;
+    areaWeight[5] = (areaWeight[5] + 1) * 100 / currentHalfTotal;
 
     for(int i = 0; i < 6; i++)
-    {
-        if(area[i].empty())
-            continue;
-
         qSort(area[i]);
 
-        float xInc;
-        float yInc;
 
-        switch(i)
+    //Initialize the place variables
+    float topX = -50;
+    float topY = -50;
+    float sideX = -50;
+    float sideY = -50;
+    float xInc = areaWeight[0] / (area[0].size() + 1);
+    float yInc = areaWeight[3] / (area[0].size() + 1);
+
+
+    // Draw area 0, between sides 2 and 3
+    for(QList<DisplaySignal>::Iterator next = area[0].begin(); next != area[0].end(); next++)
+    {
+        arrowPen.setColor((*next).color);
+        if((*next).activation)
+            arrowPen.setDashPattern(dashPattern);
+        else
+            arrowPen.setStyle(Qt::SolidLine);
+
+        painter.setBrush((*next).color);
+        painter.setPen(arrowPen);
+        topX += xInc;
+        sideY += yInc;
+        if((*next).target == 2)
         {
-        case 0:
-            xInc = areaWeight[0] * size / (area[i].size());
-            yInc = areaWeight[3] * size / (area[i].size());
-            start = end = QPoint(-50,-50);
-            break;
-        case 1:
-            xInc = areaWeight[2] * size / (area[i].size());
-            yInc = areaWeight[3] * size / (area[i].size());
-            start = end = QPoint(50, -50);
-            xInc *= -1;
-            break;
-        case 2:
-            xInc = areaWeight[0] * size / (area[i].size());
-            yInc = areaWeight[5] * size / (area[i].size());
-            start = end = QPoint(-50, 50);
-            yInc *= -1;
-            break;
-        case 3:
-            xInc = areaWeight[2] * size / (area[i].size());
-            yInc = areaWeight[5] * size / (area[i].size());
-            start = end = QPoint(50, 50);
-            xInc *= -1;
-            yInc *= -1;
-            break;
-        case 4:
-            xInc = 0;
-            yInc = areaWeight[4] * size / (area[i].size());
-            start = QPoint(-50, -50 + areaWeight[3] * size);
-            end = start + QPoint(size, 0);
-            break;
-        case 5:
-            xInc = areaWeight[1] * size / (area[i].size());
-            yInc = 0;
-            start = QPoint(-50 + areaWeight[0] * size, 50);
-            end = start + QPoint(0, size);
-            break;
+            drawArrow(painter, topX, topY, sideX, sideY, false);
+        }else{
+            drawArrow(painter, sideX, sideY, topX, topY);
+        }
+    }
+
+    // Change place variables for area 1
+    topX = 50;
+    topY = -50;
+    sideX = 50;
+    sideY = -50;
+    xInc = areaWeight[2] / (area[1].size() + 1);
+    yInc = areaWeight[3] / (area[1].size() + 1);
+
+    // Draw area 1, between sides 0 and 3
+    for(QList<DisplaySignal>::Iterator next = area[1].begin(); next != area[1].end(); next++)
+    {
+        arrowPen.setColor((*next).color);
+        if((*next).activation)
+            arrowPen.setDashPattern(dashPattern);
+        else
+            arrowPen.setStyle(Qt::SolidLine);
+
+        painter.setBrush((*next).color);
+        painter.setPen(arrowPen);
+        topX -= xInc;
+        sideY += yInc;
+        if((*next).target == 0)
+        {
+            drawArrow(painter, topX, topY, sideX, sideY, false);
+        }else{
+            drawArrow(painter, sideX, sideY, topX, topY);
+        }
+    }
+
+    // Change place variables for area 2
+    topX = -50;
+    topY = 50;
+    sideX = -50;
+    sideY = 50;
+    xInc = areaWeight[0] / (area[2].size() + 1);
+    yInc = areaWeight[5] / (area[2].size() + 1);
+
+    // Draw area 2, between sides 2 and 1
+    for(QList<DisplaySignal>::Iterator next = area[2].begin(); next != area[2].end(); next++)
+    {
+        arrowPen.setColor((*next).color);
+        if((*next).activation)
+            arrowPen.setDashPattern(dashPattern);
+        else
+            arrowPen.setStyle(Qt::SolidLine);
+
+        painter.setBrush((*next).color);
+        painter.setPen(arrowPen);
+        topX += xInc;
+        sideY -= yInc;
+        if((*next).target == 2)
+        {
+            drawArrow(painter, topX, topY, sideX, sideY, false);
+        }else{
+            drawArrow(painter, sideX, sideY, topX, topY);
+        }
+    }
+
+    // Change place variables for area 3
+    topX = 50;
+    topY = 50;
+    sideX = 50;
+    sideY = 50;
+    xInc = areaWeight[2] / (area[3].size() + 1);
+    yInc = areaWeight[5] / (area[3].size() + 1);
+
+    // Draw area 3, between sides 0 and 1
+    for(QList<DisplaySignal>::Iterator next = area[3].begin(); next != area[3].end(); next++)
+    {
+        arrowPen.setColor((*next).color);
+        if((*next).activation)
+            arrowPen.setDashPattern(dashPattern);
+        else
+            arrowPen.setStyle(Qt::SolidLine);
+
+        painter.setBrush((*next).color);
+        painter.setPen(arrowPen);
+        topX -= xInc;
+        sideY -= yInc;
+        if((*next).target == 0)
+        {
+            drawArrow(painter, topX, topY, sideX, sideY, false);
+        }else{
+            drawArrow(painter, sideX, sideY, topX, topY);
+        }
+    }
+
+    // Change place variables for area 4
+    topX = areaWeight[0] - 50;
+    sideY = -50;
+    topY = 50;
+
+    if(area[4].size() == 1)
+        xInc = 0;
+    else
+        xInc = areaWeight[1] / (area[4].size() - 1);
+
+    // Draw area 4, between sides 1 and 3
+    for(QList<DisplaySignal>::Iterator next = area[4].begin(); next != area[4].end(); next++)
+    {
+        arrowPen.setColor((*next).color);
+        if((*next).activation)
+            arrowPen.setDashPattern(dashPattern);
+        else
+            arrowPen.setStyle(Qt::SolidLine);
+
+        painter.setBrush((*next).color);
+        painter.setPen(arrowPen);
+
+        if((*next).source == -1)
+        {
+            sideY = -50;
+            topY = 50;
+            if((*next).target == 1)
+            {
+                sideY = 50 - .5 * areaWeight[3];
+                painter.drawRect(topX - 2, sideY - 2, 4, 4);
+            }else{
+                topY = .5 * areaWeight[5] - 50;
+                painter.drawRect(topX - 2, topY - 2, 4, 4);
+            }
         }
 
-        for(QList<DisplaySignal>::iterator next = area[i].begin();
-            next != area[i].end(); next++)
+        if((*next).target == 3)
+            drawArrow(painter, topX, topY, topX, sideY);
+        else
+            drawArrow(painter, topX, sideY, topX, topY);
+
+        topX += xInc;
+    }
+
+    // Change place variables for area 5
+    sideY = areaWeight[3] - 50;
+    sideX = -50;
+    topX = 50;
+
+    if(area[5].size() == 1)
+        yInc = 0;
+    else
+        yInc = areaWeight[4] / (area[5].size() - 1);
+
+    // Draw area 5, between sides 2 and 0
+    for(QList<DisplaySignal>::Iterator next = area[5].begin(); next != area[5].end(); next++)
+    {
+        arrowPen.setColor((*next).color);
+        if((*next).activation)
+            arrowPen.setDashPattern(dashPattern);
+        else
+            arrowPen.setStyle(Qt::SolidLine);
+
+        painter.setBrush((*next).color);
+        painter.setPen(arrowPen);
+
+        if((*next).source == -1)
         {
-            tilePen.setColor((*next).color);
-            arrowBrush.setColor((*next).color);
-            arrowPen.setColor((*next).color);
-            painter.setBrush(arrowBrush);
-            if((*next).activation)
+            sideX = -50;
+            topX = 50;
+            if((*next).target == 0)
             {
-                tilePen.setDashPattern(dashPattern);
+                sideX = 50 - .5 * areaWeight[2];
+                painter.drawRect(sideX - 2, sideY - 2, 4, 4);
             }else{
-                tilePen.setStyle(Qt::SolidLine);
-            }
-
-            painter.setPen(arrowPen);
-            if(i < 4)
-            {
-                start.rx() += xInc;
-                end.ry() += yInc;
-                QPoint mid(start.x(), end.y());
-                if((*next).target % 2)
-                {
-                    arrowPoints[0] = start;
-                    arrowPoints[1] = start + QPoint(3, yInc / abs(yInc) * 8);
-                    arrowPoints[2] = start + QPoint(-3, yInc / abs(yInc) * 8);
-                    painter.drawPolygon(arrowPoints, 3);
-                }else{
-                    arrowPoints[0] = end;
-                    arrowPoints[1] = end + QPoint(xInc / abs(xInc) * 8, 3);
-                    arrowPoints[2] = end + QPoint(xInc / abs(xInc) * 8, -3);
-                    painter.drawPolygon(arrowPoints, 3);
-                }
-
-                painter.setPen(tilePen);
-                painter.drawLine(start, mid);
-                painter.drawLine(mid, end);
-            }else{
-                bool init = (*next).source == -1;
-                const int rSize = 6;
-                const int rSize2 = rSize / 2;
-
-                start += QPoint(xInc, yInc);
-                end += QPoint(xInc, yInc);
-
-                QPoint realStart = start;
-                QPoint realEnd = end;
-
-
-                if((*next).target == 0)
-                {
-                    if(init)
-                    {
-                        realStart.rx() += (areaWeight[0] + areaWeight[1] + areaWeight[2] / 2.0) * size;
-                        painter.drawRect(realStart.x() - rSize2, realStart.y() - rSize2, rSize, rSize);
-                    }
-                    arrowPoints[0] = end;
-                    arrowPoints[1] = end + QPoint(-8, 3);
-                    arrowPoints[2] = end + QPoint(-8, -3);
-                }else if((*next).target == 1)
-                {
-                    if(init)
-                    {
-                        realStart.ry() += (areaWeight[3] + areaWeight[4] + areaWeight[5] / 2.0) * size;
-                        painter.drawRect(realStart.x() - rSize2, realStart.y() - rSize2, rSize, rSize);
-                    }
-                    arrowPoints[0] = end;
-                    arrowPoints[1] = end + QPoint(3, -8);
-                    arrowPoints[2] = end + QPoint(-3, -8);
-                }else if((*next).target == 2)
-                {
-                    if(init)
-                    {
-                        realEnd.rx() -= (areaWeight[0] / 2.0 + areaWeight[1] + areaWeight[2]) * size;
-                        painter.drawRect(realEnd.x() - rSize2, realEnd.y() - rSize2, rSize, rSize);
-                    }
-                    arrowPoints[0] = start;
-                    arrowPoints[1] = start + QPoint(8, 3);
-                    arrowPoints[2] = start + QPoint(8, -3);
-                }else if((*next).target == 3)
-                {
-                    if(init)
-                    {
-                        realEnd.ry() -= (areaWeight[3] / 2.0 + areaWeight[4] + areaWeight[5]) * size;
-                        painter.drawRect(realEnd.x() - rSize2, realEnd.y() - rSize2, rSize, rSize);
-                    }
-                    arrowPoints[0] = start;
-                    arrowPoints[1] = start + QPoint(3, 8);
-                    arrowPoints[2] = start + QPoint(-3, 8);
-                }
-
-                painter.drawPolygon(arrowPoints, 3);
-                painter.setPen(tilePen);
-                painter.drawLine(realStart,realEnd);
+                topX = .5 * areaWeight[0] - 50;
+                painter.drawRect(topX - 2, sideY - 2, 4, 4);
             }
         }
+
+        if((*next).target == 0)
+            drawArrow(painter, sideX, sideY, topX, sideY);
+        else
+            drawArrow(painter, topX, sideY, sideX, sideY);
+        sideY += yInc;
     }
 }
 

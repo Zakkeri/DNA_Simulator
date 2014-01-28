@@ -78,12 +78,12 @@ struct DisplayLabel
 // Just to clarify, the areas the lists of signals on a tile are as follows:
 //
 //  ___ ___ ___
-// | 0 | 5 | 1 |
+// | 0 | 4 | 1 |
 // |___| | |___|
-// |4----+----4|
+// |5----+----5|
 // |___  |  ___|
 // | 2 | | | 3 |
-// |___|_5_|___|
+// |___|_4_|___|
 //
 // so, area[1] would be a list of all the signals in the upper right corner.
 //
