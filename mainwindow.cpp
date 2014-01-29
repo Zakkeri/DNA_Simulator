@@ -55,8 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    QObject::disconnect(ui->listWidget, SIGNAL(currentRowChanged(int )), this, SLOT(on_listWidget_currentRowChanged(int)));
-
     for(QList<a_tile *>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter)
     {
         delete (*iter);
@@ -1079,6 +1077,7 @@ void MainWindow::on_actionSave_2_triggered()
 void MainWindow::on_actionLoad_triggered()
 {
     //Need to clear old data first if there is one
+    ui->treeWidget->clear();
     if(!tiles.isEmpty())
     {
         for(int i = ui->listWidget->count() - 1; i>=0; i--)

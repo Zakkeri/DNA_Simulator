@@ -272,6 +272,7 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
 
                 }
                 int rotation = (label1.side - ((label2.side + 2)%4)) % 4;   //calculate rotation
+                if(rotation < 0) rotation = 4 + rotation; //if rotation is negative, bring it to positive integer
                 FitPlace *match = new FitPlace(coord, label2.xyCoord, rotation);    //create FirPlace and append it to the list
                 fitPlaces->append(match);
 #ifdef DEBUG

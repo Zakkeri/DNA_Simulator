@@ -604,6 +604,7 @@
     // Post-Conditions: Tile is rotated counterclockwise required number of times
     void ActiveTile::rotateTile(int times=1)
     {
+        if(times == 0) return;
         if(times > 1) rotateTile(times - 1);
 
         TileSide tempSide;
@@ -613,14 +614,7 @@
         Side[3] = Side[2];
         Side[2] = tempSide;
 
-        /*
-        ActiveTile *tempNeighbor;
-        tempNeighbor = Neighbors[1];
-        Neighbors[1] = Neighbors[0];
-        Neighbors[0] = Neighbors[3];
-        Neighbors[3] = Neighbors[2];
-        Neighbors[2] = tempNeighbor;
-        */
+        this->X_Y_Coordinates = QPair<int, int>(-this->X_Y_Coordinates.second, this->X_Y_Coordinates.first);
     }
 
 
