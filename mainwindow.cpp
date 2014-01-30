@@ -1077,6 +1077,7 @@ void MainWindow::on_actionSave_2_triggered()
 void MainWindow::on_actionLoad_triggered()
 {
     //Need to clear old data first if there is one
+    this->selectedTile = 0;
     ui->treeWidget->clear();
     if(!tiles.isEmpty())
     {
