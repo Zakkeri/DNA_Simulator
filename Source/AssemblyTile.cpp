@@ -242,7 +242,11 @@ ActiveTile *AssemblyTile::getTileFromCoordinates(QPair<int, int> coordinate)
 {
     if(map.contains(this->nominalToMap(coordinate)))
     {
-        return map[this->nominalToMap(coordinate)];
+        if(map[this->nominalToMap(coordinate)]->getCoordinates() == coordinate)
+        //check if found Active Tile has the right coordinates
+            return map[this->nominalToMap(coordinate)];
+        else
+            return NULL;
     }
     else
     {
@@ -277,6 +281,7 @@ void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
  Post-Condition: Assembly tile is rotated required amount of times along reference point
  */
 {
+    if(times == 0) return;
     // First, move the refPoint to (0,0)
     this->moveAssemblyTile(QPair<int,int>(-refPoint.first, -refPoint.second));
 
@@ -308,6 +313,11 @@ void AssemblyTile::rotateAssemblyTile(QPair<int, int> refPoint, int times)
         it->side = (direction)((it->side + times) % 4);
     }
 
+    //Next, rotate each tile
+    for(QList<ActiveTile*>::iterator it = this->ListOfActiveTiles.begin(); it != this->ListOfActiveTiles.end(); ++it)
+    {
+        (*it)->rotateTile(times);
+    }
     // Then, move the refPoint back to where it should be
     this->moveAssemblyTile(refPoint);
 }
@@ -428,28 +438,27 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
 QPair<int, int> AssemblyTile::nominalToMap(QPair<int, int> coordinate)const
 {
 
-    QPair<int, int> modifiedCoordinate;
+    QPair<int, int> modifiedCoordinate = coordinate;
 
     // To get the coordinate a tile is within the map, you'll have to take
-    // it's current xy coordinate, undo the rotation, then undo the shift.
+    // it's current xy coordinate, undo the shift, then undo the rotation.
+    modifiedCoordinate.first += this->tileOffset.first;
+    modifiedCoordinate.second += this->tileOffset.second;
     switch(this->rotation)
     {
     case y:
-        modifiedCoordinate = QPair<int, int>(coordinate.second, -coordinate.first);
+        modifiedCoordinate = QPair<int, int>(modifiedCoordinate.second, -modifiedCoordinate.first);
         break;
     case _x:
-        modifiedCoordinate = QPair<int, int>(-coordinate.first, -coordinate.second);
+        modifiedCoordinate = QPair<int, int>(-modifiedCoordinate.first, -modifiedCoordinate.second);
         break;
     case _y:
-        modifiedCoordinate = QPair<int, int>(-coordinate.second, coordinate.first);
+        modifiedCoordinate = QPair<int, int>(-modifiedCoordinate.second, modifiedCoordinate.first);
         break;
     default:
-        modifiedCoordinate = coordinate;
+      //  modifiedCoordinate = coordinate;
         break;
     }
-    //Changed minus to plus!!!
-    modifiedCoordinate.first += this->tileOffset.first;
-    modifiedCoordinate.second += this->tileOffset.second;
     return modifiedCoordinate;
 }
 
