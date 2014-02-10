@@ -114,7 +114,7 @@ private:
 
 public:
     DisplayTile(int size=100);
-
+    //DisplayTile(const DisplayTile &);
     DisplayTile &operator <<(const DisplayLabel &label); // Overload to add a new Label.
     DisplayTile &operator <<(const DisplaySignal &signal); // Overload to add a new Signal
 

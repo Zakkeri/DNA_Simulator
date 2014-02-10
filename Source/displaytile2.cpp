@@ -13,6 +13,19 @@ QRectF DisplayTile::boundingRect() const
     return QRectF(-55,-55,110,110);
 }
 
+/*DisplayTile::DisplayTile(const DisplayTile &copy)
+{
+    for(int i = 0; i < 8; i++)
+    {
+        this->labels[i] = copy.labels[i];
+    }
+    this->size = copy.size;
+    for(int i = 0; i < 6; i++)
+    {
+        this->area[i] = copy.area[i];
+    }
+}*/
+
 void DisplayTile::addLabel(const DisplayLabel &newLabel)
 {
     if(newLabel.active)

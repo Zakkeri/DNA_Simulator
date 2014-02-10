@@ -9,7 +9,8 @@
 #include <QString>
 #include <QPainter>
 #include <QGraphicsScene>
-#include "Headers/displaytile.h"
+//#include "Headers/displaytile.h"
+#include "Headers/displaytile2.h"
 #include "Headers/ActiveTile.h"
 #include "Headers/AssemblyTile.h"
 #include "Headers/SetOfAssemblyTiles.h"

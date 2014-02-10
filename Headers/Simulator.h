@@ -14,7 +14,7 @@
 #define _SIMULATOR_H
 #include"../Headers/SetOfAssemblyTiles.h"
 #include"../Headers/AssemblyTileSetManager.h"
-#include "../Headers/displaytile.h"
+#include "../Headers/displaytile2.h"
 #include<QMap>
 #include<QString>
 #define DEBUG
@@ -49,7 +49,7 @@ public:
      Main function that starts simulation
      */
 
-    QList<DisplayTile> toDisplayTile(AssemblyTile * T);
+    QList<DisplayTile *> toDisplayTile(AssemblyTile * T);
     //Converts Assembly tile into Display tile, returns it as a list of display tiles
 
     QList<SetOfAssemblyTiles *> &getAssemblies();

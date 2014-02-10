@@ -19,7 +19,7 @@ SOURCES += main.cpp\
     Source/AssemblyTileSetManager.cpp \
     Source/AssemblyTile.cpp \
     Source/ActiveTile.cpp \
-    Source/displaytile.cpp
+    Source/displaytile2.cpp
 
 HEADERS  += mainwindow.h \
     Headers/Simulator.h \
@@ -28,6 +28,7 @@ HEADERS  += mainwindow.h \
     Headers/AssemblyTile.h \
     Headers/ActiveTile.h \
     Headers/AdditionalData.h \
-    Headers/displaytile.h
+    Headers/displaytile2.h
+
 
 FORMS    += mainwindow.ui

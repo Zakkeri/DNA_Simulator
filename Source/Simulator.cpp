@@ -679,9 +679,9 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
 #endif
 }
 
-QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
+QList<DisplayTile*> Simulator::toDisplayTile(AssemblyTile * T)
 {
-    QList<DisplayTile> displayTiles;
+    QList<DisplayTile*> displayTiles;
 
     if(T->getListOfActiveTiles().back()->getCoordinates().first < 0)
     {
@@ -694,15 +694,16 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
 
     for(QList<ActiveTile *>::const_iterator iter = T->getListOfActiveTiles().begin(); iter != T->getListOfActiveTiles().end(); iter++)
     {
-        DisplayTile t(10 + (*iter)->getCoordinates().first*100, 10 + (*iter)->getCoordinates().second*100, 100);
-
+        //DisplayTile t(10 + (*iter)->getCoordinates().first*100, 10 + (*iter)->getCoordinates().second*100, 100);
+        DisplayTile *t = new DisplayTile(100);
+        t->setPos(10 + (*iter)->getCoordinates().first*100, 10 + (*iter)->getCoordinates().second*100);
         for(int side = 0; side < 4; side++) //add labels and signals for each side
         {
             if(!(*iter)->getActiveLabels((direction)(side)).isEmpty())
             {
                 for(QList<int>::const_iterator activeIter = (*iter)->getActiveLabels((direction)(side)).begin(); activeIter != (*iter)->getActiveLabels((direction)(side)).end(); activeIter++)
                 {
-                    t.addLabel(DisplayLabel(side, ColorMap[(*activeIter)], true));
+                    t->addLabel(DisplayLabel(side, ColorMap[(*activeIter)], true));
                 }
             }
 
@@ -710,7 +711,7 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
             {
                 for(QList<int>::const_iterator inactiveIter = (*iter)->getInactiveLabels((direction)(side)).begin(); inactiveIter != (*iter)->getInactiveLabels((direction)(side)).end(); inactiveIter++)
                 {
-                    t.addLabel(DisplayLabel(side, ColorMap[(*inactiveIter)], false));
+                    t->addLabel(DisplayLabel(side, ColorMap[(*inactiveIter)], false));
                 }
             }
 
@@ -718,7 +719,7 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
             {
                 for(QList<Signal>::const_iterator activationIter = (*iter)->getActivationSignals((direction)(side)).begin(); activationIter != (*iter)->getActivationSignals((direction)(side)).end(); activationIter++)
                 {
-                    t.addSignal(DisplaySignal(side, (int)(*activationIter).Target, ColorMap[(*activationIter).label], true));
+                    t->addSignal(DisplaySignal(side, (int)(*activationIter).Target, ColorMap[(*activationIter).label], true));
                 }
             }
 
@@ -726,7 +727,7 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
             {
                 for(QList<Signal>::const_iterator transmIter = (*iter)->getTransmissionSignals((direction)(side)).begin(); transmIter != (*iter)->getTransmissionSignals((direction)(side)).end(); transmIter++)
                 {
-                    t.addSignal(DisplaySignal(side, (int)(*transmIter).Target, ColorMap[(*transmIter).label], false));
+                    t->addSignal(DisplaySignal(side, (int)(*transmIter).Target, ColorMap[(*transmIter).label], false));
                 }
             }
         }
@@ -735,7 +736,7 @@ QList<DisplayTile> Simulator::toDisplayTile(AssemblyTile * T)
         {
             for(QList<Signal>::const_iterator initIter = (*iter)->getInitiationSignals().begin(); initIter != (*iter)->getInitiationSignals().end(); initIter++)
             {
-                t.addSignal(DisplaySignal(-1, (int)(*initIter).Target, ColorMap[(*initIter).label], false));
+                t->addSignal(DisplaySignal(-1, (int)(*initIter).Target, ColorMap[(*initIter).label], false));
             }
         }
 

@@ -66,19 +66,20 @@ void MainWindow::paintCurrentTile()
 {
     qDebug()<<"Going to paint current tile";
     if(selectedTile == 0) return;
-    DisplayTile tilePainting(10, 10, 200); //new DisplayTile object to draw
+    //DisplayTile tilePainting(10, 10, 200); //new DisplayTile object to draw
+    DisplayTile * tilePainting = new DisplayTile; // object to draw
     for(int i = 0; i < 4; i++) //for all 4 sides
     {
         for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->activeLabels[i].begin();
             iter != selectedTile->activeLabels[i].end(); iter++)
         { //add active labels
-            tilePainting.addLabel(DisplayLabel(i, this->colorFunction[(*iter)->text().toInt()], true));
+            tilePainting->addLabel(DisplayLabel(i, this->colorFunction[(*iter)->text().toInt()], true));
         }
 
         for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->inactiveLabels[i].begin();
             iter != selectedTile->inactiveLabels[i].end(); iter++)
         { //add inactive labels
-            tilePainting.addLabel(DisplayLabel(i, this->colorFunction[(*iter)->text().toInt()], false));
+            tilePainting->addLabel(DisplayLabel(i, this->colorFunction[(*iter)->text().toInt()], false));
         }
 
         for(QList<tablePair *>::const_iterator iter = selectedTile->activationSignals[i].begin();
@@ -90,7 +91,7 @@ void MainWindow::paintCurrentTile()
             else if(tstr == "Y" || tstr == "y") t = 1;
             else if(tstr == "_X" || tstr == "_x") t = 2;
             else if(tstr == "_Y" || tstr == "_y") t = 3;
-            tilePainting.addSignal(DisplaySignal(i, t, this->colorFunction[(*iter)->first->text().toInt()], true));
+            tilePainting->addSignal(DisplaySignal(i, t, this->colorFunction[(*iter)->first->text().toInt()], true));
         }
 
         for(QList<tablePair *>::const_iterator iter = selectedTile->transmissionSignals[i].begin();
@@ -102,7 +103,7 @@ void MainWindow::paintCurrentTile()
             else if(tstr == "Y" || tstr == "y") t = 1;
             else if(tstr == "_X" || tstr == "_x") t = 2;
             else if(tstr == "_Y" || tstr == "_y") t = 3;
-            tilePainting.addSignal(DisplaySignal(i, t, this->colorFunction[(*iter)->first->text().toInt()], false));
+            tilePainting->addSignal(DisplaySignal(i, t, this->colorFunction[(*iter)->first->text().toInt()], false));
         }
     }
 
@@ -115,26 +116,30 @@ void MainWindow::paintCurrentTile()
         else if(tstr == "Y" || tstr == "y") t = 1;
         else if(tstr == "_X" || tstr == "_x") t = 2;
         else if(tstr == "_Y" || tstr == "_y") t = 3;
-        tilePainting.addSignal(DisplaySignal(-1, t, this->colorFunction[(*iter)->first->text().toInt()]));
+        tilePainting->addSignal(DisplaySignal(-1, t, this->colorFunction[(*iter)->first->text().toInt()]));
     }
 
     //QImage image(140, 140, QImage::Format_ARGB32);
-    QImage image(300, 300, QImage::Format_ARGB32); //create Q image object
-    QPainter painter(&image); //paint tile on QImage object first
+   // QImage image(300, 300, QImage::Format_ARGB32); //create Q image object
+   // QPainter painter(&image); //paint tile on QImage object first
     /*if(painter.begin(ui->graphicsView) == false)
     {
         qDebug()<<"Painter can't paint on the current device";
         return;
     }*/
-    tilePainting.drawTile(painter); //perform painting operation
+  //  tilePainting.drawTile(painter); //perform painting operation
 
     QGraphicsScene* scene = new QGraphicsScene(); //new scene for QGraphicsView
-    scene->addPixmap(QPixmap::fromImage(image)); //add QImage to the scene
-    scene->setSceneRect(0,0,image.width(),image.height()); //set scene dimensions
+   // scene->addPixmap(QPixmap::fromImage(image)); //add QImage to the scene
+   // scene->setSceneRect(0,0,image.width(),image.height()); //set scene dimensions
+
+    scene->addItem(tilePainting);
     QGraphicsScene* currentScene = ui->graphicsView->scene(); //get current scene of QGraphics view
     if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
         delete currentScene;
     ui->graphicsView->setScene(scene); //add scene with tile image to the QGraphics view
+    //ui->graphicsView->scene()->addItem(tilePainting);
+
 
 }
 
@@ -925,24 +930,21 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
     int setInd = par.row();
     int tileInd = index.row();
 
-    QList<DisplayTile> tiles = this->sim->toDisplayTile(
+    QList<DisplayTile*> tiles = this->sim->toDisplayTile(
                 this->sim->getAssemblies().at(setInd)->getListOfAssemblyTiles().at(tileInd));
 
-    QImage image(400, 400, QImage::Format_ARGB32);
-    QPainter painter(&image);
-
-    for(QList<DisplayTile>::iterator iter = tiles.begin(); iter != tiles.end(); iter++)
-    {
-        iter->drawTile(painter);
-    }
 
     QGraphicsScene* scene = new QGraphicsScene();
-    scene->addPixmap(QPixmap::fromImage(image));
-    scene->setSceneRect(0,0,image.width(),image.height());
     QGraphicsScene* currentScene = ui->graphicsView->scene();
     if(currentScene != 0)
            delete currentScene;
     ui->graphicsView->setScene(scene);
+
+    for(QList<DisplayTile*>::iterator iter = tiles.begin(); iter != tiles.end(); iter++)
+    {
+        scene->addItem(*iter);
+    }
+
     ui->graphicsView->setVisible(false);
     ui->graphicsView->setVisible(true);
 }
