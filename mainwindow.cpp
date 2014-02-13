@@ -43,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
     currentSide = 0;
     selectedTile = 0;
 
+    //scalling added!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ui->graphicsView->scale(2, 2); //scalling added!!!!
+
+
     filePath = "";
     modified = false;
     /*QPainter paint();
@@ -67,7 +71,7 @@ void MainWindow::paintCurrentTile()
     qDebug()<<"Going to paint current tile";
     if(selectedTile == 0) return;
     //DisplayTile tilePainting(10, 10, 200); //new DisplayTile object to draw
-    DisplayTile * tilePainting = new DisplayTile; // object to draw
+    DisplayTile * tilePainting = new DisplayTile(100); // object to draw
     for(int i = 0; i < 4; i++) //for all 4 sides
     {
         for(QList<QListWidgetItem *>::const_iterator iter = selectedTile->activeLabels[i].begin();
@@ -134,10 +138,10 @@ void MainWindow::paintCurrentTile()
    // scene->setSceneRect(0,0,image.width(),image.height()); //set scene dimensions
 
     scene->addItem(tilePainting);
-    QGraphicsScene* currentScene = ui->graphicsView->scene(); //get current scene of QGraphics view
+    QGraphicsScene* currentScene = ui->graphicsView_TileView->scene(); //get current scene of QGraphics view
     if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
         delete currentScene;
-    ui->graphicsView->setScene(scene); //add scene with tile image to the QGraphics view
+    ui->graphicsView_TileView->setScene(scene); //add scene with tile image to the QGraphics view
     //ui->graphicsView->scene()->addItem(tilePainting);
 
 
@@ -648,7 +652,7 @@ void MainWindow::on_activeLabel_Add_pushButton_clicked()
     selectedTile->activeLabels[currentSide].last()->setFlags(selectedTile->activeLabels[currentSide].last()->flags() | Qt::ItemIsEditable);
     ui->activeLabels_listWidget->addItem(selectedTile->activeLabels[currentSide].last());
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 
@@ -672,7 +676,7 @@ void MainWindow::on_activeLabel_Remove_pushButton_clicked()
         delete toRemove;
     }
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_inactiveLabel_Add_pushButton_clicked()
@@ -687,7 +691,7 @@ void MainWindow::on_inactiveLabel_Add_pushButton_clicked()
     selectedTile->inactiveLabels[currentSide].last()->setFlags(selectedTile->inactiveLabels[currentSide].last()->flags() | Qt::ItemIsEditable);
     ui->inactiveLabels_listWidget->addItem(selectedTile->inactiveLabels[currentSide].last()); //add item to the list widget
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_inactiveLabel_Remove_pushButton_clicked()
@@ -709,7 +713,7 @@ void MainWindow::on_inactiveLabel_Remove_pushButton_clicked()
 
     }
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_activationSig_Add_pushButton_clicked()
@@ -724,7 +728,7 @@ void MainWindow::on_activationSig_Add_pushButton_clicked()
     ui->activationSignals_table->setItem(ui->activationSignals_table->rowCount() - 1, 0, selectedTile->activationSignals[currentSide].last()->first);
     ui->activationSignals_table->setItem(ui->activationSignals_table->rowCount() - 1, 1, selectedTile->activationSignals[currentSide].last()->second);
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_activationSig_Remove_pushButton_clicked()
@@ -739,7 +743,7 @@ void MainWindow::on_activationSig_Remove_pushButton_clicked()
 
     delete toRemove;
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_transmissionSig_Add_pushButton_clicked()
@@ -754,7 +758,7 @@ void MainWindow::on_transmissionSig_Add_pushButton_clicked()
     ui->transmissionSignals_table->setItem(ui->transmissionSignals_table->rowCount() - 1, 0, selectedTile->transmissionSignals[currentSide].last()->first);
     ui->transmissionSignals_table->setItem(ui->transmissionSignals_table->rowCount() - 1, 1, selectedTile->transmissionSignals[currentSide].last()->second);
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_transmissionSig_Remove_pushButton_clicked()
@@ -769,7 +773,7 @@ void MainWindow::on_transmissionSig_Remove_pushButton_clicked()
 
     delete toRemove;
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_initiationSig_Add_button_clicked()
@@ -784,7 +788,7 @@ void MainWindow::on_initiationSig_Add_button_clicked()
     ui->initiation_signals_tableWidget->setItem(ui->initiation_signals_tableWidget->rowCount() - 1, 0, selectedTile->initiationSignals.last()->first);
     ui->initiation_signals_tableWidget->setItem(ui->initiation_signals_tableWidget->rowCount() - 1, 1, selectedTile->initiationSignals.last()->second);
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_initiationSig_Remove_button_clicked()
@@ -799,7 +803,7 @@ void MainWindow::on_initiationSig_Remove_button_clicked()
 
     delete toRemove;
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_tile_comboBox_currentIndexChanged(int index) //when different tile is selected
@@ -811,7 +815,7 @@ void MainWindow::on_tile_comboBox_currentIndexChanged(int index) //when differen
     ui->radioButton_SideX->setChecked(true);
     currentSide = 0;
     updateEntries(currentSide);
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 
@@ -857,7 +861,11 @@ void MainWindow::on_activeLabels_listWidget_itemChanged(QListWidgetItem *item)
 {
     int value = item->text().toInt();
     qDebug()<<"Active label changed to: "<<value;
-    if(this->strengthFunction.contains(value)) return; //check if current value is present
+    if(this->strengthFunction.contains(value)) //check if current value is present
+    {
+        this->paintCurrentTile();
+        return;
+    }
     this->strengthFunction[value] = -1;
     this->strengthFunction[-value] = -1;
     this->colorFunction[value] = QColor(0,0,0); //set color to white by default
@@ -868,14 +876,18 @@ void MainWindow::on_activeLabels_listWidget_itemChanged(QListWidgetItem *item)
     ui->strength_func_tableWidget->setItem(ui->strength_func_tableWidget->rowCount() - 1,
                                            1, new QTableWidgetItem("-1"));
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_inactiveLabels_listWidget_itemChanged(QListWidgetItem *item)
 {
     int value = item->text().toInt();
     qDebug()<<"Inactive label changed to: "<<value;
-    if(this->strengthFunction.contains(value)) return; //check if current value is present
+    if(this->strengthFunction.contains(value)) //check if current value is present
+    {
+        this->paintCurrentTile();
+        return;
+    }
     this->strengthFunction[value] = -1;
     this->strengthFunction[-value] = -1;
     this->colorFunction[value] = QColor(0,0,0); //set color to white by default
@@ -886,7 +898,7 @@ void MainWindow::on_inactiveLabels_listWidget_itemChanged(QListWidgetItem *item)
     ui->strength_func_tableWidget->setItem(ui->strength_func_tableWidget->rowCount() - 1,
                                            1, new QTableWidgetItem("-1"));
     modified = true;
-    //this->paintCurrentTile();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_strength_func_tableWidget_itemChanged(QTableWidgetItem *item) //check for strength to be changed
@@ -915,6 +927,7 @@ void MainWindow::on_strength_func_tableWidget_cellDoubleClicked(int row, int col
         this->colorFunction[-(ui->strength_func_tableWidget->item(row, 0)->text().toInt())] = color;
         QTableWidgetItem *forColor = new QTableWidgetItem(color.name());
         ui->strength_func_tableWidget->setItem(row, column, forColor);
+        this->paintCurrentTile();
 
     }
     modified = true;
@@ -1294,4 +1307,22 @@ void MainWindow::on_actionLoad_triggered()
     ui->transmissionSig_Add_pushButton->setVisible(true);
     ui->transmissionSig_Remove_pushButton->setVisible(true);
     ui->graphicsView_TileView->setVisible(true);
+}
+
+void MainWindow::on_activationSignals_table_itemChanged(QTableWidgetItem *item)
+{
+    qDebug()<<"Activation signal item was changed";
+    this->paintCurrentTile();
+}
+
+void MainWindow::on_transmissionSignals_table_itemChanged(QTableWidgetItem *item)
+{
+    qDebug()<<"Transmission signal item was changed";
+    this->paintCurrentTile();
+}
+
+void MainWindow::on_initiation_signals_tableWidget_itemChanged(QTableWidgetItem *item)
+{
+    qDebug()<<"Initiation signal item was changed";
+    this->paintCurrentTile();
 }

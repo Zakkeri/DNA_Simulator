@@ -87,34 +87,16 @@ struct a_tile   //struct that will hold all information about a single tile
 
     //Active labels
     QList<QListWidgetItem *> activeLabels[4];
-    /*QList<QListWidgetItem *> activeLabelsX;
-    QList<QListWidgetItem *> activeLabels_X;
-    QList<QListWidgetItem *> activeLabelsY;
-    QList<QListWidgetItem *> activeLabels_Y;
-*/
+
     //Inactive labels
     QList<QListWidgetItem *> inactiveLabels[4];
-    /*QList<QListWidgetItem *> inactiveLabelsX;
-    QList<QListWidgetItem *> inactiveLabels_X;
-    QList<QListWidgetItem *> inactiveLabelsY;
-    QList<QListWidgetItem *> inactiveLabels_Y;
-*/
+
     //Activation Signals
     QList<tablePair *> activationSignals[4];
-    /*
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > activationSignalsX;
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > activationSignals_X;
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > activationSignalsY;
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > activationSignals_Y;
-*/
+
     //Transmission Signals
     QList<tablePair *> transmissionSignals[4];
-    /*
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignalsX;
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignals_X;
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignalsY;
-    QList<QPair<QTableWidgetItem  *, QTableWidgetItem  *> > transmissionSignals_Y;
-*/
+
     //Initiation Signals
     QList<tablePair*> initiationSignals;
 };
@@ -193,6 +175,12 @@ private slots:
     void on_actionSave_2_triggered();
 
     void on_actionLoad_triggered();
+
+    void on_activationSignals_table_itemChanged(QTableWidgetItem *item);
+
+    void on_transmissionSignals_table_itemChanged(QTableWidgetItem *item);
+
+    void on_initiation_signals_tableWidget_itemChanged(QTableWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;

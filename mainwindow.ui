@@ -341,6 +341,11 @@
         <height>451</height>
        </rect>
       </property>
+      <column>
+       <property name="text">
+        <string notr="true">1</string>
+       </property>
+      </column>
      </widget>
     </widget>
    </widget>
