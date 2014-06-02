@@ -681,6 +681,8 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
 
 QList<DisplayTile*> Simulator::toDisplayTile(AssemblyTile * T)
 {
+    T->rotateToDefaultPosition(); //unrotate assembly tile if needed
+
     QList<DisplayTile*> displayTiles;
 
     if(T->getListOfActiveTiles().back()->getCoordinates().first < 0)

@@ -17,6 +17,7 @@
 #include "Headers/Simulator.h"
 #include "Headers/AdditionalData.h"
 #include "Headers/AssemblyTileSetManager.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -181,6 +182,7 @@ private slots:
     void on_transmissionSignals_table_itemChanged(QTableWidgetItem *item);
 
     void on_initiation_signals_tableWidget_itemChanged(QTableWidgetItem *item);
+
 
 private:
     Ui::MainWindow *ui;

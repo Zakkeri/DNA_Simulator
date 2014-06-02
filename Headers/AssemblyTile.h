@@ -121,6 +121,7 @@ public:
     /*
      Post-Condition: side is added to the list of free sides
      */
+    void rotateToDefaultPosition();
 
     bool getIsCopy();
 

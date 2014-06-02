@@ -692,7 +692,7 @@
      <string>Remove</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="MyGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>319</x>
@@ -701,8 +701,11 @@
       <height>331</height>
      </rect>
     </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView_TileView">
+   <widget class="MyGraphicsView" name="graphicsView_TileView">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -816,6 +819,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>mygraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>tabWidget</tabstop>
  </tabstops>

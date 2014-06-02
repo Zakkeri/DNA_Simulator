@@ -11,7 +11,7 @@
 
 
 #include "../Headers/AssemblyTile.h"
-
+#include<QDebug>
 
 #ifdef DEBUG
     int AssemblyTile::ID = 0;   //unique id for everytile
@@ -484,4 +484,23 @@ void AssemblyTile::addFreeSide(freeActiveLabel side)
 bool AssemblyTile::getIsCopy()
 {
     return this->isCopy;
+}
+
+void AssemblyTile::rotateToDefaultPosition()
+{
+    if(this->rotation == x) return; //if already at default position, quit
+    qDebug()<<"Rotating tile to its default position";
+    switch(rotation)
+    {
+    case y:
+        this->rotateAssemblyTile(QPair<int, int>(0,0), 3);
+        break;
+    case _x:
+        this->rotateAssemblyTile(QPair<int, int>(0,0), 2);
+        break;
+
+    case _y:
+        this->rotateAssemblyTile(QPair<int, int>(0,0), 1);
+        break;
+    }
 }

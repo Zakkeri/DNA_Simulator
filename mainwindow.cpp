@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     paint.drawLine(0,0,10,10);
 */
 
+
 }
 
 MainWindow::~MainWindow()
@@ -734,7 +735,7 @@ void MainWindow::on_activationSig_Add_pushButton_clicked()
 void MainWindow::on_activationSig_Remove_pushButton_clicked()
 {
     qDebug()<<"Remove activation signal button pressed";
-    if(selectedTile == 0 || ui->activationSignals_table->rowCount() == 0) return;
+    if(selectedTile == 0 || ui->activationSignals_table->currentItem() == 0) return;
     tablePair * toRemove = selectedTile->activationSignals[currentSide].at(ui->activationSignals_table->currentRow());
     selectedTile->activationSignals[currentSide].removeAt(ui->activationSignals_table->currentRow());
     ui->activationSignals_table->takeItem(ui->activationSignals_table->currentRow(), 0);
@@ -764,7 +765,7 @@ void MainWindow::on_transmissionSig_Add_pushButton_clicked()
 void MainWindow::on_transmissionSig_Remove_pushButton_clicked()
 {
     qDebug()<<"Remove transmission signal button pressed";
-    if(selectedTile == 0 || ui->transmissionSignals_table->rowCount() == 0) return;
+    if(selectedTile == 0 || ui->transmissionSignals_table->currentItem() == 0) return;
     tablePair * toRemove = selectedTile->transmissionSignals[currentSide].at(ui->transmissionSignals_table->currentRow());
     selectedTile->transmissionSignals[currentSide].removeAt(ui->transmissionSignals_table->currentRow());
     ui->transmissionSignals_table->takeItem(ui->transmissionSignals_table->currentRow(), 0);
@@ -794,7 +795,7 @@ void MainWindow::on_initiationSig_Add_button_clicked()
 void MainWindow::on_initiationSig_Remove_button_clicked()
 {
     qDebug()<<"Remove initiation signal button pressed";
-    if(selectedTile == 0 || ui->initiation_signals_tableWidget->rowCount() == 0) return;
+    if(selectedTile == 0 || ui->initiation_signals_tableWidget->currentItem() == 0) return;
     tablePair * toRemove = selectedTile->initiationSignals.at(ui->initiation_signals_tableWidget->currentRow());
     selectedTile->initiationSignals.removeAt(ui->initiation_signals_tableWidget->currentRow());
     ui->initiation_signals_tableWidget->takeItem(ui->initiation_signals_tableWidget->currentRow(), 0);
