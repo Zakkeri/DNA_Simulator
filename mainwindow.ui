@@ -527,7 +527,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Side Y</string>
+     <string>Side -Y</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="radioButton_Side_X">
@@ -559,7 +559,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Side -Y</string>
+     <string>Side Y</string>
     </property>
    </widget>
    <widget class="QListWidget" name="activeLabels_listWidget">

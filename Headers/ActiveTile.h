@@ -16,7 +16,7 @@
 #include<QSet>
 #include<QList>
 #include<QPair>
-#define DEBUG
+//#define DEBUG
 
 #include"../Headers/AssemblyTile.h"
 #include"../Headers/AdditionalData.h"

@@ -15,7 +15,7 @@
 #include"../Headers/AssemblyTile.h"
 #include<QList>
 
-#define DEBUG
+//#define DEBUG
 
 class SetOfAssemblyTiles
 {

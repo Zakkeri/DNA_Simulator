@@ -16,7 +16,7 @@
 #include<QList>
 #include<QMap>
 #include"../Headers/ActiveTile.h"
-#define DEBUG
+//#define DEBUG
 //#include"../Headers/Simulator.h"
 #include"../Headers/AdditionalData.h"
 

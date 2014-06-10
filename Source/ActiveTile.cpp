@@ -614,6 +614,22 @@
         Side[3] = Side[2];
         Side[2] = tempSide;
 
+        //rotate each signal
+        for(int i = 0; i < 4; i++)
+        {
+            for(QList<Signal>::iterator it = Side[i].ActivationSignals.begin(); it != Side[i].ActivationSignals.end(); it++)
+            {
+                it->Target = (direction)((it->Target + 1) % 4);
+            }
+            for(QList<Signal>::iterator it = Side[i].TransmissionSignals.begin(); it != Side[i].TransmissionSignals.end(); it++)
+            {
+                it->Target = (direction)((it->Target + 1) % 4);
+            }
+        }
+        for(QList<Signal>::iterator it = this->InitiationSignals.begin(); it != this->InitiationSignals.end(); it++)
+        {
+            it->Target = (direction)((it->Target + 1) % 4);
+        }
         this->X_Y_Coordinates = QPair<int, int>(-this->X_Y_Coordinates.second, this->X_Y_Coordinates.first);
     }
 
