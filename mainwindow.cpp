@@ -62,6 +62,9 @@ MainWindow::~MainWindow()
     {
         delete (*iter);
     }
+
+    if(this->sim != 0)
+        delete this->sim;
     delete ui;
 }
 
