@@ -49,12 +49,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     filePath = "";
     modified = false;
-    /*QPainter paint();
 
-    paint.setPen(QPen(Qt::black, 4, Qt::SolidLine));
-    paint.drawLine(0,0,10,10);
-*/
-
+    ui->splitter->setStretchFactor(0, 1);
+    ui->splitter->setStretchFactor(1, 2);
+    this->sim = 0;
 
 }
 
@@ -206,6 +204,28 @@ void MainWindow::on_actionNew_Simulation_triggered()
     colorFunction.clear();
     this->currentTile = 0;
 
+    //delete previous simulator
+    if(this->sim != 0)
+    {
+        delete this->sim;
+        this->sim = 0;
+    }
+
+    //reset selected tile
+    this->selectedTile = 0;
+
+    //Remove painting from the small window
+    QGraphicsScene* currentScene = ui->graphicsView_TileView->scene(); //get current scene of QGraphics view
+    if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
+        delete currentScene;
+    //And the big window
+    currentScene = ui->graphicsView->scene(); //get current scene of QGraphics view
+    if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
+        delete currentScene;
+
+    //Delete previous results
+    ui->treeWidget->clear();
+
     ui->tabWidget->setVisible(true);
     ui->radioButton_SideX->setChecked(true);
     ui->radioButton_SideX->setVisible(true);
@@ -229,7 +249,8 @@ void MainWindow::on_actionNew_Simulation_triggered()
     ui->transmissionSig_Add_pushButton->setVisible(true);
     ui->transmissionSig_Remove_pushButton->setVisible(true);
     ui->graphicsView_TileView->setVisible(true);
-
+    ui->stackedWidget->setCurrentIndex(0);
+    ui->tabWidget->setCurrentIndex(0);
     modified = true;
 
 }
@@ -452,6 +473,7 @@ void MainWindow::on_BeginSim_Button_clicked()
         Set->addAssemblyTile(AT);
     }
 
+
     this->sim = new Simulator(Set, this->strengthFunction, ui->ThetaParam_SpinBox->value(),
                               ui->NumberOfSteps_SpinBox->value(), this->colorFunction);
     this->sim->initialize();
@@ -509,6 +531,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Remove_pushButton->setVisible(true);
         ui->graphicsView_TileView->setVisible(true);
 
+        ui->stackedWidget->setCurrentIndex(0);
+
         ui->graphicsView->setVisible(false);
         break;
     case 1:
@@ -534,6 +558,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(true);
         ui->transmissionSig_Remove_pushButton->setVisible(true);
         ui->graphicsView_TileView->setVisible(true);
+
+        ui->stackedWidget->setCurrentIndex(0);
 
         ui->graphicsView->setVisible(false);
         break;
@@ -561,6 +587,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Remove_pushButton->setVisible(true);
         ui->graphicsView_TileView->setVisible(true);
 
+        ui->stackedWidget->setCurrentIndex(0);
 
         ui->graphicsView->setVisible(false);
         break;
@@ -587,6 +614,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(false);
         ui->transmissionSig_Remove_pushButton->setVisible(false);
         ui->graphicsView_TileView->setVisible(false);
+
+        ui->stackedWidget->setCurrentIndex(1);
 
         ui->graphicsView->setVisible(true); //show graphics
         //Paint tile
@@ -615,6 +644,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(false);
         ui->transmissionSig_Remove_pushButton->setVisible(false);
         ui->graphicsView_TileView->setVisible(false);
+
+        ui->stackedWidget->setCurrentIndex(1);
 
         ui->graphicsView->setVisible(true); //show graphics
         break;

@@ -6,116 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>556</height>
+    <width>838</width>
+    <height>550</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>-4</x>
-      <y>-1</y>
-      <width>281</width>
-      <height>501</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Tile Setup</string>
-     </attribute>
-     <widget class="QPushButton" name="NewTileButton">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>420</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>New Tile</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="DeleteTileButton">
-      <property name="geometry">
-       <rect>
-        <x>190</x>
-        <y>420</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Delete Tile</string>
-      </property>
-     </widget>
-     <widget class="QListWidget" name="listWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>261</width>
-        <height>391</height>
-       </rect>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
-      </property>
-      <property name="dragEnabled">
-       <bool>false</bool>
-      </property>
-      <property name="dragDropOverwriteMode">
-       <bool>false</bool>
-      </property>
-      <property name="alternatingRowColors">
+   <layout class="QVBoxLayout" name="verticalLayout_5">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="enabled">
        <bool>true</bool>
-      </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectItems</enum>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Initiation Signals</string>
-     </attribute>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>20</y>
-        <width>21</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Tile</string>
-      </property>
-      <property name="buddy">
-       <cstring>tile_comboBox</cstring>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="initiation_signals_tableWidget">
-      <property name="geometry">
-       <rect>
-        <x>15</x>
-        <y>120</y>
-        <width>251</width>
-        <height>231</height>
-       </rect>
       </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -123,628 +32,792 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::AllEditTriggers</set>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
       </property>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>true</bool>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>Label</string>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="handleWidth">
+       <number>5</number>
+      </property>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="enabled">
+        <bool>true</bool>
        </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Target</string>
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-      </column>
-     </widget>
-     <widget class="QLabel" name="label_8">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>90</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Initiation Signals</string>
-      </property>
-      <property name="buddy">
-       <cstring>initiation_signals_tableWidget</cstring>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="tile_comboBox">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>20</y>
-        <width>111</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="initiationSig_Add_button">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>370</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Add</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="initiationSig_Remove_button">
-      <property name="geometry">
-       <rect>
-        <x>190</x>
-        <y>370</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Remove</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_3">
-     <attribute name="title">
-      <string>Strength Function</string>
-     </attribute>
-     <widget class="QTableWidget" name="strength_func_tableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>261</width>
-        <height>411</height>
-       </rect>
-      </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>86</number>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>Label</string>
+       <widget class="QWidget" name="tab">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <attribute name="title">
+         <string>Tile Setup</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QListWidget" name="listWidget">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+           </property>
+           <property name="dragEnabled">
+            <bool>false</bool>
+           </property>
+           <property name="dragDropOverwriteMode">
+            <bool>false</bool>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectItems</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="NewTileButton">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>New Tile</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="DeleteTileButton">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Delete Tile</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+        <zorder>DeleteTileButton</zorder>
+        <zorder>listWidget</zorder>
+        <zorder>NewTileButton</zorder>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <attribute name="title">
+         <string>Initiation Signals</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QFrame" name="frame_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Tile</string>
+              </property>
+              <property name="buddy">
+               <cstring>tile_comboBox</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="tile_comboBox">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QFrame" name="frame">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QTableWidget" name="initiation_signals_tableWidget">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::AllEditTriggers</set>
+              </property>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>Label</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Target</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="initiationSig_Add_button">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Add</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="initiationSig_Remove_button">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Remove</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <attribute name="title">
+         <string>Strength Function</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QTableWidget" name="strength_func_tableWidget">
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>86</number>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Label</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Strength</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Color</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="strengthFunc_Add_Button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Add</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="strengthFunc_Remove_Button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Remove</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <attribute name="title">
+         <string>Start Simulation</string>
+        </attribute>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Theta Parameter</string>
+           </property>
+           <property name="buddy">
+            <cstring>ThetaParam_SpinBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="ThetaParam_SpinBox"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Number of Steps</string>
+           </property>
+           <property name="buddy">
+            <cstring>NumberOfSteps_SpinBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="NumberOfSteps_SpinBox">
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QPushButton" name="BeginSim_Button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Begin</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <attribute name="title">
+         <string>Result</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QTreeWidget" name="treeWidget">
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="frame">
+       <property name="enabled">
+        <bool>true</bool>
        </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Strength</string>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Color</string>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
        </property>
-      </column>
-     </widget>
-     <widget class="QPushButton" name="strengthFunc_Add_Button">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>430</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Add</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="strengthFunc_Remove_Button">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>430</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Remove</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Start Simulation</string>
-     </attribute>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>30</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Theta Parameter</string>
-      </property>
-      <property name="buddy">
-       <cstring>ThetaParam_SpinBox</cstring>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>90</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Number of Steps</string>
-      </property>
-      <property name="buddy">
-       <cstring>NumberOfSteps_SpinBox</cstring>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="ThetaParam_SpinBox">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>20</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="NumberOfSteps_SpinBox">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>80</y>
-        <width>51</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>1000</number>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="BeginSim_Button">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>200</y>
-        <width>111</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Begin</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_5">
-     <attribute name="title">
-      <string>Result</string>
-     </attribute>
-     <widget class="QTreeWidget" name="treeWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>256</width>
-        <height>451</height>
-       </rect>
-      </property>
-      <column>
-       <property name="text">
-        <string notr="true">1</string>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
        </property>
-      </column>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QStackedWidget" name="stackedWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetMaximumSize</enum>
+              </property>
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="radioButton_SideX">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Side X</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QRadioButton" name="radioButton_SideY">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Side Y</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QRadioButton" name="radioButton_Side_X">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Side -X</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QRadioButton" name="radioButton_Side_Y">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Side -Y</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_4">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <item>
+                  <widget class="QLabel" name="label_4">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Active Labels</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QListWidget" name="activeLabels_listWidget">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::AllEditTriggers</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="activeLabel_Add_pushButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Add</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="activeLabel_Remove_pushButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Remove</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_11">
+                 <item>
+                  <widget class="QLabel" name="label_5">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Inactive Labels</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QListWidget" name="inactiveLabels_listWidget">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::AllEditTriggers</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="inactiveLabel_Add_pushButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Add</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="inactiveLabel_Remove_pushButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Remove</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_13">
+                 <item>
+                  <widget class="QLabel" name="label_HiddenSpacer">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="MyGraphicsView" name="graphicsView_TileView">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_3">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <layout class="QGridLayout" name="gridLayout_4">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_6">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Activation Signals</string>
+                   </property>
+                   <property name="buddy">
+                    <cstring>activationSignals_table</cstring>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_8">
+                   <item>
+                    <widget class="QTableWidget" name="activationSignals_table">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <property name="autoScroll">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoScrollMargin">
+                      <number>16</number>
+                     </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::AllEditTriggers</set>
+                     </property>
+                     <property name="horizontalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerItem</enum>
+                     </property>
+                     <property name="rowCount">
+                      <number>0</number>
+                     </property>
+                     <property name="columnCount">
+                      <number>2</number>
+                     </property>
+                     <attribute name="horizontalHeaderStretchLastSection">
+                      <bool>true</bool>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>Label</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Target</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="activationSig_Add_pushButton">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="text">
+                      <string>Add</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="activationSig_Remove_pushButton">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="text">
+                      <string>Remove</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QGridLayout" name="gridLayout_5">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_7">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Transmission Signals</string>
+                   </property>
+                   <property name="buddy">
+                    <cstring>transmissionSignals_table</cstring>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_9">
+                   <item>
+                    <widget class="QTableWidget" name="transmissionSignals_table">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::AllEditTriggers</set>
+                     </property>
+                     <attribute name="horizontalHeaderStretchLastSection">
+                      <bool>true</bool>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>Label</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Target</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="transmissionSig_Add_pushButton">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="text">
+                      <string>Add</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="transmissionSig_Remove_pushButton">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="text">
+                      <string>Remove</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+           <zorder>frame_4</zorder>
+           <zorder>frame_3</zorder>
+           <zorder>layoutWidget</zorder>
+           <zorder>layoutWidget</zorder>
+           <zorder>layoutWidget</zorder>
+          </widget>
+          <widget class="QWidget" name="page_2">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="MyGraphicsView" name="graphicsView">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="mouseTracking">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-    </widget>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>80</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Active Labels</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>80</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Inactive Labels</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>290</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Activation Signals</string>
-    </property>
-    <property name="buddy">
-     <cstring>activationSignals_table</cstring>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>290</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Transmission Signals</string>
-    </property>
-    <property name="buddy">
-     <cstring>transmissionSignals_table</cstring>
-    </property>
-   </widget>
-   <widget class="QTableWidget" name="activationSignals_table">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>320</y>
-      <width>201</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="autoScroll">
-     <bool>true</bool>
-    </property>
-    <property name="autoScrollMargin">
-     <number>16</number>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::AllEditTriggers</set>
-    </property>
-    <property name="horizontalScrollMode">
-     <enum>QAbstractItemView::ScrollPerItem</enum>
-    </property>
-    <property name="rowCount">
-     <number>0</number>
-    </property>
-    <property name="columnCount">
-     <number>2</number>
-    </property>
-    <attribute name="horizontalHeaderStretchLastSection">
-     <bool>true</bool>
-    </attribute>
-    <column>
-     <property name="text">
-      <string>Label</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Target</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QTableWidget" name="transmissionSignals_table">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>320</y>
-      <width>201</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::AllEditTriggers</set>
-    </property>
-    <attribute name="horizontalHeaderStretchLastSection">
-     <bool>true</bool>
-    </attribute>
-    <column>
-     <property name="text">
-      <string>Label</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Target</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_SideX">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>30</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Side X</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_SideY">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>30</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Side -Y</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_Side_X">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>30</y>
-      <width>61</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Side -X</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_Side_Y">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>30</y>
-      <width>61</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Side Y</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="activeLabels_listWidget">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>110</y>
-      <width>91</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::AllEditTriggers</set>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="inactiveLabels_listWidget">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>110</y>
-      <width>91</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::AllEditTriggers</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="activeLabel_Add_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>250</y>
-      <width>41</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="activeLabel_Remove_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>250</y>
-      <width>51</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="inactiveLabel_Remove_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>250</y>
-      <width>51</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="inactiveLabel_Add_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>250</y>
-      <width>41</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="activationSig_Remove_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>460</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="activationSig_Add_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>460</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="transmissionSig_Add_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>460</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="transmissionSig_Remove_pushButton">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>460</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove</string>
-    </property>
-   </widget>
-   <widget class="MyGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>319</x>
-      <y>110</y>
-      <width>451</width>
-      <height>331</height>
-     </rect>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="MyGraphicsView" name="graphicsView_TileView">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>110</y>
-      <width>201</width>
-      <height>161</height>
-     </rect>
-    </property>
-   </widget>
-   <zorder>graphicsView</zorder>
-   <zorder>tabWidget</zorder>
-   <zorder>label_4</zorder>
-   <zorder>label_5</zorder>
-   <zorder>label_6</zorder>
-   <zorder>label_7</zorder>
-   <zorder>activationSignals_table</zorder>
-   <zorder>transmissionSignals_table</zorder>
-   <zorder>radioButton_SideX</zorder>
-   <zorder>radioButton_SideY</zorder>
-   <zorder>radioButton_Side_X</zorder>
-   <zorder>radioButton_Side_Y</zorder>
-   <zorder>activeLabels_listWidget</zorder>
-   <zorder>inactiveLabels_listWidget</zorder>
-   <zorder>activeLabel_Add_pushButton</zorder>
-   <zorder>activeLabel_Remove_pushButton</zorder>
-   <zorder>inactiveLabel_Remove_pushButton</zorder>
-   <zorder>inactiveLabel_Add_pushButton</zorder>
-   <zorder>activationSig_Remove_pushButton</zorder>
-   <zorder>activationSig_Add_pushButton</zorder>
-   <zorder>transmissionSig_Add_pushButton</zorder>
-   <zorder>transmissionSig_Remove_pushButton</zorder>
-   <zorder>graphicsView_TileView</zorder>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>799</width>
+     <width>838</width>
      <height>21</height>
     </rect>
    </property>
