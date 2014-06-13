@@ -895,6 +895,8 @@ void MainWindow::on_radioButton_Side_Y_clicked()
 void MainWindow::on_activeLabels_listWidget_itemChanged(QListWidgetItem *item)
 {
     int value = item->text().toInt();
+    if(value == 0)
+        return;
     qDebug()<<"Active label changed to: "<<value;
     if(this->strengthFunction.contains(value)) //check if current value is present
     {
@@ -917,6 +919,8 @@ void MainWindow::on_activeLabels_listWidget_itemChanged(QListWidgetItem *item)
 void MainWindow::on_inactiveLabels_listWidget_itemChanged(QListWidgetItem *item)
 {
     int value = item->text().toInt();
+    if(value == 0)
+        return;
     qDebug()<<"Inactive label changed to: "<<value;
     if(this->strengthFunction.contains(value)) //check if current value is present
     {
@@ -939,13 +943,109 @@ void MainWindow::on_inactiveLabels_listWidget_itemChanged(QListWidgetItem *item)
 void MainWindow::on_strength_func_tableWidget_itemChanged(QTableWidgetItem *item) //check for strength to be changed
 {
     qDebug()<<"Strength table item changed";
-    if(item->column() != 1) return;
-    int key = ui->strength_func_tableWidget->item(item->row(), 0)->text().toInt();
-    qDebug()<<"Label = "<<key;
-    qDebug()<<"Strength changed to = "<<item->text().toInt();
-    strengthFunction[key] = item->text().toInt();
-    strengthFunction[-key] = item->text().toInt();
-    modified = true;
+    if(item->column() == 0)
+    {
+        qDebug()<<"Item for column 0 is changed to "<<item->text();
+        if(item->text().toInt() == 0)
+            return;
+        if(strengthFunction.contains(item->text().toInt())) //if strength function contains item
+        {//check if this item is in the table already
+            bool inTable = false; //item is already in the table
+            QSet<int> currItems; //set of labels in the table
+            for(int i = 0; i < ui->strength_func_tableWidget->rowCount(); i++)
+            {//iterate through all labels and put them in the set and check whether new label is already in the table
+                if(i == item->row()) //skip current row
+                    continue;
+                QTableWidgetItem * next = ui->strength_func_tableWidget->item(i, 0);
+                if(next->text() == item->text())
+                    inTable = true;
+                currItems.insert(next->text().toInt()); //insert positive value
+                currItems.insert(-(next->text().toInt())); //insert negative value
+            }
+            if(inTable) //if label is in the table, then restore previous label
+            {
+                QMessageBox::warning(this, "Label is already present", "Label is already defined in the table");
+                QList<int> result = strengthFunction.keys().toSet().subtract(currItems).values();
+                if(result.empty())
+                    item->setText("0");
+                else
+                    item->setText(QString::number(abs(result.first())));
+            }
+        }
+        else
+        {
+            QSet<int> currItems; //set of labels in the table
+            for(int i = 0; i < ui->strength_func_tableWidget->rowCount(); i++)
+            {//iterate through all labels and put them in the set
+                if(i == item->row()) //skip current row
+                    continue;
+                QTableWidgetItem * next = ui->strength_func_tableWidget->item(i, 0);
+                currItems.insert(next->text().toInt()); //insert positive value
+                currItems.insert(-(next->text().toInt())); //insert negative value
+            }
+            //Get label that used to be in the cell
+            QList<int> label = strengthFunction.keys().toSet().subtract(currItems).values();
+            if(label.empty()) //if there was no previous value, then just insert it
+            {
+                if(ui->strength_func_tableWidget->item(item->row(), 1)->text() == "-1")
+                {//if strength was not defined, set it to default
+                    strengthFunction[item->text().toInt()] = -1;
+                    strengthFunction[-(item->text().toInt())] = -1;
+                }
+                else //set strength to the defined value
+                {
+                    strengthFunction[item->text().toInt()] = ui->strength_func_tableWidget->item(item->row(), 1)->text().toInt();
+                    strengthFunction[-(item->text().toInt())] = ui->strength_func_tableWidget->item(item->row(), 1)->text().toInt();
+                }
+
+                if(ui->strength_func_tableWidget->item(item->row(), 2)->text() == "")
+                {//if color is not defined, then set it to default
+                    colorFunction[item->text().toInt()] = QColor(0,0,0);
+                    colorFunction[-(item->text().toInt())] = QColor(0,0,0);
+                }
+                else
+                {//else set it to the defined one
+                    colorFunction[item->text().toInt()] = QColor(ui->strength_func_tableWidget->item(item->row(), 2)->text());
+                    colorFunction[-(item->text().toInt())] = QColor(ui->strength_func_tableWidget->item(item->row(), 2)->text());
+                }
+            }
+            else //remove old value
+            {
+                int oldLabel = abs(label.first());
+                //Get strength of teh label
+                int strength = strengthFunction[oldLabel];
+                //Remove old strength value from the map
+                strengthFunction.remove(oldLabel);
+                strengthFunction.remove(-oldLabel);
+                //Insert new label and its strength value
+                strengthFunction[item->text().toInt()] = strength;
+                strengthFunction[-(item->text().toInt())] = strength;
+
+                //check if color map needs to be updated
+                if(colorFunction.contains(oldLabel))
+                {
+                    QColor color = colorFunction[oldLabel]; //get color value
+                    //remove old label
+                    colorFunction.remove(oldLabel);
+                    colorFunction.remove(-oldLabel);
+                    //insert new label
+                    colorFunction[item->text().toInt()] = color;
+                    colorFunction[-(item->text().toInt())] = color;
+                }
+            }
+        }
+    }
+    else if(item->column() == 1)
+    {
+        int key = ui->strength_func_tableWidget->item(item->row(), 0)->text().toInt();
+        if(!strengthFunction.contains(key)) //if such key is not present, then return
+            return;
+        qDebug()<<"Label = "<<key;
+        qDebug()<<"Strength changed to = "<<item->text().toInt();
+        strengthFunction[key] = item->text().toInt();
+        strengthFunction[-key] = item->text().toInt();
+        modified = true;
+    }
 }
 
 void MainWindow::on_strength_func_tableWidget_cellDoubleClicked(int row, int column)
@@ -1360,4 +1460,42 @@ void MainWindow::on_initiation_signals_tableWidget_itemChanged(QTableWidgetItem 
 {
     qDebug()<<"Initiation signal item was changed";
     this->paintCurrentTile();
+}
+
+void MainWindow::on_strengthFunc_Add_Button_clicked()
+{
+    int rowCount = ui->strength_func_tableWidget->rowCount(); //get index of the next row
+    ui->strength_func_tableWidget->insertRow(rowCount);
+    ui->strength_func_tableWidget->setItem(rowCount, 0, new QTableWidgetItem("0"));
+    ui->strength_func_tableWidget->setItem(rowCount, 1, new QTableWidgetItem("-1"));
+    ui->strength_func_tableWidget->setItem(rowCount, 2, new QTableWidgetItem(""));
+}
+
+void MainWindow::on_strengthFunc_Remove_Button_clicked()
+{
+    int row = ui->strength_func_tableWidget->currentRow(); //get current row
+    int key = ui->strength_func_tableWidget->item(row, 0)->text().toInt(); //get key for the map
+    //remove items from the strength map, if needed
+    if(strengthFunction.contains(key))
+    {
+        strengthFunction.remove(key);
+        strengthFunction.remove(-key);
+    }
+    //remove items from the color map if needed
+    if(colorFunction.contains(key))
+    {
+        colorFunction.remove(key);
+        colorFunction.remove(-key);
+    }
+    //remove entry from the table
+    QTableWidgetItem* toDelete =  ui->strength_func_tableWidget->takeItem(row, 0);
+    if(toDelete != 0)
+        delete toDelete;
+    toDelete =  ui->strength_func_tableWidget->takeItem(row, 1);
+        if(toDelete != 0)
+            delete toDelete;
+    toDelete =  ui->strength_func_tableWidget->takeItem(row, 2);
+        if(toDelete != 0)
+            delete toDelete;
+    ui->strength_func_tableWidget->removeRow(row);
 }

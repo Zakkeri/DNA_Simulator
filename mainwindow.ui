@@ -778,11 +778,6 @@
              </widget>
             </item>
            </layout>
-           <zorder>frame_4</zorder>
-           <zorder>frame_3</zorder>
-           <zorder>layoutWidget</zorder>
-           <zorder>layoutWidget</zorder>
-           <zorder>layoutWidget</zorder>
           </widget>
           <widget class="QWidget" name="page_2">
            <layout class="QVBoxLayout" name="verticalLayout_2">

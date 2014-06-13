@@ -9,6 +9,7 @@
 #include <QString>
 #include <QPainter>
 #include <QGraphicsScene>
+#include <QMessageBox>
 //#include "Headers/displaytile.h"
 #include "Headers/displaytile2.h"
 #include "Headers/ActiveTile.h"
@@ -183,6 +184,10 @@ private slots:
 
     void on_initiation_signals_tableWidget_itemChanged(QTableWidgetItem *item);
 
+
+    void on_strengthFunc_Add_Button_clicked();
+
+    void on_strengthFunc_Remove_Button_clicked();
 
 private:
     Ui::MainWindow *ui;
