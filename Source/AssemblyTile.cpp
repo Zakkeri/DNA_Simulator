@@ -409,6 +409,11 @@ bool AssemblyTile::operator==(const AssemblyTile & other)const
                 matching = false;   //Active tiles are not equal, thus Assembly Tiles are not equal anymore
                 break;
             }
+            else if(tile1->getRotation() != ((tile2->getRotation() + rotation) %4))
+            {//if tiles are equal, check if their rotation is equal
+                matching = false;   //Active tiles are not equal, thus Assembly Tiles are not equal anymore
+                break;
+            }
         }
 
         // If they don't match, rotate the other tile

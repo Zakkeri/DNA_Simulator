@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     modified = false;
 
     ui->splitter->setStretchFactor(0, 1);
-    ui->splitter->setStretchFactor(1, 2);
+    ui->splitter->setStretchFactor(1, 1);
     this->sim = 0;
 
 }
@@ -382,7 +382,7 @@ void MainWindow::on_BeginSim_Button_clicked()
     int ID = 0;
     for(QList<a_tile *>::const_iterator it = this->tiles.begin(); it != this->tiles.end(); ++it)
     {
-        //lisst to cconstruct
+        //list to construct
         QList<QList<int> > * activeLabels = new QList<QList<int> >();
         QList<QList<int> > * inactiveLabels = new QList<QList<int> >();
         QList<QList<Signal> > * activationSigs = new QList<QList<Signal> >();
@@ -1282,6 +1282,16 @@ void MainWindow::on_actionLoad_triggered()
     strengthFunction.clear();
     colorFunction.clear();
     this->currentTile = 0;
+
+    //Remove painting from the small window
+    QGraphicsScene* currentScene = ui->graphicsView_TileView->scene(); //get current scene of QGraphics view
+    if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
+        delete currentScene;
+    //And the big window
+    currentScene = ui->graphicsView->scene(); //get current scene of QGraphics view
+    if(currentScene != 0) //if it exist, then delete it to be able to replace it with a new scene
+        delete currentScene;
+    ui->tabWidget->setCurrentIndex(0);
 
     //Open dialog for user to select file
     filePath = QFileDialog::getOpenFileName(this, "Open File", QString(), "Tile (*.xml)");

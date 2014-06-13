@@ -44,7 +44,7 @@
 #endif
         TileID = ID;
         parent = 0; //set parent to 0
-
+        rotation = 0;
 		for(int i = 0; i < 4; i++)
 		{
             Side[i].ActiveLabels = ActiveLabels[i];
@@ -74,7 +74,7 @@
     ActiveTile::ID++;
 #endif
         this->parent = 0;    //set parent to NULL, so it will be set manualy
-
+        this->rotation = otherTile.rotation;
         X_Y_Coordinates = otherTile.X_Y_Coordinates;
         TileID = otherTile.getId();
         this->InitiationSignals = otherTile.InitiationSignals;
@@ -631,6 +631,7 @@
             it->Target = (direction)((it->Target + 1) % 4);
         }
         this->X_Y_Coordinates = QPair<int, int>(-this->X_Y_Coordinates.second, this->X_Y_Coordinates.first);
+        rotation = (rotation + 1) % 4;
     }
 
 
@@ -681,4 +682,9 @@
     {
         parent = p;
 
+    }
+
+    int ActiveTile::getRotation()
+    {
+        return this->rotation;
     }

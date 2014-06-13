@@ -163,10 +163,14 @@ public:
     // Post-Conditions: Sets parent of this Active Tile
     void setParent(AssemblyTile* p);
 
+    // Post-Conditions: Returns current rotation of the tile
+    int getRotation();
+
 private:
   //  static int counter;
 	int TileID;
     QPair<int, int> X_Y_Coordinates;
+    int rotation;
     //ActiveTile *Neighbors[4];
 	TileSide Side[4];
     QList<Signal> InitiationSignals;

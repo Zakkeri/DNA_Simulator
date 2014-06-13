@@ -298,8 +298,9 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
     qDebug()<<"Rotating Assembly Tile "<<T2->getIndex();
 #endif
     T2->rotateAssemblyTile(place->secondtTile, place->rotation); //rotate second tile
-
+    //calculate the shift and unshift
     QPair<int, int> shift(place->firstTile.first - place->secondtTile.first, place->firstTile.second - place->secondtTile.second);
+    QPair<int, int> unshift(place->secondtTile.first - place->firstTile.first, place->secondtTile.second - place->firstTile.second);
 #ifdef DEBUG
     qDebug()<<"Shifting Assembly Tile "<<T2->getIndex();
 #endif
@@ -320,6 +321,10 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
         if(T2->getIsCopy())
         {
             delete T2;
+        }
+        else
+        {
+            T2->moveAssemblyTile(unshift);
         }
         return 0;
     }
@@ -343,6 +348,10 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
     if(T2->getIsCopy())
     {
         delete T2;
+    }
+    else
+    {
+        T2->moveAssemblyTile(unshift);
     }
     return newTile;
 }
