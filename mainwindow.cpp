@@ -969,7 +969,10 @@ void MainWindow::on_strength_func_tableWidget_itemChanged(QTableWidgetItem *item
                 if(result.empty())
                     item->setText("0");
                 else
-                    item->setText(QString::number(abs(result.first())));
+                {
+                    int res = (result.first() == 0 ? result.last() : result.first());
+                    item->setText(QString::number(abs(res)));
+                }
             }
         }
         else
@@ -1011,7 +1014,7 @@ void MainWindow::on_strength_func_tableWidget_itemChanged(QTableWidgetItem *item
             }
             else //remove old value
             {
-                int oldLabel = abs(label.first());
+                int oldLabel = abs((label.first() == 0 ? label.last() : label.first()));
                 //Get strength of teh label
                 int strength = strengthFunction[oldLabel];
                 //Remove old strength value from the map

@@ -301,6 +301,8 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
     //calculate the shift and unshift
     QPair<int, int> shift(place->firstTile.first - place->secondtTile.first, place->firstTile.second - place->secondtTile.second);
     QPair<int, int> unshift(place->secondtTile.first - place->firstTile.first, place->secondtTile.second - place->firstTile.second);
+    //calculate unrotation
+    int unrotation = 4 - place->rotation;
 #ifdef DEBUG
     qDebug()<<"Shifting Assembly Tile "<<T2->getIndex();
 #endif
@@ -322,9 +324,10 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
         {
             delete T2;
         }
-        else
+        else//unshift and unrotate second tile
         {
             T2->moveAssemblyTile(unshift);
+            T2->rotateAssemblyTile(place->secondtTile, unrotation);
         }
         return 0;
     }
@@ -349,9 +352,10 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
     {
         delete T2;
     }
-    else
+    else //unshift and unrotate second tile
     {
         T2->moveAssemblyTile(unshift);
+        T2->rotateAssemblyTile(place->secondtTile, unrotation);
     }
     return newTile;
 }
