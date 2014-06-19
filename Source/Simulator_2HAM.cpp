@@ -1,21 +1,22 @@
 
 #include <QQueue>
 #include <QDebug>
-#include "../Headers/Simulator.h"
+#include "../Headers/Simulator_2HAM.h"
 
-Simulator::Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> &C)
+Simulator_2HAM::Simulator_2HAM(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> &C)
 
 /*
- Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
+ Post-Condition: Simulator_2HAM with initial set of tiles S, strength map, theta parameter, and # of steps is created
  */
     : manager(S), StrengthMap(StrengthFunction), ThetaParameter(Theta), NumberOfSteps(StepNumber), ColorMap(C)
+
 {
 #ifdef DEBUG
-    qDebug()<<"Constructing Simulator object";
+    qDebug()<<"Constructing Simulator_2HAM object";
 #endif
 }
 
-void Simulator::initialize()
+void Simulator_2HAM::initialize()
 /*
  Post-Condition: All initialization goes here
  */
@@ -26,7 +27,7 @@ void Simulator::initialize()
     currentStep = 1;
 }
 
-void Simulator::startSimulation()
+void Simulator_2HAM::startSimulation()
 /*
  Main function that starts simulation
  */
@@ -205,14 +206,14 @@ void Simulator::startSimulation()
 
 }
 
-/*SetOfAssemblyTiles & Simulator::createNewSetOfAssemblyTiles()
+/*SetOfAssemblyTiles & Simulator_2HAM::createNewSetOfAssemblyTiles()
 
  Post-Condition: New empty set of assembly tiles is created and returned
  /
 {
 
 }*/
-SetOfAssemblyTiles & Simulator::selectMostCurrentSetOfAssemblyTiles()
+SetOfAssemblyTiles & Simulator_2HAM::selectMostCurrentSetOfAssemblyTiles()
 /*
  Post-Condition: Most updated set of assembly tiles is returned. This set contains tiles that will be picked as First Assembly Tiles
  */
@@ -220,7 +221,7 @@ SetOfAssemblyTiles & Simulator::selectMostCurrentSetOfAssemblyTiles()
     return manager.getAssemblyTileSet(currentStep - 1);
 }
 
-QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
+QList<FitPlace*> *Simulator_2HAM::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
 /*
  Post-Condition: All possible fitting places of T1 and T2 are found and put in a list
  */
@@ -280,7 +281,7 @@ QList<FitPlace*> *Simulator::findFittingSpots(AssemblyTile &T1,AssemblyTile &T2)
     return fitPlaces;
 }
 
-AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, FitPlace *place)
+AssemblyTile * Simulator_2HAM::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, FitPlace *place)
 /*
  Post-Condition: T1 and T2 are attempted to be combined at places first and second. If successful, pointer to a new tile is returned.
  If not successful, NULL is returned
@@ -360,7 +361,7 @@ AssemblyTile * Simulator::attemptToCombine(AssemblyTile *T1,AssemblyTile *T2, Fi
     return newTile;
 }
 
-bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QList<boundaryPoint*> *boundary)
+bool Simulator_2HAM::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QList<boundaryPoint*> *boundary)
 /*
  Post-Condition: Check if T1 and T2 contain an overlap of xy coordinates, i.e. do not fit each other.
  return true, if there is an overlap, and false otherwise. Also construct a list of boundary points, and check bond strength
@@ -578,7 +579,7 @@ bool Simulator::checkOverlapAndStrength(AssemblyTile & T1, AssemblyTile & T2, QL
     return false;
 }
 
-int Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boundary)
+int Simulator_2HAM::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction boundary)
 /*
  Post-Condition: returns the highest bond strenghth of tile t1 and t2 at specified direction of tile t1
  */
@@ -606,7 +607,7 @@ int Simulator::getBondStrength(ActiveTile & t1, ActiveTile & t2, direction bound
 
 }
 
-void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *> *boundary)
+void Simulator_2HAM::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *> *boundary)
 /*
  Post-Condition: Apply tile modification function to tile T, also make boundary list empty at the end
  */
@@ -683,7 +684,7 @@ void Simulator::tileModificationFunction(AssemblyTile & T, QList<boundaryPoint *
 #endif
 }
 
-QList<DisplayTile*> Simulator::toDisplayTile(AssemblyTile * T)
+QList<DisplayTile*> Simulator_2HAM::toDisplayTile(AssemblyTile * T)
 {
     T->rotateToDefaultPosition(); //unrotate assembly tile if needed
 
@@ -752,7 +753,7 @@ QList<DisplayTile*> Simulator::toDisplayTile(AssemblyTile * T)
     return displayTiles;
 }
 
-QList<SetOfAssemblyTiles *> &Simulator::getAssemblies()
+QList<SetOfAssemblyTiles *> &Simulator_2HAM::getAssemblies()
 //Get the list of all sets of assembly tiles
 {
     return this->manager.getListOfSets();

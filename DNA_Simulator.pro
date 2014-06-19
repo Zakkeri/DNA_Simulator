@@ -14,23 +14,27 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    Source/Simulator.cpp \
     Source/SetOfAssemblyTiles.cpp \
     Source/AssemblyTileSetManager.cpp \
     Source/AssemblyTile.cpp \
     Source/ActiveTile.cpp \
     Source/displaytile2.cpp \
-    mygraphicsview.cpp
+    mygraphicsview.cpp \
+    Source/Simulator_2HAM.cpp \
+    Source/base_simulator.cpp \
+    Source/Simulator_aTAM.cpp
 
 HEADERS  += mainwindow.h \
-    Headers/Simulator.h \
     Headers/SetOfAssemblyTiles.h \
     Headers/AssemblyTileSetManager.h \
     Headers/AssemblyTile.h \
     Headers/ActiveTile.h \
     Headers/AdditionalData.h \
     Headers/displaytile2.h \
-    mygraphicsview.h
+    mygraphicsview.h \
+    Headers/Simulator_2HAM.h \
+    Headers/base_simulator.h \
+    Headers/Simulator_aTAM.h
 
 
 FORMS    += mainwindow.ui

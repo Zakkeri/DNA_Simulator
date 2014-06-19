@@ -2,7 +2,7 @@
 #include <QApplication>
 #include<QMap>
 #include"Headers/SetOfAssemblyTiles.h"
-#include"Headers/Simulator.h"
+#include"Headers/Simulator_2HAM.h"
 #include"Headers/ActiveTile.h"
 #include"Headers/AssemblyTile.h"
 #include<QDebug>

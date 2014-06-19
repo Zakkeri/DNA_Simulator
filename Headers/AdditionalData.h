@@ -70,4 +70,17 @@ struct boundaryPoint
     direction side; //where the boundary is
 };
 
+typedef struct fittingSpot
+{
+    fittingSpot(const QPair<int, int>& c1, const QPair<int, int> &c2,const int num)
+        : firstTile(c1), secondtTile(c2), rotation(num)
+    {
+
+    }
+
+    QPair<int, int> firstTile;
+    QPair<int, int> secondtTile;
+    int rotation;
+}FitPlace;
+
 #endif // ADDITIONALDATA_H

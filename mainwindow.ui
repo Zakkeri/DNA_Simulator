@@ -444,19 +444,6 @@
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
              <layout class="QGridLayout" name="gridLayout_2">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetMaximumSize</enum>
-              </property>
-              <item row="0" column="0">
-               <widget class="QRadioButton" name="radioButton_SideX">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>Side X</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="1">
                <widget class="QRadioButton" name="radioButton_SideY">
                 <property name="enabled">
@@ -477,6 +464,13 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="4">
+               <widget class="QCheckBox" name="checkBox_seedTile">
+                <property name="text">
+                 <string>Seed Tile</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="3">
                <widget class="QRadioButton" name="radioButton_Side_Y">
                 <property name="enabled">
@@ -484,6 +478,16 @@
                 </property>
                 <property name="text">
                  <string>Side -Y</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="radioButton_SideX">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Side X</string>
                 </property>
                </widget>
               </item>
@@ -832,7 +836,8 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionOptions"/>
+    <addaction name="action2HAM_simulation"/>
+    <addaction name="actionATAM_simulation"/>
    </widget>
    <addaction name="menuDNA_Simulator"/>
    <addaction name="menuSettings"/>
@@ -860,9 +865,15 @@
     <string>New Simulation</string>
    </property>
   </action>
-  <action name="actionOptions">
+  <action name="action2HAM_simulation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Options</string>
+    <string>2HAM simulation</string>
+   </property>
+   <property name="toolTip">
+    <string>2HAM model simulation</string>
    </property>
   </action>
   <action name="actionLoad">
@@ -883,6 +894,17 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionATAM_simulation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>aTAM simulation</string>
+   </property>
+   <property name="toolTip">
+    <string>aTAM model simulation</string>
    </property>
   </action>
  </widget>

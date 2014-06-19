@@ -15,9 +15,11 @@
 #include "Headers/ActiveTile.h"
 #include "Headers/AssemblyTile.h"
 #include "Headers/SetOfAssemblyTiles.h"
-#include "Headers/Simulator.h"
+#include "Headers/Simulator_2HAM.h"
 #include "Headers/AdditionalData.h"
 #include "Headers/AssemblyTileSetManager.h"
+#include "Headers/base_simulator.h"
+#include "Headers/Simulator_aTAM.h"
 
 namespace Ui {
 class MainWindow;
@@ -189,6 +191,12 @@ private slots:
 
     void on_strengthFunc_Remove_Button_clicked();
 
+    void on_action2HAM_simulation_triggered();
+
+    void on_actionATAM_simulation_triggered();
+
+    void on_checkBox_seedTile_clicked(bool checked);
+
 private:
     Ui::MainWindow *ui;
     int currentTile;    //will keep a count of the tiles that were created
@@ -197,7 +205,8 @@ private:
     short currentSide;
     QMap<int, int> strengthFunction;
     QMap<int, QColor> colorFunction;
-    Simulator * sim;
+    Base_Simulator * sim;
+    a_tile * seedTile; //seed tile for aTAM simulation
 
     //For saving and loading
     QString filePath; //path of currently saved/loaded tiles

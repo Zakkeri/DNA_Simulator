@@ -17,7 +17,7 @@
 #include<QMap>
 #include"../Headers/ActiveTile.h"
 //#define DEBUG
-//#include"../Headers/Simulator.h"
+//#include"../Headers/Simulator_2HAM.h"
 #include"../Headers/AdditionalData.h"
 
 inline QPair<int, int> unrotate(QPair<int, int> coord, int rotation)

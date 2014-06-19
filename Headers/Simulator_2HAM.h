@@ -3,10 +3,12 @@
 #include"../Headers/SetOfAssemblyTiles.h"
 #include"../Headers/AssemblyTileSetManager.h"
 #include "../Headers/displaytile2.h"
+#include "../Headers/base_simulator.h"
+#include"../Headers/AdditionalData.h"
 #include<QMap>
 #include<QString>
 //#define DEBUG
-typedef struct fittingSpot
+/*typedef struct fittingSpot
 {
     fittingSpot(const QPair<int, int>& c1, const QPair<int, int> &c2,const int num)
         : firstTile(c1), secondtTile(c2), rotation(num)
@@ -18,13 +20,13 @@ typedef struct fittingSpot
     QPair<int, int> secondtTile;
     int rotation;
 }FitPlace;
+*/
 
-
-class Simulator
+class Simulator_2HAM : public Base_Simulator
 {
 public:
 
-    Simulator(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> &C);
+    Simulator_2HAM(SetOfAssemblyTiles *S, QMap<int, int> &StrengthFunction, int Theta, int StepNumber, QMap<int, QColor> &C);
     /*
      Post-Condition: Simulator with initial set of tiles S, strength map, theta parameter, and # of steps is created
      */

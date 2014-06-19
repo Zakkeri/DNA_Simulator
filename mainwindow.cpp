@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->transmissionSig_Remove_pushButton->setVisible(false);
     ui->graphicsView->setVisible(false);
     ui->graphicsView_TileView->setVisible(false);
-
     //ui->graphicsView->setScene(new QGraphicsScene());
 
     ui->radioButton_SideX->setChecked(true);
@@ -54,6 +53,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->splitter->setStretchFactor(1, 1);
     this->sim = 0;
 
+    //Set up for 2HAM
+    seedTile = 0;
+    ui->action2HAM_simulation->trigger();
 }
 
 MainWindow::~MainWindow()
@@ -334,6 +336,14 @@ void MainWindow::updateEntries(short side)
         ui->initiation_signals_tableWidget->setItem(ui->initiation_signals_tableWidget->rowCount() - 1, 0, (*iter)->first);
         ui->initiation_signals_tableWidget->setItem(ui->initiation_signals_tableWidget->rowCount() - 1, 1, (*iter)->second);
     }
+
+    if(ui->actionATAM_simulation->isChecked()) //if doing aTAM check or uncheck seed tile checkbox
+    {
+        if(seedTile == selectedTile)
+            ui->checkBox_seedTile->setChecked(true);
+        else
+            ui->checkBox_seedTile->setChecked(false);
+    }
 }
 
 void MainWindow::on_NewTileButton_clicked()
@@ -376,9 +386,16 @@ void MainWindow::on_DeleteTileButton_clicked()
 
 void MainWindow::on_BeginSim_Button_clicked()
 {
+    if(ui->actionATAM_simulation->isChecked() && seedTile == 0)
+    {
+        QMessageBox::warning(this, "Seed tile not selected", "Please select a seed tile");
+        ui->tabWidget->setCurrentIndex(0);
+        return;
+    }
     //Need to add validation of input
     SetOfAssemblyTiles * Set = new SetOfAssemblyTiles();
     //for each store tile, create Assembly tile and add it to the set
+    AssemblyTile * seed = 0; //in case I have a seed tile
     int ID = 0;
     for(QList<a_tile *>::const_iterator it = this->tiles.begin(); it != this->tiles.end(); ++it)
     {
@@ -473,12 +490,28 @@ void MainWindow::on_BeginSim_Button_clicked()
         ActiveTile * T = new ActiveTile(*activeLabels, *inactiveLabels, *activationSigs, *transmissionSigs,
                                         *initSigs, ID++);
         AssemblyTile * AT = new AssemblyTile(T, this->strengthFunction);
-        Set->addAssemblyTile(AT);
+        //If doing aTAM check for seed tile
+        if(ui->actionATAM_simulation->isChecked() && seedTile == (*it))
+        {
+            seed = AT;
+        }
+        else
+        {
+            Set->addAssemblyTile(AT);
+        }
     }
 
-
-    this->sim = new Simulator(Set, this->strengthFunction, ui->ThetaParam_SpinBox->value(),
-                              ui->NumberOfSteps_SpinBox->value(), this->colorFunction);
+    //Instantiate the correct simulator
+    if(ui->action2HAM_simulation->isChecked())
+    {
+        this->sim = new Simulator_2HAM(Set, this->strengthFunction, ui->ThetaParam_SpinBox->value(),
+                                  ui->NumberOfSteps_SpinBox->value(), this->colorFunction);
+    }
+    else
+    {
+        this->sim = new Simulator_aTAM(seed, Set, this->strengthFunction, ui->ThetaParam_SpinBox->value(),
+                                       ui->NumberOfSteps_SpinBox->value(), this->colorFunction);
+    }
     this->sim->initialize();
     this->sim->startSimulation();
     qDebug()<<"Simulation is over";
@@ -487,7 +520,22 @@ void MainWindow::on_BeginSim_Button_clicked()
     //tree->setColumnCount(1);
     ui->treeWidget->clear();
     QList<SetOfAssemblyTiles *> resultSet = this->sim->getAssemblies(); //result set
-    for(int i = 0; i < resultSet.length(); i++)
+    int i = 0; //loop index
+    if(ui->actionATAM_simulation->isChecked()) //if doing aTAM simulation, then for i=0 put building blocks
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(); //get an item for the set
+        item->setText(0, "Building tiles");  //set text to the set
+        SetOfAssemblyTiles* set = resultSet.at(i);
+        for(int j = 0; j < set->getListOfAssemblyTiles().length(); j++)
+        {
+            QTreeWidgetItem * child = new QTreeWidgetItem(); //get an item for the tile
+            child->setText(0,"Tile " + QString::number(j));
+            item->addChild(child); //add tile to the set item
+        }
+        ui->treeWidget->addTopLevelItem(item); //add all tiles to the total tree
+        i++;
+    }
+    for(; i < resultSet.length(); i++)
     //for(QList<SetOfAssemblyTiles *>::const_iterator it = resultSet.begin(); it != resultSet.end(); it++)
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(); //get an item for the set
@@ -858,8 +906,7 @@ void MainWindow::on_tile_comboBox_currentIndexChanged(int index) //when differen
 void MainWindow::on_listWidget_itemChanged(QListWidgetItem *item)
 {
     qDebug()<<"Item changed event: "<<item->text();
-    ui->tile_comboBox->removeItem(ui->listWidget->currentRow());
-    ui->tile_comboBox->insertItem(ui->listWidget->currentRow(), item->text());
+    ui->tile_comboBox->setItemText(ui->listWidget->currentRow(), item->text());
 }
 
 void MainWindow::on_radioButton_SideX_clicked()
@@ -1229,7 +1276,13 @@ void MainWindow::on_actionSave_2_triggered()
 //Load Action
 void MainWindow::on_actionLoad_triggered()
 {
-    //Need to clear old data first if there is one
+    //Open dialog for user to select file
+    filePath = QFileDialog::getOpenFileName(this, "Open File", QString(), "Tile (*.xml)");
+    QFile readFile(filePath); //declare and open file
+    if (!readFile.open(QIODevice::ReadOnly))
+        return;
+
+    //Remove old data
     this->selectedTile = 0;
     ui->treeWidget->clear();
     if(!tiles.isEmpty())
@@ -1296,11 +1349,6 @@ void MainWindow::on_actionLoad_triggered()
         delete currentScene;
     ui->tabWidget->setCurrentIndex(0);
 
-    //Open dialog for user to select file
-    filePath = QFileDialog::getOpenFileName(this, "Open File", QString(), "Tile (*.xml)");
-    QFile readFile(filePath); //declare and open file
-    if (!readFile.open(QIODevice::ReadOnly))
-        return;
     QXmlStreamReader read(&readFile); //declare xml reader
     read.readNextStartElement(); //read TileSet tag
     read.readNextStartElement(); //read next tile
@@ -1511,4 +1559,50 @@ void MainWindow::on_strengthFunc_Remove_Button_clicked()
         if(toDelete != 0)
             delete toDelete;
     ui->strength_func_tableWidget->removeRow(row);
+}
+
+void MainWindow::on_action2HAM_simulation_triggered()
+{
+    qDebug()<<"Doing 2HAM simulation";
+    //this->simulationModel = 1;
+    ui->actionATAM_simulation->setChecked(false);
+    ui->action2HAM_simulation->setChecked(true);
+    ui->checkBox_seedTile->setVisible(false);
+    if(seedTile != 0) //set foreground to black
+    {
+        seedTile->Tile->setForeground(Qt::black);
+    }
+}
+
+void MainWindow::on_actionATAM_simulation_triggered()
+{
+    qDebug()<<"Doing aTAM simulation";
+    //this->simulationModel = 2;
+    ui->action2HAM_simulation->setChecked(false);
+    ui->actionATAM_simulation->setChecked(true);
+    ui->checkBox_seedTile->setVisible(true);
+    if(seedTile != 0) //set foreground to dark green
+    {
+        seedTile->Tile->setForeground(Qt::darkGreen);
+    }
+}
+
+void MainWindow::on_checkBox_seedTile_clicked(bool checked)
+{
+    if(selectedTile == 0) return; //if no tile selected, then return
+    if(checked) //if checked tile as a seed
+    {
+        if(seedTile == 0) seedTile = selectedTile; //set new seed tile
+        else //make previous seed tile to be non-seed tile
+        {
+            seedTile->Tile->setForeground(Qt::black); //change text color to black
+            seedTile = selectedTile; //update seed tile
+        }
+        seedTile->Tile->setForeground(Qt::darkGreen); //make tile name color green
+    }
+    else //if unchecked tile to become non-seed
+    {
+        seedTile->Tile->setForeground(Qt::black); //change text color to black
+        seedTile = 0; //unreference seed tile
+    }
 }
