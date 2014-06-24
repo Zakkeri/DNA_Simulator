@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->transmissionSig_Remove_pushButton->setVisible(false);
     ui->graphicsView->setVisible(false);
     ui->graphicsView_TileView->setVisible(false);
+    ui->checkBox_seedTile->setVisible(false);
     //ui->graphicsView->setScene(new QGraphicsScene());
 
     ui->radioButton_SideX->setChecked(true);
@@ -56,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Set up for 2HAM
     seedTile = 0;
     ui->action2HAM_simulation->trigger();
+    ui->listWidget->setSelectionMode(QAbstractItemView::SingleSelection); //single selection
 }
 
 MainWindow::~MainWindow()
@@ -208,6 +210,7 @@ void MainWindow::on_actionNew_Simulation_triggered()
     strengthFunction.clear();
     colorFunction.clear();
     this->currentTile = 0;
+    this->seedTile = 0;
 
     //delete previous simulator
     if(this->sim != 0)
@@ -254,6 +257,7 @@ void MainWindow::on_actionNew_Simulation_triggered()
     ui->transmissionSig_Add_pushButton->setVisible(true);
     ui->transmissionSig_Remove_pushButton->setVisible(true);
     ui->graphicsView_TileView->setVisible(true);
+    ui->checkBox_seedTile->setVisible(true);
     ui->stackedWidget->setCurrentIndex(0);
     ui->tabWidget->setCurrentIndex(0);
     modified = true;
@@ -581,6 +585,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(true);
         ui->transmissionSig_Remove_pushButton->setVisible(true);
         ui->graphicsView_TileView->setVisible(true);
+        ui->checkBox_seedTile->setVisible(true);
 
         ui->stackedWidget->setCurrentIndex(0);
 
@@ -609,6 +614,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(true);
         ui->transmissionSig_Remove_pushButton->setVisible(true);
         ui->graphicsView_TileView->setVisible(true);
+        ui->checkBox_seedTile->setVisible(true);
 
         ui->stackedWidget->setCurrentIndex(0);
 
@@ -637,6 +643,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(true);
         ui->transmissionSig_Remove_pushButton->setVisible(true);
         ui->graphicsView_TileView->setVisible(true);
+        ui->checkBox_seedTile->setVisible(true);
 
         ui->stackedWidget->setCurrentIndex(0);
 
@@ -665,6 +672,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(false);
         ui->transmissionSig_Remove_pushButton->setVisible(false);
         ui->graphicsView_TileView->setVisible(false);
+        ui->checkBox_seedTile->setVisible(false);
 
         ui->stackedWidget->setCurrentIndex(1);
 
@@ -695,6 +703,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->transmissionSig_Add_pushButton->setVisible(false);
         ui->transmissionSig_Remove_pushButton->setVisible(false);
         ui->graphicsView_TileView->setVisible(false);
+        ui->checkBox_seedTile->setVisible(false);
 
         ui->stackedWidget->setCurrentIndex(1);
 
@@ -1177,6 +1186,10 @@ void MainWindow::on_actionSave_2_triggered()
     {
         save.writeStartElement("Tile");
         save.writeAttribute("name", (*iter)->Tile->text());
+        if(seedTile != 0 && seedTile == *iter) //if this is a seed tile, mark it so
+        {
+            save.writeAttribute("seed", "1");
+        }
         //save each side
         for(int i = 0; i < 4; i++)
         {
@@ -1284,6 +1297,7 @@ void MainWindow::on_actionLoad_triggered()
 
     //Remove old data
     this->selectedTile = 0;
+    this->seedTile = 0;
     ui->treeWidget->clear();
     if(!tiles.isEmpty())
     {
@@ -1358,6 +1372,14 @@ void MainWindow::on_actionLoad_triggered()
         {
             QString tileName = read.attributes().value("name").toString(); //get tile name
             tiles.append(selectedTile = new a_tile(tileName)); //set current tile and append it to the list
+            if(read.attributes().hasAttribute("seed")) // if this is a seed tile, mark it so
+            {
+                this->seedTile = tiles.last();
+                if(ui->actionATAM_simulation->isChecked()) //if aTAM simulation is trigered, change tile text color
+                {
+                    this->seedTile->Tile->setForeground(Qt::darkGreen);
+                }
+            }
             tiles.last()->Tile->setFlags(tiles.last()->Tile->flags() | Qt::ItemIsEditable);
             ui->listWidget->addItem(tiles.last()->Tile); //add tile to the list
             ui->tile_comboBox->addItem(tileName);  //add tile to the combo box
@@ -1503,6 +1525,11 @@ void MainWindow::on_actionLoad_triggered()
     ui->transmissionSig_Add_pushButton->setVisible(true);
     ui->transmissionSig_Remove_pushButton->setVisible(true);
     ui->graphicsView_TileView->setVisible(true);
+    ui->checkBox_seedTile->setVisible(true);
+
+    ui->listWidget->item(0)->setSelected(true);
+    this->selectedTile = this->tiles.first();
+    this->paintCurrentTile();
 }
 
 void MainWindow::on_activationSignals_table_itemChanged(QTableWidgetItem *item)
@@ -1567,11 +1594,12 @@ void MainWindow::on_action2HAM_simulation_triggered()
     //this->simulationModel = 1;
     ui->actionATAM_simulation->setChecked(false);
     ui->action2HAM_simulation->setChecked(true);
-    ui->checkBox_seedTile->setVisible(false);
+    ui->checkBox_seedTile->setEnabled(false);
     if(seedTile != 0) //set foreground to black
     {
         seedTile->Tile->setForeground(Qt::black);
     }
+    ui->checkBox_seedTile->setChecked(false);
 }
 
 void MainWindow::on_actionATAM_simulation_triggered()
@@ -1580,11 +1608,16 @@ void MainWindow::on_actionATAM_simulation_triggered()
     //this->simulationModel = 2;
     ui->action2HAM_simulation->setChecked(false);
     ui->actionATAM_simulation->setChecked(true);
-    ui->checkBox_seedTile->setVisible(true);
+    ui->checkBox_seedTile->setEnabled(true);
     if(seedTile != 0) //set foreground to dark green
     {
         seedTile->Tile->setForeground(Qt::darkGreen);
+        if(seedTile == this->selectedTile)
+        {
+            ui->checkBox_seedTile->setChecked(true);
+        }
     }
+
 }
 
 void MainWindow::on_checkBox_seedTile_clicked(bool checked)
