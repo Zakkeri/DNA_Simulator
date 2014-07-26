@@ -78,10 +78,11 @@ void DisplayTile::drawArrow(QPainter &painter, int startX, int startY, int endX,
     QPainterPath path, arrowPath;
     const QBrush startBrush = painter.brush();
     int dir;
+    QPainterPathStroker stroker; //to make arrows bigger
+    stroker.setWidth(this->size / 50);
 
     painter.setBrush(Qt::NoBrush);
     path.moveTo(startX, startY);
-
 
     if(xFirst)
     {
@@ -107,7 +108,6 @@ void DisplayTile::drawArrow(QPainter &painter, int startX, int startY, int endX,
         else
             dir = 3;
     }
-
     painter.drawPath(path);
 
     painter.setPen(painter.pen().color());
@@ -118,27 +118,29 @@ void DisplayTile::drawArrow(QPainter &painter, int startX, int startY, int endX,
     switch(dir)
     {
     case 0:
-        arrowPath.lineTo(endX - 6, endY - 2);
-        arrowPath.lineTo(endX - 6, endY + 2);
+        arrowPath.lineTo(endX - 6, endY - 3);
+        arrowPath.lineTo(endX - 6, endY + 3);
         arrowPath.lineTo(endX, endY);
         break;
     case 1:
-        arrowPath.lineTo(endX - 2, endY - 6);
-        arrowPath.lineTo(endX + 2, endY - 6);
+        arrowPath.lineTo(endX - 3, endY - 6);
+        arrowPath.lineTo(endX + 3, endY - 6);
         arrowPath.lineTo(endX, endY);
         break;
     case 2:
-        arrowPath.lineTo(endX + 6, endY - 2);
-        arrowPath.lineTo(endX + 6, endY + 2);
+        arrowPath.lineTo(endX + 6, endY - 3);
+        arrowPath.lineTo(endX + 6, endY + 3);
         arrowPath.lineTo(endX, endY);
         break;
     case 3:
-        arrowPath.lineTo(endX - 2, endY + 6);
-        arrowPath.lineTo(endX + 2, endY + 6);
+        arrowPath.lineTo(endX - 3, endY + 6);
+        arrowPath.lineTo(endX + 3, endY + 6);
         arrowPath.lineTo(endX, endY);
         break;
     }
 
+    const QPainterPath stroked = stroker.createStroke(arrowPath);
+    arrowPath = stroked.united(arrowPath);
     painter.drawPath(arrowPath);
 }
 
@@ -147,7 +149,7 @@ void DisplayTile::drawOutline(QPainter &painter) const
     QPen tilePen;
     QVector<qreal> dashPattern;
 
-    tilePen.setWidth(this->size / 100);
+    tilePen.setWidth(this->size / 50);
     dashPattern << 2 << 7;
 
     for(int i = 0; i < 8; i++)
@@ -233,6 +235,7 @@ void DisplayTile::drawSignals(QPainter &painter)
     QVector<qreal> dashPattern;
     dashPattern << 2 << 5;
     arrowPen.setStyle(Qt::SolidLine);
+    arrowPen.setWidth(this->size / 50); //set width
     arrowBrush.setStyle(Qt::SolidPattern);
 
     areaWeight[0] = qMax(area[0].size() / 2.0 + area[2].size() / 2.0, 1.0);

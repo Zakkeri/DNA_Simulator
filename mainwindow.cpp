@@ -37,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setVisible(false);
     ui->graphicsView_TileView->setVisible(false);
     ui->checkBox_seedTile->setVisible(false);
-    //ui->graphicsView->setScene(new QGraphicsScene());
 
     ui->radioButton_SideX->setChecked(true);
     currentSide = 0;
@@ -157,6 +156,7 @@ void MainWindow::on_actionNew_Simulation_triggered()
 {
     qDebug()<<"New button was pressed";
     //Need to clear old data first if there is one
+    filePath = ""; //clear the file path
     if(!tiles.isEmpty())
     {
         for(int i = ui->listWidget->count() - 1; i>=0; i--)

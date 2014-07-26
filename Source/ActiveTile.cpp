@@ -310,8 +310,6 @@
 
                 RemoveTransmissionSignal(side, transm); //remove signal, since it was processed
 
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                //make sure that only one tarnsmission signal can be used, maybe I want to continue
                 return;//and return, since we are done
             }
         }
