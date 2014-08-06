@@ -111,6 +111,7 @@ private:
     QList<DisplayLabel> labels[8];
     int size;
     QList<DisplaySignal> area[6];
+    int loopBack_Signals[2];
 
 public:
     DisplayTile(int size=100);
@@ -127,7 +128,7 @@ public:
     void drawSignals(QPainter &painter); // Draws the signals of the tile.
     void drawTile(QPainter &painter); // Draws the whole tile.
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-
+    void drawLoop(QPainter &painter, int X, int Y, int xInc, int yInc, int side); //draws the loop signal
 };
 
 #endif // DISPLAYTILE_H

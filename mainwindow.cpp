@@ -1529,6 +1529,8 @@ void MainWindow::on_actionLoad_triggered()
 
     ui->listWidget->item(0)->setSelected(true);
     this->selectedTile = this->tiles.first();
+    this->currentSide = 0;
+    updateEntries(0);
     this->paintCurrentTile();
 }
 

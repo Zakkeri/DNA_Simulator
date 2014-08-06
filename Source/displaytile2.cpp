@@ -6,6 +6,7 @@ void drawSquare(QPainter *p);
 DisplayTile::DisplayTile(int size)
 {
     this->size = size;
+    this->loopBack_Signals[0] = this->loopBack_Signals[1] = 0;
 }
 
 QRectF DisplayTile::boundingRect() const
@@ -64,6 +65,18 @@ void DisplayTile::addSignal(const DisplaySignal &newSignal)
     else if((newSignal.source == 1 && newSignal.target == 3) ||
             (newSignal.source == 3 && newSignal.target == 1))
         area[4].append(newSignal);
+    else if((newSignal.source == 1 && newSignal.target == 1) ||
+        (newSignal.source == 3 && newSignal.target == 3))
+    {
+        area[4].append(newSignal);
+        this->loopBack_Signals[0]++;
+    }
+    else if((newSignal.source == 0 && newSignal.target == 0) ||
+            (newSignal.source == 2 && newSignal.target == 2))
+    {
+        area[5].append(newSignal);
+        this->loopBack_Signals[1]++;
+    }
     else if(newSignal.source == -1)
     {
         if(newSignal.target % 2)
@@ -239,10 +252,10 @@ void DisplayTile::drawSignals(QPainter &painter)
     arrowBrush.setStyle(Qt::SolidPattern);
 
     areaWeight[0] = qMax(area[0].size() / 2.0 + area[2].size() / 2.0, 1.0);
-    areaWeight[1] = qMax((double)area[4].size(), 1.0);
+    areaWeight[1] = qMax((double)area[4].size() + this->loopBack_Signals[0], 1.0);
     areaWeight[2] = qMax(area[1].size() / 2.0 + area[3].size() / 2.0, 1.0);
     areaWeight[3] = qMax(area[0].size() / 2.0 + area[1].size() / 2.0, 1.0);
-    areaWeight[4] = qMax((double)area[5].size(), 1.0);
+    areaWeight[4] = qMax((double)area[5].size() + this->loopBack_Signals[1], 1.0);
     areaWeight[5] = qMax(area[2].size() / 2.0 + area[3].size() / 2.0, 1.0);
 
     currentHalfTotal = areaWeight[0] + areaWeight[1] + areaWeight[2] + 1.0;
@@ -380,10 +393,10 @@ void DisplayTile::drawSignals(QPainter &painter)
     sideY = -50;
     topY = 50;
 
-    if(area[4].size() == 1)
+    if((area[4].size() + this->loopBack_Signals[0]) == 1)
         xInc = 0;
     else
-        xInc = areaWeight[1] / (area[4].size() - 1);
+        xInc = areaWeight[1] / ((area[4].size() + this->loopBack_Signals[0]) - 1);
 
     // Draw area 4, between sides 1 and 3
     for(QList<DisplaySignal>::Iterator next = area[4].begin(); next != area[4].end(); next++)
@@ -411,7 +424,17 @@ void DisplayTile::drawSignals(QPainter &painter)
             }
         }
 
-        if((*next).target == 3)
+        if(((*next).source == 1) && ((*next).target == 1))
+        {
+            drawLoop(painter, topX, topY, xInc, 0, 1);
+            topX += xInc;
+        }
+        else if(((*next).source == 3) && ((*next).target == 3))
+        {
+            drawLoop(painter, topX, sideY, xInc, 0, 3);
+            topX += xInc;
+        }
+        else if((*next).target == 3)
             drawArrow(painter, topX, topY, topX, sideY);
         else
             drawArrow(painter, topX, sideY, topX, topY);
@@ -424,10 +447,10 @@ void DisplayTile::drawSignals(QPainter &painter)
     sideX = -50;
     topX = 50;
 
-    if(area[5].size() == 1)
+    if((area[5].size() + this->loopBack_Signals[1]) == 1)
         yInc = 0;
     else
-        yInc = areaWeight[4] / (area[5].size() - 1);
+        yInc = areaWeight[4] / ((area[5].size() + this->loopBack_Signals[1]) - 1);
 
     // Draw area 5, between sides 2 and 0
     for(QList<DisplaySignal>::Iterator next = area[5].begin(); next != area[5].end(); next++)
@@ -455,7 +478,17 @@ void DisplayTile::drawSignals(QPainter &painter)
             }
         }
 
-        if((*next).target == 0)
+        if(((*next).source == 0) && ((*next).target == 0))
+        {
+            drawLoop(painter, topX, sideY, 0, yInc, 0);
+            sideY += yInc;
+        }
+        else if(((*next).source == 2) && ((*next).target == 2))
+        {
+            drawLoop(painter, sideX, sideY, 0, yInc, 2);
+            sideY += yInc;
+        }
+        else if((*next).target == 0)
             drawArrow(painter, sideX, sideY, topX, sideY);
         else
             drawArrow(painter, topX, sideY, sideX, sideY);
@@ -494,6 +527,74 @@ void drawSquare(QPainter *p)
 {
     p->setPen(Qt::black);
     p->drawRect(-50,-50,100,100);
+}
+
+void DisplayTile::drawLoop(QPainter &painter, int X, int Y, int xInc, int yInc, int side)
+{
+    QPainterPath path, arrowPath;
+    const QBrush startBrush = painter.brush();
+    QPainterPathStroker stroker; //to make arrows bigger
+    stroker.setWidth(this->size / 50);
+
+    painter.setBrush(Qt::NoBrush);
+    path.moveTo(X, Y);
+    switch(side)
+    {
+    case 0:
+        //Draw Loop
+        path.lineTo(X - 25, Y);
+        path.lineTo(X - 25, Y + yInc);
+        path.lineTo(X, Y + yInc);
+        //Draw arrow
+        arrowPath.moveTo(X, Y + yInc);
+        arrowPath.lineTo(X - 6, (Y + yInc) - 3);
+        arrowPath.lineTo(X - 6, (Y + yInc) + 3);
+        arrowPath.lineTo(X, Y + yInc);
+        break;
+
+    case 1:
+        //Draw Loop
+        path.lineTo(X, Y - 25);
+        path.lineTo(X + xInc, Y - 25);
+        path.lineTo(X + xInc, Y);
+        //Draw arrow
+        arrowPath.moveTo(X + xInc, Y);
+        arrowPath.lineTo((X + xInc) - 3, Y - 6);
+        arrowPath.lineTo((X + xInc) + 3, Y - 6);
+        arrowPath.lineTo(X + xInc, Y);
+        break;
+
+    case 2:
+        //Draw Loop
+        path.lineTo(X + 25, Y);
+        path.lineTo(X + 25, Y + yInc);
+        path.lineTo(X, Y + yInc);
+        //Draw arrow
+        arrowPath.moveTo(X, Y + yInc);
+        arrowPath.lineTo(X + 6, (Y + yInc) - 3);
+        arrowPath.lineTo(X + 6, (Y + yInc) + 3);
+        arrowPath.lineTo(X, Y + yInc);
+        break;
+
+    case 3:
+        //Draw Loop
+        path.lineTo(X, Y + 25);
+        path.lineTo(X + xInc, Y + 25);
+        path.lineTo(X + xInc, Y);
+        //Draw arrow
+        arrowPath.moveTo(X + xInc, Y);
+        arrowPath.lineTo((X + xInc) - 3, Y + 6);
+        arrowPath.lineTo((X + xInc) + 3, Y + 6);
+        arrowPath.lineTo(X + xInc, Y);
+        break;
+    }
+    //Finish drawing
+    painter.drawPath(path);
+    painter.setPen(painter.pen().color());
+    painter.setBrush(startBrush);
+    const QPainterPath stroked = stroker.createStroke(arrowPath);
+    arrowPath = stroked.united(arrowPath);
+    painter.drawPath(arrowPath);
 }
 
 DisplayTile &DisplayTile::operator <<(const DisplayLabel &label)
